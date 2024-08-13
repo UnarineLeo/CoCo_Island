@@ -473,7 +473,202 @@ public class Parser
 
     private Boolean parseINSTRUC(Node parent)
     {
-        return true;
+        Node InstrucNode = new Node(id++, "Non-Terminal", "INSTRUC");
+        parent.children.add(InstrucNode);
+
+        if(tokens.get(index).getContent() == "print" || tokens.get(index).getContent() == "skip" || tokens.get(index).getContent() == "halt" ||
+        tokens.get(index).getContent() == "if" || tokens.get(index).getType() == "VNAME" || tokens.get(index).getType() == "FNAME" || tokens.get(index).getContent() == "end")
+        {
+            if(tokens.get(index).getContent() == "end")
+            {
+                return true;
+            }
+            else
+            {
+                Boolean command = parseCOMMAND(parent);
+                if(command)
+                {
+                    if(index >= tokens.size())
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                    else if(tokens.get(index).getContent() == ";")
+                    {
+                        Node colonNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                        parent.children.add(colonNode);
+                        index++;
+
+                        if(index >= tokens.size())
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected end at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                        else if(tokens.get(index).getContent() == "end")
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            parseINSTRUC(parent);
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                }
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected COMMAND at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+            }
+
+        }
+        else
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"print\" or \"skip\" or \"halt\" or \"if\" or \"VNAME\" or \"FNAME\" or \"end\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+
+    }
+
+    private Boolean parseCOMMAND(Node parent)
+    {
+        Node commandNode = new Node(id++, "Non-Terminal", "COMMAND");
+        parent.children.add(commandNode);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"print\" or \"skip\" or \"halt\" or \"if\" or \"VNAME\" or \"FNAME\" or \"end\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+        else
+        {
+            if(tokens.get(index).getContent() == "skip" || tokens.get(index).getContent() == "halt")
+            {
+                return true;
+            }
+            else if(tokens.get(index).getContent() == "print")
+            {
+                //print ATOMIC
+                Node printNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                parent.children.add(printNode);
+                index++;
+
+                if(index >= tokens.size())
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ATOMIC at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+                else
+                {
+                    if(tokens.get(index).getType() == "VNAME" || tokens.get(index).getType() == "CONST")
+                    {
+                        Boolean atomic = parseATOMIC(parent);
+                        if(atomic)
+                        {
+                            if(index >= tokens.size())
+                            {
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.exit(0);
+                                return false;
+                            }
+                            else if(tokens.get(index).getContent() == ";")
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.exit(0);
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ATOMIC at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME or FNAME after \"print\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                }
+            }
+            else if(tokens.get(index).getContent() == "if")
+            {
+                //Branch
+            }
+            else if(tokens.get(index).getType() == "VNAME")
+            {
+                //ASSIGN
+
+            }
+            else if(tokens.get(index).getType() == "FNAME")
+            {
+                //CALL
+            }
+            else
+            {
+
+            }
+        }
+
+    }
+
+    private Boolean parseATOMIC(Node parent)
+    {
+        Node atomicNode = new Node(id++, "Non-Terminal", "ATOMIC");
+        parent.children.add(atomicNode);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" or \"CONST\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+        else if(tokens.get(index).getType() == "VNAME")
+        {
+            return parseVNAME(atomicNode);//consult
+        }
+        else if(tokens.get(index).getType() == "CONST")
+        {
+            Boolean constant = parseCONST(parent);
+            if(constant)
+            {
+                return true;//consult
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"CONST\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
+        else
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" or \"CONST\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+    }
+
+    private Boolean parseCONST(Node parent) {
     }
 
     private Boolean parseFUNCTIONS(Node parent) {
