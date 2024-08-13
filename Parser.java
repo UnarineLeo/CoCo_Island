@@ -669,6 +669,7 @@ public class Parser
     }
 
     private Boolean parseCONST(Node parent) {
+        return true;
     }
 
     private Boolean parseFUNCTIONS(Node parent) {
