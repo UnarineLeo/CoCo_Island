@@ -9,6 +9,7 @@ public class Main
         Lexer  lexer= new Lexer();
         String testString="sub oijuh pkoji okijuh okjiuv F_0001lkjh okg  ";
         int vindex=lexer.FindEndTheEndOfTheToken_Function_Variable(testString, 30+3);
+        System.out.println(vindex);
         System.out.println(testString.substring(30, vindex));
 //         Scanner scanner = new Scanner(System.in);
 //         String response;

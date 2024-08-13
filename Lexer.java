@@ -93,14 +93,17 @@ public class Lexer {
                 String FunctionName=input.substring(i, FindEndTheEndOfTheToken_Function_Variable(input, i+3));
                 Token token = new Token(id,"FunctionName",FunctionName,row,col);
                 tokens.add(token);
-                i=FindEndTheEndOfTheToken_Function_Variable(input, i+3)-1;
-                //need to skip some charactere
+                col+=i-FindEndTheEndOfTheToken_Function_Variable(input, i);
+                i=FindEndTheEndOfTheToken_Function_Variable(input, i+3);
+               ;
+              
             }
             else if(input.charAt(i) == 'V' && i+1< input.length() && input.charAt(i+1) == '_' && i+2< input.length() && Character.isLowerCase(input.charAt(i+2)) )
             {
                 String VariableName=input.substring(i, FindEndTheEndOfTheToken_Function_Variable(input, i+3));
                 Token token = new Token(id,"VariableName",VariableName,row,col);
                 tokens.add(token);
+                col+=i-FindEndTheEndOfTheToken_Function_Variable(input, i);
                 i=FindEndTheEndOfTheToken_Function_Variable(input, i+3)-1;
                 //skip some  charactet
             }
@@ -109,11 +112,13 @@ public class Lexer {
                 String Constant=ExtractNextPossibleKey(input, i);
                 Token token= new Token(id,"Constant", Constant, row, col);
                 tokens.add(token);
+                
                 int index=input.indexOf(' ', i);
                 if(input.indexOf("\n", i) < index)
                     index=input.indexOf("\n", i);
         
-                i=index-1;
+                col+=index-i;
+                i=index;
                 //skip some characters
 
             }
@@ -126,6 +131,7 @@ public class Lexer {
                 if(input.indexOf("\n", i) < index)
                     index=input.indexOf("\n", i);
         
+                col+=index-i;
                 i=index-1;
                 //skip some characters
 
@@ -138,7 +144,8 @@ public class Lexer {
                 int index=input.indexOf(' ', i);
                 if(input.indexOf("\n", i) < index)
                     index=input.indexOf("\n", i);
-        
+                
+                col+=index-i;
                 i=index-1;
                
             }
