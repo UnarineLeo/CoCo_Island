@@ -54,76 +54,105 @@ public class Lexer {
             }
             else if(input.charAt(i) == ',')
             {
+                System.out.println("Entry Index "+ i);
+                System.out.println(input.charAt(i));
                 Token token = new Token(id,"Symbol",",",row,col);
                 tokens.add(token);
+                System.out.print("Next Index "+  (i+1));
 
             }
             else if(input.charAt(i) == ';')
             {
+                System.out.println("Entry Index "+ i);
+                System.out.println(input.charAt(i));
                 Token token = new Token(id,"Symbol",";",row,col);
                 tokens.add(token);
+                System.out.println("Next Index "+ (i+1));
             }
             else if(input.charAt(i) == '(')
             {
+                System.out.println("Entry Index "+ i);
+                System.out.println(input.charAt(i));
                 Token token = new Token(id,"Symbol","(",row,col);
                 tokens.add(token);
+                System.out.println("Next Index "+ (i+1));
             }
             else if(input.charAt(i) == ')')
             {
+                System.out.println("Entry Index "+ i);
+                System.out.println(input.charAt(i));
                 Token token = new Token(id,"Symbol",")",row,col);
                 tokens.add(token);
+                System.out.println("Next Index "+ (i+1));
             }
             else if(input.charAt(i) == '{')
             {
+                System.out.println("Entry Index "+ i);
+                System.out.println(input.charAt(i));
                 Token token = new Token(id,"Symbol","{",row,col);
                 tokens.add(token);
+                System.out.println("Next Index "+ (i+1));
             }
             else if(input.charAt(i) == '}')
             {
+                System.out.println("Entry Index "+ i);
+                System.out.println(input.charAt(i));
                 Token token = new Token(id,"Symbol","}",row,col);
                 tokens.add(token);
+                System.out.println("Next Index "+ (i+1));
             }
             else if(input.charAt(i) == '=')
             {
+                System.out.println("Entry Index "+ i);
+                System.out.println(input.charAt(i));
                 Token token = new Token(id,"Symbol","=",row,col);
                 tokens.add(token);
+                System.out.println("next Index "+ (i+1));
             }
             else if(input.charAt(i) == 'F' && i+1< input.length() && input.charAt(i+1) == '_' && i+2< input.length() && Character.isLowerCase(input.charAt(i+2)) )
             {
+                System.out.println("Entry Index "+ i);
+                System.out.println(input.charAt(i));
                 String FunctionName=input.substring(i, FindEndTheEndOfTheToken_Function_Variable(input, i+3));
                 Token token = new Token(id,"FunctionName",FunctionName,row,col);
                 tokens.add(token);
                 col+=i-FindEndTheEndOfTheToken_Function_Variable(input, i);
                 i=FindEndTheEndOfTheToken_Function_Variable(input, i+3);
-               ;
+                System.out.println("Next Index "+ i);
               
             }
             else if(input.charAt(i) == 'V' && i+1< input.length() && input.charAt(i+1) == '_' && i+2< input.length() && Character.isLowerCase(input.charAt(i+2)) )
             {
+                System.out.println("Entry Index "+ i);
+                System.out.println(input.charAt(i));
                 String VariableName=input.substring(i, FindEndTheEndOfTheToken_Function_Variable(input, i+3));
                 Token token = new Token(id,"VariableName",VariableName,row,col);
                 tokens.add(token);
                 col+=i-FindEndTheEndOfTheToken_Function_Variable(input, i);
-                i=FindEndTheEndOfTheToken_Function_Variable(input, i+3)-1;
+                i=FindEndTheEndOfTheToken_Function_Variable(input, i+3);
+                System.out.println("Next Index "+ i);
                 //skip some  charactet
             }
-            else if(CheckIfItIsAConstant_String(ExtractNextPossibleKey(input, i)))
+            else if(input.charAt(i)=='"'  /*&& CheckIfThereIsStringConstant(input, i)*/)
             {
-                String Constant=ExtractNextPossibleKey(input, i);
+                System.out.println("Entry Index "+ i);
+                System.out.println(input.charAt(i));
+                String Constant=input.substring(i, input.indexOf("\"", i+1)+1);
+               
                 Token token= new Token(id,"Constant", Constant, row, col);
                 tokens.add(token);
                 
-                int index=input.indexOf(' ', i);
-                if(input.indexOf("\n", i) < index)
-                    index=input.indexOf("\n", i);
-        
+                int index= input.indexOf("\"", i+1);
                 col+=index-i;
-                i=index;
-                //skip some characters
+                i=index+1;//test
+                System.out.println("next Index "+ (i));
+                
 
             }
-            else if(CheckIfItIsAConstant_String(ExtractNextPossibleKey_Number_Constant(input, i)))
+            else if(input.charAt(i)=='-' || Character.isDigit(input.charAt(i)))
             {
+                System.out.println("Entry Index "+ i);
+                System.out.println(input.charAt(i));
                 String Constant=ExtractNextPossibleKey_Number_Constant(input,i);
                 Token token= new Token(id,"Constant", Constant, row, col);
                 tokens.add(token);
@@ -132,22 +161,54 @@ public class Lexer {
                     index=input.indexOf("\n", i);
         
                 col+=index-i;
-                i=index-1;
-                //skip some characters
+                i=index;
+                System.out.println("next Index "+ i);
+      
 
             }
-            else if(CheckIfItIsAConstant_Number(ExtractNextPossibleKey(input, i)))
+            else if((input.charAt(i)=='m'|| input.charAt(i)=='b'||input.charAt(i)=='e'||input.charAt(i)=='n'||input.charAt(i)=='s'||input.charAt(i)=='h'||input.charAt(i)=='p'||input.charAt(i)=='i'||input.charAt(i)=='t'||input.charAt(i)=='e'||input.charAt(i)=='v') && CheckIfThereIsAKeyword(input, i))
             {
-                String Keyword=ExtractNextPossibleKey(input, i).trim();
-                Token token = new Token(id, "Keyword",Keyword, row, col );
-                tokens.add(token);
+                System.out.println("Entry Index "+ i);
+                System.out.println(input.charAt(i));
                 int index=input.indexOf(' ', i);
                 if(input.indexOf("\n", i) < index)
                     index=input.indexOf("\n", i);
-                
+                String Keyword=input.substring(i,index).trim();
+
+                Token token= new Token(id,"Keyword", Keyword, row, col);
+                tokens.add(token);
+
                 col+=index-i;
-                i=index-1;
-               
+                i=index;
+                System.out.println("Next Index "+ (i));
+    
+            }
+            else if((input.charAt(i)=='n'|| input.charAt(i)=='s'||input.charAt(i)=='o'||input.charAt(i)=='a'||input.charAt(i)=='e'||input.charAt(i)=='g'||input.charAt(i)=='s'||input.charAt(i)=='m'||input.charAt(i)=='d') && CheckIfThereIsAKeyword2(input, i))
+            {
+                System.out.println("Entry Index "+ i);
+                System.out.println(input.charAt(i));
+                int index=input.indexOf('(', i);
+       
+                String Keyword=input.substring(i,index).trim();
+
+                Token token= new Token(id,"Keyword", Keyword, row, col);
+                tokens.add(token);
+
+                col+=index-i;
+                i=index;
+                System.out.println("Next Index "+ i);
+            }
+            else if(input.charAt(i)=='<')
+            {
+                
+            }
+           
+            else{
+                //error
+                
+                System.out.println("Error case");
+                System.out.println("Entry Index "+ i);
+                System.out.println("Next Index" + (i+1));
             }
 
         }
@@ -178,6 +239,38 @@ public class Lexer {
         return index;
     }
 
+   
+    public Boolean CheckIfThereIsStringConstant(String input, int startIndex)
+    {
+        int NextDoubleColon=input.indexOf("\"", startIndex+1);
+
+
+        return CheckIfItIsAConstant_String(input.substring(startIndex, NextDoubleColon));
+
+    }
+
+    public Boolean CheckIfThereIsAKeyword(String input, int StartIndex)
+    {
+        int index=input.indexOf(' ', StartIndex);
+     
+       
+        if(input.indexOf("\n", StartIndex) < index && input.indexOf("\n", StartIndex)>0){
+            index=input.indexOf("\n", StartIndex);
+        }
+
+        // System.out.println(input.charAt(index-1));
+        // System.out.println(input.charAt(StartIndex));
+        // System.out.println(input.substring(StartIndex, index).length());
+        // System.out.println(input.substring(StartIndex, index));    
+
+        return CheckIfItIsAKey(input.substring(StartIndex, index));
+    }
+    public Boolean CheckIfThereIsAKeyword2(String input, int StartIndex)
+    {
+        int index=input.indexOf('(', StartIndex);
+        return CheckIfItIsAKey(input.substring(StartIndex, index));
+    }
+   
     public String ExtractNextPossibleKey(String input, int StartIndex)//testes
     {
         // int StopIndex=StartIndex;
@@ -203,18 +296,27 @@ public class Lexer {
         //    StopIndex++;
         // }
         int index=input.indexOf(' ', StartIndex);
-        if(input.indexOf("\n", index) < StartIndex)
-            index=input.indexOf("\n", index);
+        if(input.indexOf("\n", StartIndex) < index)
+            index=input.indexOf("\n", StartIndex);
 
         return input.substring(StartIndex, index);
     }
 
     public boolean CheckIfItIsAKey(String literal)//tested
     {
-
-        if(literal.trim()=="main"|| literal.trim()=="begin"|| literal.trim()=="end"|| literal.trim()=="num"||literal.trim()=="text"|| literal.trim()=="skip"|| literal.trim()=="halt"|| literal.trim()=="print"|| literal.trim()=="< input"|| literal.trim()=="if" || literal.trim()=="then"|| literal.trim()=="else"|| literal.trim()=="not"|| literal.trim()=="sqrt"|| literal.trim()=="or"|| literal.trim()=="and"|| literal.trim()=="eq"|| literal.trim()=="grt"|| literal.trim()=="add"|| literal.trim()=="sub"|| literal.trim()=="mul"|| literal.trim()=="div"|| literal.trim()=="void")
-        {
-            return true;
+        String trimmedLiteral = literal.trim();
+  
+    
+        String[] keywords = {
+            "main", "begin", "end", "num", "text", "skip", "halt", "print", "< input", 
+            "if", "then", "else", "not", "sqrt", "or", "and", "eq", "grt", "add", "sub", 
+            "mul", "div", "void"
+        };
+    
+        for (String keyword : keywords) {
+            if (trimmedLiteral.equals(keyword)) {
+                return true;
+            }
         }
         return false;
     }
