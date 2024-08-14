@@ -217,7 +217,7 @@ public class Parser
                             if(tokens.get(index).getContent() == ",")
                             {
                                 Node commaNode = new Node(id++, "Terminal", tokens.get(index).getContent());
-                                parent.children.add(commaNode);
+                                globalNode.children.add(commaNode);
                                 index++;
 
                                 if(index >= tokens.size())
@@ -237,7 +237,7 @@ public class Parser
                                         }
                                         else if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
                                         {
-                                            parseGLOBVARS(parent);
+                                            parseGLOBVARS(globalNode);
                                             return true;
                                         }
                                         else
@@ -307,7 +307,7 @@ public class Parser
         if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
         {
             Node TypeNode = new Node(id++, "Terminal", tokens.get(index).getContent());
-            parent.children.add(TypeNode);
+            VTypNode.children.add(TypeNode);
             index++;
 
             if(index >= tokens.size())
@@ -376,7 +376,7 @@ public class Parser
         if(tokens.get(index).getContent() == "begin")
         {
             Node beginNode = new Node(id++, "Terminal", tokens.get(index).getContent());
-            parent.children.add(beginNode);
+            AlgoNode.children.add(beginNode);
             index++;
 
             if(index >= tokens.size())
@@ -401,13 +401,13 @@ public class Parser
                         if(tokens.get(index).getContent() == "end")
                         {
                             Node endNode = new Node(id++, "Terminal", tokens.get(index).getContent());
-                            parent.children.add(endNode);
+                            AlgoNode.children.add(endNode);
                             index++;
 
                             if(index >= tokens.size())
                             {
                                 //confirm if parent or AlgoNode
-                                Boolean functions = parseFUNCTIONS(parent);
+                                Boolean functions = parseFUNCTIONS(parent); //shares same parent as Algo
                                 if(functions)
                                 {
                                     return true;
@@ -425,7 +425,7 @@ public class Parser
                                 if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void")
                                 {
                                     //confirm if parent or AlgoNode
-                                    Boolean functions = parseFUNCTIONS(parent);
+                                    Boolean functions = parseFUNCTIONS(parent); //shares same parent as Algo
                                     if(functions)
                                     {
                                         return true;
@@ -485,7 +485,7 @@ public class Parser
             }
             else
             {
-                Boolean command = parseCOMMAND(parent);
+                Boolean command = parseCOMMAND(InstrucNode);
                 if(command)
                 {
                     if(index >= tokens.size())
@@ -497,7 +497,7 @@ public class Parser
                     else if(tokens.get(index).getContent() == ";")
                     {
                         Node colonNode = new Node(id++, "Terminal", tokens.get(index).getContent());
-                        parent.children.add(colonNode);
+                        InstrucNode.children.add(colonNode);
                         index++;
 
                         if(index >= tokens.size())
@@ -512,8 +512,8 @@ public class Parser
                         }
                         else
                         {
-                            parseINSTRUC(parent);
-                            return true;
+                            parseINSTRUC(parent); //calling itself
+                            return true;//consult
                         }
                     }
                     else
@@ -562,7 +562,7 @@ public class Parser
             {
                 //print ATOMIC
                 Node printNode = new Node(id++, "Terminal", tokens.get(index).getContent());
-                parent.children.add(printNode);
+                commandNode.children.add(printNode);
                 index++;
 
                 if(index >= tokens.size())
@@ -575,7 +575,7 @@ public class Parser
                 {
                     if(tokens.get(index).getType() == "VNAME" || tokens.get(index).getType() == "CONST")
                     {
-                        Boolean atomic = parseATOMIC(parent);
+                        Boolean atomic = parseATOMIC(commandNode);
                         if(atomic)
                         {
                             if(index >= tokens.size())
@@ -613,6 +613,99 @@ public class Parser
             else if(tokens.get(index).getContent() == "if")
             {
                 //Branch
+                Node ifNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                commandNode.children.add(ifNode);
+                index++;
+
+                if(index >= tokens.size())
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+                else
+                {
+                    Boolean cond = parseCOND(commandNode);
+                    if(cond)
+                    {
+                        if(index >= tokens.size())
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                        else
+                        {
+                            if(tokens.get(index).getContent() == "then")
+                            {
+                                Node thenNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                commandNode.children.add(thenNode);
+                                index++;
+
+                                if(index >= tokens.size())
+                                {
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"then\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.exit(0);
+                                    return false;
+                                }
+                                else {
+                                    Boolean algo = parseALGO(commandNode);
+                                    if (algo) {
+                                        if (index >= tokens.size()) {
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"else\" or Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.exit(0);
+                                            return false;
+                                        } else {
+                                            if (tokens.get(index).getContent() == "else") {
+                                                Node elseNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                                commandNode.children.add(elseNode);
+                                                index++;
+//
+                                                if (index >= tokens.size()) {
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"else\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.exit(0);
+                                                    return false;
+                                                } else {
+                                                    Boolean algo2 = parseALGO(commandNode);
+                                                    if (algo2) {
+                                                        if (index >= tokens.size()) {
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") after ALGO at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.exit(0);
+                                                            return false;
+                                                        } else if (tokens.get(index).getContent() == ";") {
+                                                            return true;
+                                                        } else {
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.exit(0);
+                                                            return false;
+                                                        }
+                                                    } else {
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"else\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.exit(0);
+                                                        return false;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.exit(0);
+                                return false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                }
+
             }
             else if(tokens.get(index).getType() == "VNAME")
             {
@@ -629,6 +722,89 @@ public class Parser
             }
         }
 
+    }
+
+    private Boolean parseCOND(Node parent)
+    {
+        Node condNode = new Node(id++, "Non-Terminal", "COMMAND");
+        parent.children.add(condNode);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected COND after \"if\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+        else
+        {
+            int test = index + 2;
+            if(test >= tokens.size())
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected at least 1 argument(s) in \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+            else if(tokens.get(test).getType() == "VNAME" || tokens.get(test).getType() == "CONST")
+            {
+                //Simple
+                Boolean simple = parseSIMPLE(condNode);
+                if(simple)
+                {
+                    if(index >= tokens.size())
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                    else if(tokens.get(index).getContent() == "then")
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                }
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+            }
+            else
+            {
+                //Composite
+                Boolean composite = parseCOMPOSITE(condNode);
+                if(composite)
+                {
+                    if(index >= tokens.size())
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                    else if(tokens.get(index).getContent() == "then")
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                }
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+            }
+        }
     }
 
     private Boolean parseATOMIC(Node parent)
@@ -648,7 +824,7 @@ public class Parser
         }
         else if(tokens.get(index).getType() == "CONST")
         {
-            Boolean constant = parseCONST(parent);
+            Boolean constant = parseCONST(atomicNode);
             if(constant)
             {
                 return true;//consult
@@ -668,8 +844,34 @@ public class Parser
         }
     }
 
-    private Boolean parseCONST(Node parent) {
-        return true;
+    private Boolean parseCONST(Node parent)
+    {
+        Node constNode = new Node(id++, "Non-Terminal", "CONST");
+        parent.children.add(constNode);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"CONST\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+        else
+        {
+            if(tokens.get(index).getType() == "CONST")
+            {
+                Node printNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                constNode.children.add(printNode);
+                index++;
+
+                return true;
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"CONST\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
     }
 
     private Boolean parseFUNCTIONS(Node parent) {
