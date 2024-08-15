@@ -304,6 +304,13 @@ public class Parser
         Node VTypNode = new Node(id++, "Non-Terminal", "VTYP");
         parent.children.add(VTypNode);
 
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME after VTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+
         if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
         {
             Node TypeNode = new Node(id++, "Terminal", tokens.get(index).getContent());
@@ -327,7 +334,6 @@ public class Parser
             System.exit(0);
             return false;
         }
-
     }
 
     private Boolean parseVNAME(Node parent)
@@ -2414,6 +2420,910 @@ public class Parser
         Node functionsNode = new Node(id++, "Non-Terminal", "FUNCTIONS");
         parent.children.add(functionsNode);
 
-        return true;
+        if(index >= tokens.size())
+        {
+            return true;
+        }
+        else
+        {
+            Boolean decl = parseDECL(functionsNode);
+            if(decl)
+            {
+                if(index >= tokens.size())
+                {
+                    return true;
+                }
+                else if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void")
+                {
+                    return parseFUNCTIONS(parent);
+                }
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"DECL\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"DECL\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
+    }
+
+    private Boolean parseDECL(Node parent)
+    {
+        Node DeclNode = new Node(id++, "Non-Terminal", "DECL");
+        parent.children.add(DeclNode);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"DECL\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+        else
+        {
+            if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void")
+            {
+                Boolean header = parseHEADER(DeclNode);
+                if(header)
+                {
+                    if(index >= tokens.size())
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"BODY\" after \"HEADER\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+
+                    if(tokens.get(index).getContent() == "{")
+                    {
+                        Boolean body = parseBODY(DeclNode);
+                        if(body)
+                        {
+                            if(index >= tokens.size())
+                            {
+                                return true;
+                            }
+                            else if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void")
+                            {
+                               return true;
+                            }
+                            else
+                            {
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\",\"void\" or end of program at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.exit(0);
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"BODY\" after \"HEADER\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"{\" after \"HEADER\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+
+                }
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"HEADER\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\" or \"void\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
+    }
+
+    private Boolean parseBODY(Node parent)
+    {
+        Node BodyNode = new Node(id++, "Non-Terminal", "BODY");
+        parent.children.add(BodyNode);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+        else
+        {
+            Boolean prolog = parsePROLOG(BodyNode);
+            if(prolog)
+            {
+                if(index >= tokens.size())
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+
+                if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
+                {
+                    Boolean localvars = parseLOCALVARS(BodyNode);
+                    if(localvars)
+                    {
+                        if(index >= tokens.size())
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ALGO\" after \"LOCALVARS\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+
+                        if(tokens.get(index).getContent() == "begin")
+                        {
+                            Boolean algo = parseALGO(BodyNode);
+                            if(algo)
+                            {
+                                if(index >= tokens.size())
+                                {
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"EPILOG\" after \"ALGO\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.exit(0);
+                                    return false;
+                                }
+
+                                if(tokens.get(index).getContent() == "}")
+                                {
+                                  Boolean epilog = parseEPILOG(BodyNode);
+                                  if(epilog)
+                                  {
+                                      if(index >= tokens.size())
+                                      {
+                                          System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SUBFUNCT\" after \"ALGO\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                          System.exit(0);
+                                          return false;
+                                      }
+
+                                      if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void" || tokens.get(index).getContent() == "end")
+                                      {
+                                          Boolean subfuncs = parseSUBFUNCTS(BodyNode);
+                                          if(subfuncs)
+                                          {
+                                              if(index >= tokens.size())
+                                              {
+                                                  System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"end\" after \"SUBFUNCS\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                  System.exit(0);
+                                                  return false;
+                                              }
+
+                                              if(tokens.get(index).getContent() == "end")
+                                              {
+                                                  Node endNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                                  BodyNode.children.add(endNode);
+                                                  index++;
+
+                                                  if(index >= tokens.size())
+                                                  {
+                                                      return true;
+                                                  }
+
+                                                  if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void")
+                                                  {
+                                                      return true;
+                                                  }
+                                                  else
+                                                  {
+                                                      System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\" or \"void\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                      System.exit(0);
+                                                      return false;
+                                                  }
+                                              }
+                                              else
+                                              {
+                                                  System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"end\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                  System.exit(0);
+                                                  return false;
+                                              }
+                                          }
+                                          else
+                                          {
+                                              System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SUBFUNCS\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                              System.exit(0);
+                                              return false;
+                                          }
+                                      }
+                                      else
+                                      {
+                                          System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"void\" or \"num\" or \"end\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                          System.exit(0);
+                                          return false;
+                                      }
+                                  }
+                                  else
+                                  {
+                                      System.out.println("\u001B[31mParsing Error\u001B[0m: Expected EPILOG: } at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                      System.exit(0);
+                                      return false;
+                                  }
+                                }
+                                else
+                                {
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected EPILOG: } at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.exit(0);
+                                    return false;
+                                }
+
+                            }
+                            else
+                            {
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ALGO\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.exit(0);
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"begin\" after comma: \",\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"LOCALVARS\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+
+                }
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"PROLOG: {\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
+    }
+
+    private Boolean parseSUBFUNCTS(Node parent)
+    {
+        Node subfuncs = new Node(id++, "Non-Terminal", "SUBFUNCS");
+        parent.children.add(subfuncs);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FUNCS\" or \"end\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+
+        if(tokens.get(index).getContent() == "end")
+        {
+            return true;
+        }
+        else if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void")
+        {
+            Boolean functions = parseFUNCTIONS(subfuncs);
+            if(functions)
+            {
+                return true;
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FUNCTIONS at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
+        else
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FUNCS\" or \"end\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+    }
+
+    private Boolean parseLOCALVARS(Node parent)
+    {
+        Node localVars = new Node(id++, "Non-Terminal", "LOCALVARS");
+        parent.children.add(localVars);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+
+        if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
+        {
+            Boolean vtype = parseVTYP(localVars);
+            if(vtype)
+            {
+                if(index >= tokens.size())
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+
+                if(tokens.get(index).getType() == "VNAME")
+                {
+                    Boolean vname = parseVNAME(localVars);
+                    if(vname)
+                    {
+                        if(index >= tokens.size())
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+
+                        if(tokens.get(index).getType() == ",")
+                        {
+                            Node commaNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                            localVars.children.add(commaNode);
+                            index++;
+
+                            ///
+                            if(index >= tokens.size())
+                            {
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.exit(0);
+                                return false;
+                            }
+
+                            if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
+                            {
+                                Boolean vtype2 = parseVTYP(localVars);
+                                if(vtype2)
+                                {
+                                    if(index >= tokens.size())
+                                    {
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.exit(0);
+                                        return false;
+                                    }
+
+                                    if(tokens.get(index).getType() == "VNAME")
+                                    {
+                                        Boolean vname2 = parseVNAME(localVars);
+                                        if(vname2)
+                                        {
+                                            if(index >= tokens.size())
+                                            {
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.exit(0);
+                                                return false;
+                                            }
+
+                                            if(tokens.get(index).getType() == ",")
+                                            {
+                                                Node commaNode2 = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                                localVars.children.add(commaNode2);
+                                                index++;
+
+                                                ///
+                                                if(index >= tokens.size())
+                                                {
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.exit(0);
+                                                    return false;
+                                                }
+
+                                                if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
+                                                {
+                                                    Boolean vtype3 = parseVTYP(localVars);
+                                                    if(vtype3)
+                                                    {
+                                                        if(index >= tokens.size())
+                                                        {
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.exit(0);
+                                                            return false;
+                                                        }
+
+                                                        if(tokens.get(index).getType() == "VNAME")
+                                                        {
+                                                            Boolean vname3 = parseVNAME(localVars);
+                                                            if(vname3)
+                                                            {
+                                                                if(index >= tokens.size())
+                                                                {
+                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                    System.exit(0);
+                                                                    return false;
+                                                                }
+
+                                                                if(tokens.get(index).getType() == ",")
+                                                                {
+                                                                    Node commaNode3 = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                                                    localVars.children.add(commaNode3);
+                                                                    index++;
+
+                                                                    ///
+                                                                    if(index >= tokens.size())
+                                                                    {
+                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"algo(begin)\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                        System.exit(0);
+                                                                        return false;
+                                                                    }
+
+                                                                    if(tokens.get(index).getContent() == "begin")
+                                                                    {
+                                                                        return true;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"algo(begin)\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                        System.exit(0);
+                                                                        return false;
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                    System.exit(0);
+                                                                    return false;
+                                                                }
+
+                                                            }
+                                                            else
+                                                            {
+                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                System.exit(0);
+                                                                return false;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.exit(0);
+                                                            return false;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.exit(0);
+                                                        return false;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.exit(0);
+                                                    return false;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.exit(0);
+                                                return false;
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.exit(0);
+                                            return false;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.exit(0);
+                                        return false;
+                                    }
+                                }
+                                else
+                                {
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.exit(0);
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.exit(0);
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                }
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
+        else
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+    }
+
+    private Boolean parseHEADER(Node parent)
+    {
+        Node HeaderNode = new Node(id++, "Non-Terminal", "HEADER");
+        parent.children.add(HeaderNode);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+        else
+        {
+            Boolean ftype = parseFTYP(HeaderNode);
+            if(ftype)
+            {
+                if(index >= tokens.size())
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FNAME\" after \"FTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+                else
+                {
+                    Boolean fname = parseFNAME(HeaderNode);
+                    if(fname)
+                    {
+                        if(index >= tokens.size())
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FNAME\" after \"FTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                        else
+                        {
+                            if(tokens.get(index).getContent() == "(")
+                            {
+                                Node openingBraceNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                HeaderNode.children.add(openingBraceNode);
+                                index++;
+
+                                if(index >= tokens.size())
+                                {
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"FNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.exit(0);
+                                    return false;
+                                }
+
+                                if(tokens.get(index).getType() == "VNAME")
+                                {
+                                    Boolean vname = parseVNAME(HeaderNode);
+                                    if(vname)
+                                    {
+                                        if(index >= tokens.size())
+                                        {
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.exit(0);
+                                            return false;
+                                        }
+
+                                        if(tokens.get(index).getContent() == ",")
+                                        {
+                                            Node commaNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                            HeaderNode.children.add(commaNode);
+                                            index++;
+
+                                            if(index >= tokens.size())
+                                            {
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.exit(0);
+                                                return false;
+                                            }
+
+                                            if(tokens.get(index).getType() == "VNAME")
+                                            {
+                                                Boolean vname2 = parseVNAME(HeaderNode);
+                                                if(vname2)
+                                                {
+                                                    if(index >= tokens.size())
+                                                    {
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.exit(0);
+                                                        return false;
+                                                    }
+
+                                                    if(tokens.get(index).getContent() == ",")
+                                                    {
+                                                        Node commaNode2 = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                                        HeaderNode.children.add(commaNode2);
+                                                        index++;
+
+                                                        if(index >= tokens.size())
+                                                        {
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.exit(0);
+                                                            return false;
+                                                        }
+
+                                                        if(tokens.get(index).getType() == "VNAME")
+                                                        {
+                                                            Boolean vname3 = parseVNAME(HeaderNode);
+                                                            if(vname3)
+                                                            {
+                                                                if(index >= tokens.size())
+                                                                {
+                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                    System.exit(0);
+                                                                    return false;
+                                                                }
+
+                                                                if(tokens.get(index).getContent() == ")")
+                                                                {
+                                                                    Node closeBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                                                    HeaderNode.children.add(closeBracketNode);
+                                                                    index++;
+
+                                                                    if(index >= tokens.size())
+                                                                    {
+                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                        System.exit(0);
+                                                                        return false;
+                                                                    }
+
+                                                                    if(tokens.get(index).getContent() == "{")
+                                                                    {
+                                                                        return true;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"{\" after \"Function DECL\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                        System.exit(0);
+                                                                        return false;
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                    System.exit(0);
+                                                                    return false;
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                System.exit(0);
+                                                                return false;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.exit(0);
+                                                            return false;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.exit(0);
+                                                        return false;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"FNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.exit(0);
+                                                    return false;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"FNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.exit(0);
+                                                return false;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.exit(0);
+                                            return false;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.exit(0);
+                                        return false;
+                                    }
+                                }
+                                else
+                                {
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"FNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.exit(0);
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after \"FNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.exit(0);
+                                return false;
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FNAME\" after \"FTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FTYP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
+
+    }
+
+    private Boolean parsePROLOG(Node parent)
+    {
+        Node prologNode = new Node(id++, "Non-Terminal", "PROLOG");
+        parent.children.add(prologNode);
+
+        if (index >= tokens.size()) {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected PROLOG: { at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+
+        if(tokens.get(index).getContent() == "{")
+        {
+            Node openingBraceNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+            prologNode.children.add(openingBraceNode);
+            index++;
+
+            if (index >= tokens.size()) {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected LOCALVARS  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+
+            if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
+            {
+                return true;
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
+        else
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected PROLOG: { at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+
+    }
+
+    private Boolean parseEPILOG(Node parent)
+    {
+        Node epilogNode = new Node(id++, "Non-Terminal", "EPILOG");
+        parent.children.add(epilogNode);
+
+        if (index >= tokens.size()) {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected EPILOG: }  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+
+        if(tokens.get(index).getContent() == "}")
+        {
+            Node openingBraceNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+            epilogNode.children.add(openingBraceNode);
+            index++;
+
+            if (index >= tokens.size()) {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SUBFUNCTION\" or \"end\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+
+            if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void" || tokens.get(index).getType() == "end")
+            {
+                return true;
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FUNCTIONS\" or \"end\" after \"}\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
+        else
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected EPILOG: } at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+
+    }
+
+    private Boolean parseFTYP(Node parent)
+    {
+        Node FTypNode = new Node(id++, "Non-Terminal", "FTYP");
+        parent.children.add(FTypNode);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+
+        if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void")
+        {
+            Node TypeNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+            FTypNode.children.add(TypeNode);
+            index++;
+
+            if(index >= tokens.size())
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FNAME after FTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\" or \"void\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
     }
 }
