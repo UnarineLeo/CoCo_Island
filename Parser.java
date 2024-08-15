@@ -613,19 +613,22 @@ public class Parser
             else if(tokens.get(index).getContent() == "if")
             {
                 //Branch
+                return true;
             }
             else if(tokens.get(index).getType() == "VNAME")
             {
                 //ASSIGN
+                return true;
 
             }
             else if(tokens.get(index).getType() == "FNAME")
             {
                 //CALL
+                return true;
             }
             else
             {
-
+                return true;
             }
         }
 

@@ -116,8 +116,8 @@ public class Lexer {
                 String FunctionName=input.substring(i, FindEndTheEndOfTheToken_Function_Variable(input, i+3));
                 Token token = new Token(id,"FunctionName",FunctionName,row,col);
                 tokens.add(token);
-                col+=i-FindEndTheEndOfTheToken_Function_Variable(input, i);
-                i=FindEndTheEndOfTheToken_Function_Variable(input, i+3);
+                col+=i-FindEndTheEndOfTheToken_Function_Variable(input, i)-1;
+                i=FindEndTheEndOfTheToken_Function_Variable(input, i+3)-1;
                 System.out.println("Next Index "+ i);
               
             }
@@ -128,23 +128,31 @@ public class Lexer {
                 String VariableName=input.substring(i, FindEndTheEndOfTheToken_Function_Variable(input, i+3));
                 Token token = new Token(id,"VariableName",VariableName,row,col);
                 tokens.add(token);
-                col+=i-FindEndTheEndOfTheToken_Function_Variable(input, i);
-                i=FindEndTheEndOfTheToken_Function_Variable(input, i+3);
+                col+=i-FindEndTheEndOfTheToken_Function_Variable(input, i)-1;
+                i=FindEndTheEndOfTheToken_Function_Variable(input, i+3)-1;
                 System.out.println("Next Index "+ i);
                 //skip some  charactet
             }
             else if(input.charAt(i)=='"'  /*&& CheckIfThereIsStringConstant(input, i)*/)
             {
+                System.out.println(CheckIfItIsAConstant_String(input));
                 System.out.println("Entry Index "+ i);
                 System.out.println(input.charAt(i));
                 String Constant=input.substring(i, input.indexOf("\"", i+1)+1);
-               
+                if(!CheckIfItIsAConstant_String(Constant.trim()))
+                {
+                    System.out.println("Error Constant To Long");
+                    System.out.println("\u001B[31mError\u001B[0m: Program file not found, please remove any spaces from the file name, and also include the extension(.txt) after the name and try again.");
+                    System.exit(0);
+                }
+
+
                 Token token= new Token(id,"Constant", Constant, row, col);
                 tokens.add(token);
                 
                 int index= input.indexOf("\"", i+1);
                 col+=index-i;
-                i=index+1;//test
+                i=index;
                 System.out.println("next Index "+ (i));
                 
 
@@ -153,15 +161,18 @@ public class Lexer {
             {
                 System.out.println("Entry Index "+ i);
                 System.out.println(input.charAt(i));
-                String Constant=ExtractNextPossibleKey_Number_Constant(input,i);
-                Token token= new Token(id,"Constant", Constant, row, col);
+                int NextIndex= ExtractNextPossibleKey_Number_Constant(input,i);
+                if( !CheckItIsAValidNumber(input.substring(i, NextIndex).trim()))
+                {
+                    System.out.println("\u001B[31mError\u001B[0m: Program file not found, please remove any spaces from the file name, and also include the extension(.txt) after the name and try again.");
+                    System.exit(0);
+                }
+                
+                Token token= new Token(id,"Constant", input.substring(i, NextIndex).trim(), row, col);
                 tokens.add(token);
-                int index=input.indexOf(' ', i);
-                if(input.indexOf("\n", i) < index)
-                    index=input.indexOf("\n", i);
-        
-                col+=index-i;
-                i=index;
+                
+                col+=i-NextIndex;
+                i=NextIndex-1;
                 System.out.println("next Index "+ i);
       
 
@@ -200,15 +211,22 @@ public class Lexer {
             }
             else if(input.charAt(i)=='<')
             {
-                
+                System.out.println("Entry Index "+ i);
+                System.out.println(input.charAt(i));
+                int index=i+7;
+                String Keyword=input.substring(i, i+7 );
+                Token token= new Token(id,"Keyword", Keyword, row, col);
+                tokens.add(token);
+                i=index;
+                System.out.println("Next Index "+ i);
             }
            
             else{
                 //error
                 
                 System.out.println("Error case");
-                System.out.println("Entry Index "+ i);
-                System.out.println("Next Index" + (i+1));
+                System.out.println("\u001B[31mError\u001B[0m: Program file not found, please remove any spaces from the file name, and also include the extension(.txt) after the name and try again.");
+                System.exit(0);
             }
 
         }
@@ -242,11 +260,33 @@ public class Lexer {
    
     public Boolean CheckIfThereIsStringConstant(String input, int startIndex)
     {
-        int NextDoubleColon=input.indexOf("\"", startIndex+1);
+         return CheckIfItIsAConstant_String(input.substring(startIndex, input.indexOf("\"", startIndex+1)+1));
 
+    }
 
-        return CheckIfItIsAConstant_String(input.substring(startIndex, NextDoubleColon));
+    public Boolean CheckItIsAValidNumber(String number)
+    {
+        int point=0;
+        int dash=0;
 
+        for(int i=0; i<number.length(); i++)
+        {
+            if(number.charAt(i)=='.')
+            {
+                point++;
+            }
+            if(number.charAt(i)=='-')
+            {
+                dash++;
+            }
+
+            if(point>1|| dash>1)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public Boolean CheckIfThereIsAKeyword(String input, int StartIndex)
@@ -286,21 +326,31 @@ public class Lexer {
         return input.substring(StartIndex,index );
     }
    
-    public String ExtractNextPossibleKey_Number_Constant(String input, int StartIndex)//tested
+    public int ExtractNextPossibleKey_Number_Constant(String input, int StartIndex)//tested
     {
-        //int StopIndex=StartIndex;
-        // int OnePointSymbol=0;
+        int StopIndex=StartIndex;
+        int OnePointSymbol=0;
+        // String[] regex= new String[7];
+        // regex[0]= "0";
+        // regex[1]= "0.([0-9])*[1-9]";
+        // regex[2]= "-0.([0-9])*[1-9]";
+        // regex[3]= "[1-9]([0-9])*";
+        // regex[4]= "-[1-9]([0-9])*";
+        // regex[5]= "[1-9]([0-9])*.([0-9])*[1-9]";
+        // regex[6]= "-[1-9]([0-9])*.([0-9])*[1-9]";
+        
+        
+        while(Character.isDigit(input.charAt(StopIndex)) || input.charAt(StopIndex)=='.'|| input.charAt(StopIndex)=='-' ) 
+        {
+            StopIndex++;
+        }
+        // int index=input.indexOf(' ', StartIndex);
+        // if(input.indexOf("\n", StartIndex) < index)
+        //     index=input.indexOf("\n", StartIndex);
 
-        // while( (Character.isDigit(input.charAt(StopIndex))  || input.charAt(StopIndex)=='.') && ! )
-        // {
-        //    StopIndex++;
-        // }
-        int index=input.indexOf(' ', StartIndex);
-        if(input.indexOf("\n", StartIndex) < index)
-            index=input.indexOf("\n", StartIndex);
-
-        return input.substring(StartIndex, index);
+        return StopIndex;
     }
+
 
     public boolean CheckIfItIsAKey(String literal)//tested
     {

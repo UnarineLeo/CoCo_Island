@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TokenStream>
+<Token>
+<ID> 1 </ID>
+<Type> Keyword </Type>
+<Content> main </Content>
+</Token>
+<Token>
+<ID> 2 </ID>
+<Type> Keyword </Type>
+<Content> num </Content>
+</Token>
+<Token>
+<ID> 3 </ID>
+<Type> Constant </Type>
+<Content> -265 </Content>
+</Token>
+<Token>
+<ID> 4 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 6 </ID>
+<Type> Constant </Type>
+<Content> "Ajihgvfc" </Content>
+</Token>
+</TokenStream>
