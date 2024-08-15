@@ -613,12 +613,12 @@ public class Parser
             else if(tokens.get(index).getContent() == "if")
             {
                 //Branch
-                Boolean branch = parseBRANCH(parent);
+                Boolean branch = parseBRANCH(commandNode);
                 if(branch)
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" or \"BRANCH\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"BRANCH\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -630,7 +630,7 @@ public class Parser
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" or \"BRANCH\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"BRANCH\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -651,6 +651,35 @@ public class Parser
             else if(tokens.get(index).getType() == "FNAME")
             {
                 //CALL
+                Boolean call = parseCALL(commandNode);
+                if(call)
+                {
+                    if(index >= tokens.size())
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"CALL\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                    else
+                    {
+                        if(tokens.get(index).getContent() == ";")
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"CALL\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"CALL\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
             }
             else
             {
@@ -660,6 +689,233 @@ public class Parser
             }
         }
 
+    }
+
+    private Boolean parseCALL(Node parent)
+    {
+        Node callNode = new Node(id++, "Non-Terminal", "CALL");
+        parent.children.add(callNode);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"if\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+        else
+        {
+            Boolean fname = parseFNAME(callNode);
+            if(fname)
+            {
+                if(index >= tokens.size())
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after \"FNAME\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+                else
+                {
+                    if(tokens.get(index).getContent() == "(")
+                    {
+                        Node openingBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                        callNode.children.add(openingBracketNode);
+                        index++;
+
+                        if(index >= tokens.size())
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"(\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                        else
+                        {
+                            Boolean atomic = parseATOMIC(callNode);
+                            if(atomic)
+                            {
+                                if(index >= tokens.size())
+                                {
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.exit(0);
+                                    return false;
+                                }
+                                else
+                                {
+                                    if(tokens.get(index).getContent() == ",")
+                                    {
+                                        Node commaNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                        callNode.children.add(commaNode);
+                                        index++;
+
+                                        if(index >= tokens.size())
+                                        {
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \",\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.exit(0);
+                                            return false;
+                                        }
+                                        else
+                                        {
+                                            Boolean atomic2 = parseATOMIC(callNode);
+                                            if(atomic2)
+                                            {
+                                                if(index >= tokens.size())
+                                                {
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.exit(0);
+                                                    return false;
+                                                }
+                                                else
+                                                {
+                                                    if(tokens.get(index).getContent() == ",")
+                                                    {
+                                                        Node commaNode2 = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                                        callNode.children.add(commaNode2);
+                                                        index++;
+
+                                                        if(index >= tokens.size())
+                                                        {
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \",\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.exit(0);
+                                                            return false;
+                                                        }
+                                                        else
+                                                        {
+                                                            Boolean atomic3 = parseATOMIC(callNode);
+                                                            if(atomic3)
+                                                            {
+                                                                if(index >= tokens.size())
+                                                                {
+                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"ATOMIC\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                    System.exit(0);
+                                                                    return false;
+                                                                }
+                                                                else
+                                                                {
+                                                                    if(tokens.get(index).getContent() == ")")
+                                                                    {
+                                                                        Node closingBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                                                        callNode.children.add(closingBracketNode);
+                                                                        index++;
+
+                                                                        if(index >= tokens.size())
+                                                                        {
+                                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \")\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                            System.exit(0);
+                                                                            return false;
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            if(tokens.get(index).getContent() == ";")
+                                                                            {
+                                                                                return true;
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"COMMAND\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                                System.exit(0);
+                                                                                return false;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"ATOMIC\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                        System.exit(0);
+                                                                        return false;
+                                                                    }
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \",\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                System.exit(0);
+                                                                return false;
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.exit(0);
+                                                        return false;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \",\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.exit(0);
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.exit(0);
+                                        return false;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"(\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.exit(0);
+                                return false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after \"FNAME\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FNAME\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
+    }
+
+    private Boolean parseFNAME(Node parent)
+    {
+        Node FNameNode = new Node(id++, "Non-Terminal", "FNAME");
+        parent.children.add(FNameNode);
+
+        if(tokens.get(index).getType() == "FNAME")
+        {
+            Node Name = new Node(id++, "Terminal", tokens.get(index).getContent());
+            FNameNode.children.add(Name);
+            index++;
+
+            if(index >= tokens.size())
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after FNAME at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+
+            if(tokens.get(index).getContent() == "(")
+            {
+                return true;
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after FNAME at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
+        else
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FNAME at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
     }
 
     private Boolean parseBRANCH(Node parent)
