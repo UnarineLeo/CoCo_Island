@@ -613,99 +613,35 @@ public class Parser
             else if(tokens.get(index).getContent() == "if")
             {
                 //Branch
-                Node ifNode = new Node(id++, "Terminal", tokens.get(index).getContent());
-                commandNode.children.add(ifNode);
-                index++;
-
-                if(index >= tokens.size())
+                Boolean branch = parseBRANCH(parent);
+                if(branch)
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
-                    System.exit(0);
-                    return false;
-                }
-                else
-                {
-                    Boolean cond = parseCOND(commandNode);
-                    if(cond)
+                    if(index >= tokens.size())
                     {
-                        if(index >= tokens.size())
-                        {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
-                            System.exit(0);
-                            return false;
-                        }
-                        else
-                        {
-                            if(tokens.get(index).getContent() == "then")
-                            {
-                                Node thenNode = new Node(id++, "Terminal", tokens.get(index).getContent());
-                                commandNode.children.add(thenNode);
-                                index++;
-
-                                if(index >= tokens.size())
-                                {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"then\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
-                                    System.exit(0);
-                                    return false;
-                                }
-                                else {
-                                    Boolean algo = parseALGO(commandNode);
-                                    if (algo) {
-                                        if (index >= tokens.size()) {
-                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"else\" or Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
-                                            System.exit(0);
-                                            return false;
-                                        } else {
-                                            if (tokens.get(index).getContent() == "else") {
-                                                Node elseNode = new Node(id++, "Terminal", tokens.get(index).getContent());
-                                                commandNode.children.add(elseNode);
-                                                index++;
-//
-                                                if (index >= tokens.size()) {
-                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"else\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
-                                                    System.exit(0);
-                                                    return false;
-                                                } else {
-                                                    Boolean algo2 = parseALGO(commandNode);
-                                                    if (algo2) {
-                                                        if (index >= tokens.size()) {
-                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") after ALGO at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
-                                                            System.exit(0);
-                                                            return false;
-                                                        } else if (tokens.get(index).getContent() == ";") {
-                                                            return true;
-                                                        } else {
-                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
-                                                            System.exit(0);
-                                                            return false;
-                                                        }
-                                                    } else {
-                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"else\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
-                                                        System.exit(0);
-                                                        return false;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
-                                System.exit(0);
-                                return false;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" or \"BRANCH\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
                         System.exit(0);
                         return false;
                     }
+                    else
+                    {
+                        if(tokens.get(index).getContent() == ";")
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" or \"BRANCH\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                    }
                 }
-
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"BRANCH\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
             }
             else if(tokens.get(index).getType() == "VNAME")
             {
@@ -718,10 +654,150 @@ public class Parser
             }
             else
             {
-
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"print\" or \"skip\" or \"halt\" or \"if\" or \"VNAME\" or \"FNAME\" or \"end\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
             }
         }
 
+    }
+
+    private Boolean parseBRANCH(Node parent)
+    {
+        Node branchNode = new Node(id++, "Non-Terminal", "BRANCH");
+        parent.children.add(branchNode);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"if\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+        else
+        {
+            Node ifNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+            branchNode.children.add(ifNode);
+            index++;
+
+            if(index >= tokens.size())
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+            else
+            {
+                Boolean cond = parseCOND(branchNode);
+                if(cond)
+                {
+                    if(index >= tokens.size())
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                    else
+                    {
+                        if(tokens.get(index).getContent() == "then")
+                        {
+                            Node thenNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                            branchNode.children.add(thenNode);
+                            index++;
+
+                            if(index >= tokens.size())
+                            {
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"then\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.exit(0);
+                                return false;
+                            }
+                            else
+                            {
+                                Boolean algo = parseALGO(branchNode);
+                                if (algo)
+                                {
+                                    if (index >= tokens.size())
+                                    {
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"else\" or Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.exit(0);
+                                        return false;
+                                    }
+                                    else
+                                    {
+                                        if (tokens.get(index).getContent() == "else")
+                                        {
+                                            Node elseNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                            branchNode.children.add(elseNode);
+                                            index++;
+//
+                                            if (index >= tokens.size())
+                                            {
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"else\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.exit(0);
+                                                return false;
+                                            }
+                                            else
+                                            {
+                                                Boolean algo2 = parseALGO(branchNode);
+                                                if (algo2)
+                                                {
+                                                    if (index >= tokens.size())
+                                                    {
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") after ALGO at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.exit(0);
+                                                        return false;
+                                                    }
+                                                    else if (tokens.get(index).getContent() == ";")
+                                                    {
+                                                        return true;
+                                                    }
+                                                    else
+                                                    {
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.exit(0);
+                                                        return false;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"else\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.exit(0);
+                                                    return false;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"else\" after \"ALGO\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.exit(0);
+                                            return false;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"then\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.exit(0);
+                                    return false;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+            }
+
+        }
     }
 
     private Boolean parseCOND(Node parent)
