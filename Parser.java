@@ -646,7 +646,35 @@ public class Parser
             else if(tokens.get(index).getType() == "VNAME")
             {
                 //ASSIGN
-
+                Boolean assign = parseASSIGN(commandNode);
+                if(assign)
+                {
+                    if(index >= tokens.size())
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"ASSIGN\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                    else
+                    {
+                        if(tokens.get(index).getContent() == ";")
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"ASSIGN\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ASSIGN\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
             }
             else if(tokens.get(index).getType() == "FNAME")
             {
@@ -689,6 +717,14 @@ public class Parser
             }
         }
 
+    }
+
+    private Boolean parseASSIGN(Node parent)
+    {
+        Node assignNode = new Node(id++, "Non-Terminal", "ASSIGN");
+        parent.children.add(assignNode);
+
+        return true;
     }
 
     private Boolean parseCALL(Node parent)
