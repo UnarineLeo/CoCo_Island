@@ -1240,6 +1240,25 @@ public class Parser
                 if(opnode2)
                 {
                     ///
+                    if(index >= tokens.size())
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" or \")\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                    else
+                    {
+                        if(tokens.get(index).getContent() == "," || tokens.get(index).getContent() == ")")
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" or \")\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                    }
                 }
                 else
                 {
@@ -1254,6 +1273,25 @@ public class Parser
                 if(atomic)
                 {
                     ///
+                    if(index >= tokens.size())
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" or \")\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                    else
+                    {
+                        if(tokens.get(index).getContent() == "," || tokens.get(index).getContent() == ")")
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" or \")\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                    }
                 }
                 else
                 {
@@ -1261,6 +1299,12 @@ public class Parser
                     System.exit(0);
                     return false;
                 }
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \"(\" or \",\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
             }
         }
     }
