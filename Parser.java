@@ -726,7 +726,7 @@ public class Parser
 
     private Boolean parseCOND(Node parent)
     {
-        Node condNode = new Node(id++, "Non-Terminal", "COMMAND");
+        Node condNode = new Node(id++, "Non-Terminal", "COND");
         parent.children.add(condNode);
 
         if(index >= tokens.size())
@@ -777,7 +777,7 @@ public class Parser
             else
             {
                 //Composite
-                Boolean composite = parseCOMPOSITE(condNode);
+                Boolean composite = parseCOMPOSIT(condNode);
                 if(composite)
                 {
                     if(index >= tokens.size())
@@ -807,6 +807,559 @@ public class Parser
         }
     }
 
+    private Boolean parseCOMPOSIT(Node parent)
+    {
+        Node compositeNode = new Node(id++, "Non-Terminal", "COMPOSIT");
+        parent.children.add(compositeNode);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"or\" or \"and\" or \"eq\" or \"grt\" or \"not\" or \"sqrt\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+        else
+        {
+            if(tokens.get(index).getContent() == "or" || tokens.get(index).getContent() == "and" || tokens.get(index).getContent() == "eq" || tokens.get(index).getContent() == "grt")
+            {
+                Boolean binop = parseBINOP(compositeNode);
+                if(binop)
+                {
+                    if(index >= tokens.size())
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                    else
+                    {
+                        if(tokens.get(index).getContent() == "(")
+                        {
+                            Node openBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                            compositeNode.children.add(openBracketNode);
+                            index++;
+
+                            if(index >= tokens.size())
+                            {
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.exit(0);
+                                return false;
+                            }
+                            else
+                            {
+                                if(tokens.get(index).getContent() == "or" || tokens.get(index).getContent() == "and" || tokens.get(index).getContent() == "eq" || tokens.get(index).getContent() == "grt")
+                                {
+                                    Boolean simple = parseSIMPLE(compositeNode);
+                                    if(simple)
+                                    {
+                                        if(index >= tokens.size())
+                                        {
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.exit(0);
+                                            return false;
+                                        }
+                                        else
+                                        {
+                                            if(tokens.get(index).getContent() == ",")
+                                            {
+                                                Node commaNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                                compositeNode.children.add(commaNode);
+                                                index++;
+
+                                                if(index >= tokens.size())
+                                                {
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Comma(,)\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.exit(0);
+                                                    return false;
+                                                }
+                                                else
+                                                {
+                                                    if(tokens.get(index).getContent() == "or" || tokens.get(index).getContent() == "and" || tokens.get(index).getContent() == "eq" || tokens.get(index).getContent() == "grt")
+                                                    {
+                                                        Boolean simple2 = parseSIMPLE(compositeNode);
+                                                        if(simple2)
+                                                        {
+                                                            if(index >= tokens.size())
+                                                            {
+                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"ATOMIC\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                System.exit(0);
+                                                                return false;
+                                                            }
+                                                            else
+                                                            {
+                                                                if(tokens.get(index).getContent() == ")")
+                                                                {
+                                                                    Node closingBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                                                    compositeNode.children.add(closingBracketNode);
+                                                                    index++;
+
+                                                                    if(index >= tokens.size())
+                                                                    {
+                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"Closing Bracket ')' \" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                        System.exit(0);
+                                                                        return false;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if(tokens.get(index).getContent() == "then")
+                                                                        {
+                                                                            return true;
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                            System.exit(0);
+                                                                            return false;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"SIMPLE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                    System.exit(0);
+                                                                    return false;
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Comma(,)\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.exit(0);
+                                                            return false;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Comma(,)\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.exit(0);
+                                                        return false;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"SIMPLE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.exit(0);
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.exit(0);
+                                        return false;
+                                    }
+                                }
+                                else
+                                {
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.exit(0);
+                                    return false;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected BINOP after \"if\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+            }
+            else if(tokens.get(index).getContent() == "not" || tokens.get(index).getContent() == "sqrt")
+            {
+                Boolean unop = parseUNOP(compositeNode);
+                if(unop)
+                {
+                    if(index >= tokens.size())
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                    else
+                    {
+                        if (tokens.get(index).getContent() == "(")
+                        {
+                            Node openBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                            compositeNode.children.add(openBracketNode);
+                            index++;
+
+                            if (index >= tokens.size())
+                            {
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.exit(0);
+                                return false;
+                            }
+                            else
+                            {
+                                //Simple => BINOP(ATOMIC,ATOMIC)
+                                if (tokens.get(index).getContent() == "or" || tokens.get(index).getContent() == "and" || tokens.get(index).getContent() == "eq" || tokens.get(index).getContent() == "grt")
+                                {
+                                    Boolean simple = parseSIMPLE(compositeNode);
+                                    if (simple)
+                                    {
+                                        if(index >= tokens.size())
+                                        {
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"ATOMIC\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.exit(0);
+                                            return false;
+                                        }
+                                        else
+                                        {
+                                            if(tokens.get(index).getContent() == ")")
+                                            {
+                                                Node closingBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                                compositeNode.children.add(closingBracketNode);
+                                                index++;
+
+                                                if(index >= tokens.size())
+                                                {
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"Closing Bracket ')' \" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.exit(0);
+                                                    return false;
+                                                }
+                                                else
+                                                {
+                                                    if(tokens.get(index).getContent() == "then")
+                                                    {
+                                                        return true;
+                                                    }
+                                                    else
+                                                    {
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.exit(0);
+                                                        return false;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"SIMPLE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.exit(0);
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.exit(0);
+                                        return false;
+                                    }
+                                }
+                                else
+                                {
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.exit(0);
+                                    return false;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"UNOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"UNOP\" after \"if\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"or\" or \"and\" or \"eq\" or \"grt\" or \"not\" or \"sqrt\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
+    }
+
+    private Boolean parseUNOP(Node parent)
+    {
+        Node unopNode = new Node(id++, "Non-Terminal", "UNOP");
+        parent.children.add(unopNode);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"not\" or \"sqrt\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+        else
+        {
+            if(tokens.get(index).getContent() == "not" || tokens.get(index).getContent() == "sqrt")
+            {
+                Node unaryNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                unopNode.children.add(unaryNode);
+                index++;
+
+                if(index >= tokens.size())
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"UNOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+                else
+                {
+                    if(tokens.get(index).getContent() == "(")
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"UNOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"not\" or \"sqrt\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
+    }
+
+    private Boolean parseSIMPLE(Node parent)
+    {
+        Node simpleNode = new Node(id++, "Non-Terminal", "SIMPLE");
+        parent.children.add(simpleNode);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected COND after \"if\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+        else
+        {
+            if(tokens.get(index).getContent() == "or" || tokens.get(index).getContent() == "and" || tokens.get(index).getContent() == "eq" || tokens.get(index).getContent() == "grt")
+            {
+                Boolean binop = parseBINOP(simpleNode);
+                if(binop)
+                {
+                    if(index >= tokens.size())
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                    else
+                    {
+                        if(tokens.get(index).getContent() == "(")
+                        {
+                            Node openBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                            simpleNode.children.add(openBracketNode);
+                            index++;
+
+                            if(index >= tokens.size())
+                            {
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.exit(0);
+                                return false;
+                            }
+                            else
+                            {
+                                if(tokens.get(index).getType() == "VNAME" || tokens.get(index).getType() == "CONST")
+                                {
+                                    Boolean atomic = parseATOMIC(simpleNode);
+                                    if(atomic)
+                                    {
+                                        if(index >= tokens.size())
+                                        {
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.exit(0);
+                                            return false;
+                                        }
+                                        else
+                                        {
+                                            if(tokens.get(index).getContent() == ",")
+                                            {
+                                                Node commaNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                                simpleNode.children.add(commaNode);
+                                                index++;
+
+                                                if(index >= tokens.size())
+                                                {
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Comma(,)\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.exit(0);
+                                                    return false;
+                                                }
+                                                else
+                                                {
+                                                    if(tokens.get(index).getType() == "VNAME" || tokens.get(index).getType() == "CONST")
+                                                    {
+                                                        Boolean atomic2 = parseATOMIC(simpleNode);
+                                                        if(atomic2)
+                                                        {
+                                                            if(index >= tokens.size())
+                                                            {
+                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"ATOMIC\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                System.exit(0);
+                                                                return false;
+                                                            }
+                                                            else
+                                                            {
+                                                                if(tokens.get(index).getContent() == ")")
+                                                                {
+                                                                    Node closingBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                                                                    simpleNode.children.add(closingBracketNode);
+                                                                    index++;
+
+                                                                    if(index >= tokens.size())
+                                                                    {
+                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"Closing Bracket ')' \" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                        System.exit(0);
+                                                                        return false;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if(tokens.get(index).getContent() == "then")
+                                                                        {
+                                                                           return true;
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                            System.exit(0);
+                                                                            return false;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"ATOMIC\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                    System.exit(0);
+                                                                    return false;
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Comma(,)\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.exit(0);
+                                                            return false;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Comma(,)\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.exit(0);
+                                                        return false;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.exit(0);
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.exit(0);
+                                        return false;
+                                    }
+                                }
+                                else
+                                {
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.exit(0);
+                                    return false;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected BINOP after \"if\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"or\" or \"and\" or \"eq\" or \"grt\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
+    }
+
+    private Boolean parseBINOP(Node parent)
+    {
+        Node binopNode = new Node(id++, "Non-Terminal", "BINOP");
+        parent.children.add(binopNode);
+
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"or\" or \"and\" or \"eq\" or \"grt\" or \"sub\" or \"add\" or \"mul\" or \"div\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.exit(0);
+            return false;
+        }
+        else
+        {
+            if(tokens.get(index).getContent() == "or" || tokens.get(index).getContent() == "and" || tokens.get(index).getContent() == "eq" || tokens.get(index).getContent() == "grt" || tokens.get(index).getContent() == "sub" || tokens.get(index).getContent() == "add" || tokens.get(index).getContent() == "mul" || tokens.get(index).getContent() == "div")
+            {
+                Node binaryNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                binopNode.children.add(binaryNode);
+                index++;
+
+                if(index >= tokens.size())
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+                else
+                {
+                    if(tokens.get(index).getContent() == "(")
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"or\" or \"and\" or \"eq\" or \"grt\" or \"sub\" or \"add\" or \"mul\" or \"div\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.exit(0);
+                return false;
+            }
+        }
+    }
+
     private Boolean parseATOMIC(Node parent)
     {
         Node atomicNode = new Node(id++, "Non-Terminal", "ATOMIC");
@@ -827,7 +1380,22 @@ public class Parser
             Boolean constant = parseCONST(atomicNode);
             if(constant)
             {
-                return true;//consult
+                if(index >= tokens.size())
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") or \";\" or \")\" after CONST at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+                else if(tokens.get(index).getContent() == "," || tokens.get(index).getContent() == ";" || tokens.get(index).getContent() == ")")
+                {
+                    return true;//consult
+                }
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\" ,\") or \";\" or \")\" after CONST at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
             }
             else
             {
@@ -863,7 +1431,24 @@ public class Parser
                 constNode.children.add(printNode);
                 index++;
 
-                return true;
+                if(index >= tokens.size())
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") or \";\" or \")\" after CONST at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+
+                if(tokens.get(index).getContent() == "," || tokens.get(index).getContent() == ";" || tokens.get(index).getContent() == ")")
+                {
+                    return true;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") or \";\" or \")\" after CONST at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.exit(0);
+                    return false;
+                }
+
             }
             else
             {
@@ -874,7 +1459,11 @@ public class Parser
         }
     }
 
-    private Boolean parseFUNCTIONS(Node parent) {
+    private Boolean parseFUNCTIONS(Node parent)
+    {
+        Node functionsNode = new Node(id++, "Non-Terminal", "FUNCTIONS");
+        parent.children.add(functionsNode);
+
         return true;
     }
 }
