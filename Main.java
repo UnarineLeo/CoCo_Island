@@ -7,22 +7,13 @@ public class Main
 
     public static void main(String[] args) throws Exception
     {
-        // Lexer  lexer= new Lexer();
-        // String testString="num < input main";
-        // System.out.println(testString.substring(4+7));
-
-        /*boolean vindex=lexer.CheckIfThereIsAKeyword(testString, 5);
-        System.out.println(vindex);
-        System.out.println(lexer.CheckIfItIsAKey(testString));*/
-    
+            
          Scanner scanner = new Scanner(System.in);
          String response;
          do
          {
              System.out.print("Enter file name: ");
              String fileName = scanner.nextLine();
-            //  Lexer lexer_yaka_Grunner= new Lexer();
-            //  List<Token> tokens = lexer_yaka_Grunner.toTokens(fileName);
              Parser parser = new Parser(fileName);
              //root = parser.parse();
             //  Scoping scope = new Scoping();

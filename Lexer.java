@@ -31,6 +31,7 @@ public class Lexer {
             String input2 = reader.nextLine();
             input = input + input2 + "\n";
         }
+        input+=" ";
 
         reader.close();
 
@@ -131,9 +132,9 @@ public class Lexer {
                 col+=i-FindEndTheEndOfTheToken_Function_Variable(input, i)-1;
                 i=FindEndTheEndOfTheToken_Function_Variable(input, i+3)-1;
                 System.out.println("Next Index "+ i);
-                //skip some  charactet
+                
             }
-            else if(input.charAt(i)=='"'  /*&& CheckIfThereIsStringConstant(input, i)*/)
+            else if(input.charAt(i)=='"' )
             {
                 System.out.println(CheckIfItIsAConstant_String(input));
                 System.out.println("Entry Index "+ i);
@@ -142,7 +143,7 @@ public class Lexer {
                 if(!CheckIfItIsAConstant_String(Constant.trim()))
                 {
                     System.out.println("Error Constant To Long");
-                    System.out.println("\u001B[31mError\u001B[0m: Program file not found, please remove any spaces from the file name, and also include the extension(.txt) after the name and try again.");
+                    System.out.println("\u001B[31mError\u001B[0m: Failed at index "+ i);
                     System.exit(0);
                 }
 
@@ -164,7 +165,7 @@ public class Lexer {
                 int NextIndex= ExtractNextPossibleKey_Number_Constant(input,i);
                 if( !CheckItIsAValidNumber(input.substring(i, NextIndex).trim()))
                 {
-                    System.out.println("\u001B[31mError\u001B[0m: Program file not found, please remove any spaces from the file name, and also include the extension(.txt) after the name and try again.");
+                    System.out.println("\u001B[31mError\u001B[0m: Failed at index " + i);
                     System.exit(0);
                 }
                 
@@ -225,7 +226,7 @@ public class Lexer {
                 //error
                 
                 System.out.println("Error case");
-                System.out.println("\u001B[31mError\u001B[0m: Program file not found, please remove any spaces from the file name, and also include the extension(.txt) after the name and try again.");
+                System.out.println("\u001B[31mError\u001B[0m: Could not tokenize at index "+ i);
                 System.exit(0);
             }
 
@@ -298,10 +299,7 @@ public class Lexer {
             index=input.indexOf("\n", StartIndex);
         }
 
-        // System.out.println(input.charAt(index-1));
-        // System.out.println(input.charAt(StartIndex));
-        // System.out.println(input.substring(StartIndex, index).length());
-        // System.out.println(input.substring(StartIndex, index));    
+  
 
         return CheckIfItIsAKey(input.substring(StartIndex, index));
     }
@@ -313,12 +311,7 @@ public class Lexer {
    
     public String ExtractNextPossibleKey(String input, int StartIndex)//testes
     {
-        // int StopIndex=StartIndex;
-
-        // while( Character.isLetter(input.charAt(StopIndex)) )
-        // {
-        //    StopIndex++;
-        // }
+        
         int index=input.indexOf(' ', StartIndex);
         if(input.indexOf("\n", index) < StartIndex)
             index=input.indexOf("\n", StartIndex);
