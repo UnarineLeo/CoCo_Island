@@ -1,0 +1,2 @@
+main num V_number,V_number=0.001
+main text V_text, print V_text void F_name(V_n1,V_n2,V_n3)

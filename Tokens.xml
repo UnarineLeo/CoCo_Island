@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TokenStream>
+<Token>
+<ID> 1 </ID>
+<Type> Keyword </Type>
+<Content> main </Content>
+</Token>
+<Token>
+<ID> 2 </ID>
+<Type> Keyword </Type>
+<Content> text </Content>
+</Token>
+<Token>
+<ID> 3 </ID>
+<Type> VariableName </Type>
+<Content> V_text1 </Content>
+</Token>
+<Token>
+<ID> 5 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 7 </ID>
+<Type> Keyword </Type>
+<Content> num </Content>
+</Token>
+<Token>
+<ID> 9 </ID>
+<Type> VariableName </Type>
+<Content> V_num </Content>
+</Token>
+<Token>
+<ID> 11 </ID>
+<Type> Keyword </Type>
+<Content> begin </Content>
+</Token>
+<Token>
+<ID> 12 </ID>
+<Type> FunctionName </Type>
+<Content> F_functio1 </Content>
+</Token>
+<Token>
+<ID> 13 </ID>
+<Type> Symbol </Type>
+<Content> ( </Content>
+</Token>
+<Token>
+<ID> 14 </ID>
+<Type> Constant </Type>
+<Content> "Asdf" </Content>
+</Token>
+<Token>
+<ID> 15 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 17 </ID>
+<Type> Constant </Type>
+<Content> "Adf" </Content>
+</Token>
+<Token>
+<ID> 18 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 20 </ID>
+<Type> Constant </Type>
+<Content> -0.002 </Content>
+</Token>
+<Token>
+<ID> 21 </ID>
+<Type> Symbol </Type>
+<Content> ) </Content>
+</Token>
+<Token>
+<ID> 23 </ID>
+<Type> Symbol </Type>
+<Content> ; </Content>
+</Token>
+<Token>
+<ID> 25 </ID>
+<Type> Keyword </Type>
+<Content> end </Content>
+</Token>
+<Token>
+<ID> 26 </ID>
+<Type> Keyword </Type>
+<Content> if </Content>
+</Token>
+<Token>
+<ID> 27 </ID>
+<Type> Keyword </Type>
+<Content> or </Content>
+</Token>
+<Token>
+<ID> 28 </ID>
+<Type> Constant </Type>
+<Content> "Ssdd" </Content>
+</Token>
+<Token>
+<ID> 29 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 31 </ID>
+<Type> Constant </Type>
+<Content> 331 </Content>
+</Token>
+<Token>
+<ID> 32 </ID>
+<Type> Symbol </Type>
+<Content> ) </Content>
+</Token>
+<Token>
+<ID> 34 </ID>
+<Type> Keyword </Type>
+<Content> then </Content>
+</Token>
+<Token>
+<ID> 35 </ID>
+<Type> Keyword </Type>
+<Content> begin </Content>
+</Token>
+<Token>
+<ID> 36 </ID>
+<Type> FunctionName </Type>
+<Content> F_functio1 </Content>
+</Token>
+<Token>
+<ID> 37 </ID>
+<Type> Symbol </Type>
+<Content> ( </Content>
+</Token>
+<Token>
+<ID> 38 </ID>
+<Type> Constant </Type>
+<Content> "Bsdf" </Content>
+</Token>
+<Token>
+<ID> 39 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 41 </ID>
+<Type> Constant </Type>
+<Content> "Bdf" </Content>
+</Token>
+<Token>
+<ID> 42 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 44 </ID>
+<Type> Constant </Type>
+<Content> -0.002 </Content>
+</Token>
+<Token>
+<ID> 45 </ID>
+<Type> Symbol </Type>
+<Content> ) </Content>
+</Token>
+<Token>
+<ID> 47 </ID>
+<Type> Keyword </Type>
+<Content> end </Content>
+</Token>
+<Token>
+<ID> 48 </ID>
+<Type> Keyword </Type>
+<Content> else </Content>
+</Token>
+<Token>
+<ID> 49 </ID>
+<Type> Keyword </Type>
+<Content> begin </Content>
+</Token>
+<Token>
+<ID> 50 </ID>
+<Type> VariableName </Type>
+<Content> V_num </Content>
+</Token>
+<Token>
+<ID> 52 </ID>
+<Type> Keyword </Type>
+<Content> < input </Content>
+</Token>
+<Token>
+<ID> 53 </ID>
+<Type> Keyword </Type>
+<Content> end </Content>
+</Token>
+<Token>
+<ID> 54 </ID>
+<Type> Keyword </Type>
+<Content> num </Content>
+</Token>
+<Token>
+<ID> 55 </ID>
+<Type> FunctionName </Type>
+<Content> F_function1 </Content>
+</Token>
+<Token>
+<ID> 56 </ID>
+<Type> Symbol </Type>
+<Content> ( </Content>
+</Token>
+<Token>
+<ID> 57 </ID>
+<Type> Constant </Type>
+<Content> "Dsdf" </Content>
+</Token>
+<Token>
+<ID> 58 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 60 </ID>
+<Type> Constant </Type>
+<Content> 536 </Content>
+</Token>
+<Token>
+<ID> 61 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 63 </ID>
+<Type> Constant </Type>
+<Content> "Bdfcv" </Content>
+</Token>
+<Token>
+<ID> 64 </ID>
+<Type> Symbol </Type>
+<Content> ) </Content>
+</Token>
+<Token>
+<ID> 66 </ID>
+<Type> Symbol </Type>
+<Content> { </Content>
+</Token>
+<Token>
+<ID> 68 </ID>
+<Type> Keyword </Type>
+<Content> num </Content>
+</Token>
+<Token>
+<ID> 69 </ID>
+<Type> VariableName </Type>
+<Content> V_n1 </Content>
+</Token>
+<Token>
+<ID> 70 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 72 </ID>
+<Type> Keyword </Type>
+<Content> text </Content>
+</Token>
+<Token>
+<ID> 73 </ID>
+<Type> VariableName </Type>
+<Content> V_n2 </Content>
+</Token>
+<Token>
+<ID> 74 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 76 </ID>
+<Type> Keyword </Type>
+<Content> num </Content>
+</Token>
+<Token>
+<ID> 77 </ID>
+<Type> VariableName </Type>
+<Content> V_n3 </Content>
+</Token>
+<Token>
+<ID> 80 </ID>
+<Type> Keyword </Type>
+<Content> begin </Content>
+</Token>
+<Token>
+<ID> 81 </ID>
+<Type> Keyword </Type>
+<Content> skip </Content>
+</Token>
+<Token>
+<ID> 82 </ID>
+<Type> Keyword </Type>
+<Content> end </Content>
+</Token>
+<Token>
+<ID> 83 </ID>
+<Type> Symbol </Type>
+<Content> } </Content>
+</Token>
+<Token>
+<ID> 86 </ID>
+<Type> Keyword </Type>
+<Content> end </Content>
+</Token>
+</TokenStream>

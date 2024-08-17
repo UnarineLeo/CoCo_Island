@@ -1,0 +1,2 @@
+main text V_text1 , num  V_num begin F_functio1("Asdf", "Adf", -0.002) ; end if or("Ssdd", 331) then begin F_functio1("Bsdf", "Bdf", -0.002) end else begin V_num < input end
+num F_function1("Dsdf", 536, "Bdfcv") { num V_n1, text V_n2, num V_n3  begin skip end }  end

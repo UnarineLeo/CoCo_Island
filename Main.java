@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Scanner;
 
 public class Main
@@ -6,24 +7,29 @@ public class Main
 
     public static void main(String[] args) throws Exception
     {
-        Scanner scanner = new Scanner(System.in);
-        String response;
-        do
-        {
-            System.out.print("Enter file name: ");
-            String fileName = scanner.nextLine();
-            Parser parser = new Parser(fileName);
-//            root = parser.parse();
-//            Scoping scope = new Scoping();
-//            scope.Scope(root);
-//            Translation translation = new Translation();
-//            translation.Translate(root, scope);
+            
+         Scanner scanner = new Scanner(System.in);
+         String response;
+         do
+         {
+             System.out.print("Enter file name: ");
+             String fileName = scanner.nextLine();
+             Parser parser = new Parser(fileName);
+             //root = parser.parse();
+            //  Scoping scope = new Scoping();
+            //  scope.Scope(root);
+            //  Translation translation = new Translation();
+            //  translation.Translate(root, scope);
+            //  for(int i=0; i<tokens.size(); i++)
+            //  {
+            //      System.out.println(tokens.get(i));
+            //  }
 
-            System.out.print("Do you want to enter another file? (y/n): ");
-            response = scanner.nextLine();
-        }
-        while (response.equals("y") || response.equals("Y"));
+             System.out.print("Do you want to enter another file? (y/n): ");
+             response = scanner.nextLine();
+         }
+         while (response.equals("y") || response.equals("Y"));
 
-        scanner.close();
+         scanner.close();
     }
 }
