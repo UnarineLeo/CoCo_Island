@@ -486,12 +486,14 @@ public class Lexer
                     Token token = new Token(id,"Keyword","end",row,col);
                     tokens.add(token);
                     i+=2;
+                    col += 2;
                 }
                 else if((i+1) <= input.length() && input.charAt(i+1) == 'q')
                 {
                     Token token = new Token(id,"Keyword","eq",row,col);
                     tokens.add(token);
                     i+=1;
+                    col += 1;
                 }
                 else
                 {
@@ -669,7 +671,7 @@ public class Lexer
             }
             else if(input.charAt(i) == 'v')
             {
-                if((i+2) <= input.length() && input.charAt(i+1) == 'o' && input.charAt(i+2) == 'i' && input.charAt(i+3) == 'd')
+                if((i+3) <= input.length() && input.charAt(i+1) == 'o' && input.charAt(i+2) == 'i' && input.charAt(i+3) == 'd')
                 {
                     Token token = new Token(id,"Keyword","void",row,col);
                     tokens.add(token);
