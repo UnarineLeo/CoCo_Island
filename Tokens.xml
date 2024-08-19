@@ -2,7 +2,12 @@
 <TokenStream>
 <Token>
 <ID> 1 </ID>
-<Type> CONST </Type>
-<Content> -1454.5 </Content>
+<Type> FNAME </Type>
+<Content> F_aname </Content>
+</Token>
+<Token>
+<ID> 2 </ID>
+<Type> VNAME </Type>
+<Content> V_adsa </Content>
 </Token>
 </TokenStream>

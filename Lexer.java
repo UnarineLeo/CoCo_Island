@@ -99,36 +99,72 @@ public class Lexer
                 Token token = new Token(id,"Symbol","=",row,col);
                 tokens.add(token);
             }
-            else if(input.charAt(i) == 'F' && i+1< input.length() && input.charAt(i+1) == '_' && i+2< input.length() && Character.isLowerCase(input.charAt(i+2)) )
+            else if(input.charAt(i) == 'F')
             {
+                if(i+1< input.length() && input.charAt(i+1) == '_')
+                {
+                    if(i+2< input.length() && Character.isLowerCase(input.charAt(i+2)))
+                    {
+                        String FunctionName = input.substring(i, FindEndTheEndOfTheToken_Function_Variable(input, i+3));
+                        Token token = new Token(id,"FNAME",FunctionName,row,col);
+                        tokens.add(token);
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mLexing Error\u001B[0m: Expected an lowercase letter after the character \'F_\' at line " + row + " at column " + (col + i+2) + ".");
+                        System.exit(0);
+                    }
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: Expected an underscore(_) after the character \'F\' at line " + row + " at column " + (col + i+1) + ".");
+                    System.exit(0);
+                }
 
-                String FunctionName = input.substring(i, FindEndTheEndOfTheToken_Function_Variable(input, i+3));
-                Token token = new Token(id,"FNAME",FunctionName,row,col);
-                tokens.add(token);
 
                 col += i-FindEndTheEndOfTheToken_Function_Variable(input, i)-1; ///
                 i = FindEndTheEndOfTheToken_Function_Variable(input, i+3)-1;
 
             }
-            else if(input.charAt(i) == 'V' && i+1< input.length() && input.charAt(i+1) == '_' && i+2< input.length() && Character.isLowerCase(input.charAt(i+2)) )
+            else if(input.charAt(i) == 'V')
             {
+                if(i+1< input.length() && input.charAt(i+1) == '_')
+                {
+                    if(i+2< input.length() && Character.isLowerCase(input.charAt(i+2)))
+                    {
+                        String VariableName = input.substring(i, FindEndTheEndOfTheToken_Function_Variable(input, i+3));
+                        Token token = new Token(id,"VNAME",VariableName,row,col);
+                        tokens.add(token);
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mLexing Error\u001B[0m: Expected an lowercase letter after the character \'V_\' at line " + row + " at column " + (col + i+2) + ".");
+                        System.exit(0);
+                    }
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: Expected an underscore(_) after the character \'V\' at line " + row + " at column " + (col + i+1) + ".");
+                    System.exit(0);
+                }
 
-                String VariableName=input.substring(i, FindEndTheEndOfTheToken_Function_Variable(input, i+3));
-                Token token = new Token(id,"VNAME",VariableName,row,col);
-                tokens.add(token);
-
-                col+=i-FindEndTheEndOfTheToken_Function_Variable(input, i)-1;
+                col += i-FindEndTheEndOfTheToken_Function_Variable(input, i)-1;
                 i = FindEndTheEndOfTheToken_Function_Variable(input, i+3)-1;
 
             }
             else if(input.charAt(i)=='"' )
             {
 
-                String Constant=input.substring(i, input.indexOf("\"", i+1)+1);
+                String Constant = input.substring(i, input.indexOf("\"", i+1)+1);
+                if(input.indexOf("\"", i+1) == -1)
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: Expected a closing double quote(\") at the end of the string constant,with 1-8 alphat. Error at line " + row + " at column " + col + ".");
+                    System.exit(0);
+                }
+
                 if(!CheckIfItIsAConstant_String(Constant.trim()))
                 {
-                    System.out.println("Error Constant To Long");
-                    System.out.println("\u001B[31mError\u001B[0m: Failed at index "+ i);
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: String Constant is either too long or too short OR it does not start with a capital letter followed by 0-7 lowercase letters. Error at line " + row + " at column " + col + ".");
                     System.exit(0);
                 }
 
@@ -384,14 +420,273 @@ public class Lexer
                     System.exit(0);
                 }
             }
-            else if((input.charAt(i)=='m'|| input.charAt(i)=='b'||input.charAt(i)=='e'||input.charAt(i)=='n'||input.charAt(i)=='s'||input.charAt(i)=='h'||input.charAt(i)=='p'||input.charAt(i)=='i'||input.charAt(i)=='t'||input.charAt(i)=='e'||input.charAt(i)=='v'))
-            {}
+            else if(input.charAt(i) == 'a')
+            {
+                if((i+2) <= input.length() && input.charAt(i+1) == 'd' && input.charAt(i+2) == 'd')
+                {
+                    Token token = new Token(id,"Keyword","add",row,col);
+                    tokens.add(token);
+                    i+=2;
+                    col += 2;
+                }
+                else if((i+2) <= input.length() && input.charAt(i+1) == 'n' && input.charAt(i+2) == 'd')
+                {
+                    Token token = new Token(id,"Keyword","and",row,col);
+                    tokens.add(token);
+                    i+=2;
+                    col += 2;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: For tokens \"add\" or \"and\", Expected \"dd\" or \"nd\" after the character \'a\' at line " + row + " between columns " + col + "and " + (col+2) + ".");
+                    System.exit(0);
+                }
+            }
+            else if(input.charAt(i) == 'b')
+            {
+                if((i+4) <= input.length() && input.charAt(i+1) == 'e' && input.charAt(i+2) == 'g' && input.charAt(i+3) == 'i' && input.charAt(i+4) == 'n')
+                {
+                    Token token = new Token(id,"Keyword","begin",row,col);
+                    tokens.add(token);
+                    i+=4;
+                    col += 4;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: For token \"begin\", Expected \"egin\" after the character \'b\' at line " + row + " between columns " + col + "and " + (col+4) + ".");
+                    System.exit(0);
+                }
+            }
+            else if(input.charAt(i) == 'd')
+            {
+                if((i+2) <= input.length() && input.charAt(i+1) == 'i' && input.charAt(i+2) == 'v')
+                {
+                    Token token = new Token(id,"Keyword","div",row,col);
+                    tokens.add(token);
+                    i+=2;
+                    col += 2;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: For token \"div\", Expected \"iv\" after the character \'d\' at line " + row + " between columns " + col + "and " + (col+2) + ".");
+                    System.exit(0);
+                }
+            }
+            else if(input.charAt(i) == 'e')
+            {
+                if((i+3) <= input.length() && input.charAt(i+1) == 'l' && input.charAt(i+2) == 's' && input.charAt(i+3) == 'e')
+                {
+                    Token token = new Token(id,"Keyword","else",row,col);
+                    tokens.add(token);
+                    i+=3;
+                    col += 3;
+                }
+                else if((i+2) <= input.length() && input.charAt(i+1) == 'n' && input.charAt(i+2) == 'd')
+                {
+                    Token token = new Token(id,"Keyword","end",row,col);
+                    tokens.add(token);
+                    i+=2;
+                }
+                else if((i+1) <= input.length() && input.charAt(i+1) == 'q')
+                {
+                    Token token = new Token(id,"Keyword","eq",row,col);
+                    tokens.add(token);
+                    i+=1;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: For tokens \"end\", \"else\" or \"eq\", Expected \"nd\", \"lse\" or \"q\" after the character \'e\' at line " + row + " between columns " + col + "and " + (col+3) + ".");
+                    System.exit(0);
+                }
+            }
+            else if(input.charAt(i) == 'g')
+            {
+                if((i+2) <= input.length() && input.charAt(i+1) == 'r' && input.charAt(i+2) == 't')
+                {
+                    Token token = new Token(id,"Keyword","grt",row,col);
+                    tokens.add(token);
+                    i+=2;
+                    col += 2;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: For token \"grt\", Expected \"rt\" after the character \'g\' at line " + row + " between columns " + col + "and " + (col+2) + ".");
+                    System.exit(0);
+                }
+            }
+            else if(input.charAt(i) == 'h')
+            {
+                if((i+3) <= input.length() && input.charAt(i+1) == 'a' && input.charAt(i+2) == 'l' && input.charAt(i+3) == 't') {
+                    Token token = new Token(id, "Keyword", "halt", row, col);
+                    tokens.add(token);
+                    i += 3;
+                    col += 3;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: For token \"halt\", Expected \"alt\" after the character \'h\' at line " + row + " between columns " + col + "and " + (col+3) + ".");
+                    System.exit(0);
+                }
+            }
+            else if(input.charAt(i) == 'i')
+            {
+                if((i+1) <= input.length() && input.charAt(i+1) == 'f')
+                {
+                    Token token = new Token(id,"Keyword","if",row,col);
+                    tokens.add(token);
+                    i+=1;
+                    col += 1;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: For token \"if\", Expected \"f\" after the character \'i\' at line " + row + " between columns " + col + "and " + (col+1) + ".");
+                    System.exit(0);
+                }
+            }
+            else if(input.charAt(i) == 'm')
+            {
+                if((i+3) <= input.length() && input.charAt(i+1) == 'a' && input.charAt(i+2) == 'i' && input.charAt(i+3) == 'n')
+                {
+                    Token token = new Token(id, "Keyword", "main", row, col);
+                    tokens.add(token);
+                    i += 3;
+                    col += 3;
+                }
+                else if((i+2) <= input.length() && input.charAt(i+1) == 'u' && input.charAt(i+2) == 'l')
+                {
+                    Token token = new Token(id,"Keyword","mul",row,col);
+                    tokens.add(token);
+                    i+=2;
+                    col += 2;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: For tokens \"main\" or \"mul\", Expected \"ain\" or \"ul\" after the character \'m\' at line " + row + " between columns " + col + "and " + (col+3) + ".");
+                    System.exit(0);
+                }
+            }
+            else if(input.charAt(i) == 'n')
+            {
+                if((i+2) <= input.length() && input.charAt(i+1) == 'o' && input.charAt(i+2) == 't') {
+                    Token token = new Token(id, "Keyword", "not", row, col);
+                    tokens.add(token);
+                    i += 2;
+                    col += 2;
+                }
+                else if((i+2) <= input.length() && input.charAt(i+1) == 'u' && input.charAt(i+2) == 'm')
+                {
+                    Token token = new Token(id,"Keyword","num",row,col);
+                    tokens.add(token);
+                    i+=2;
+                    col += 2;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: For tokens \"not\" or \"num\", Expected \"ot\" or \"um\" after the character \'n\' at line " + row + " between columns " + col + "and " + (col+2) + ".");
+                    System.exit(0);
+                }
+            }
+            else if(input.charAt(i) == 'o')
+            {
+                if((i+1) <= input.length() && input.charAt(i+1) == 'r')
+                {
+                    Token token = new Token(id,"Keyword","or",row,col);
+                    tokens.add(token);
+                    i+=1;
+                    col += 1;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: For token \"or\", Expected \"r\" after the character \'o\' at line " + row + " between columns " + col + "and " + (col+1) + ".");
+                    System.exit(0);
+                }
+            }
+            else if(input.charAt(i) == 'p')
+            {
+                if((i+4) <= input.length() && input.charAt(i+1) == 'r' && input.charAt(i+2) == 'i' && input.charAt(i+3) == 'n' && input.charAt(i+4) == 't')
+                {
+                    Token token = new Token(id,"Keyword","print",row,col);
+                    tokens.add(token);
+                    i+=4;
+                    col += 4;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: For token \"print\", Expected \"rint\" after the character \'p\' at line " + row + " between columns " + col + "and " + (col+4) + ".");
+                    System.exit(0);
+                }
+            }
+            else if(input.charAt(i) == 's')
+            {
+                if((i+3) <= input.length() && input.charAt(i+1) == 'q' && input.charAt(i+2) == 'r' && input.charAt(i+3) == 't')
+                {
+                    Token token = new Token(id,"Keyword","sqrt",row,col);
+                    tokens.add(token);
+                    i+=3;
+                    col += 3;
+                }
+                else if((i+3) <= input.length() && input.charAt(i+1) == 'k' && input.charAt(i+2) == 'i' && input.charAt(i+3) == 'p')
+                {
+                    Token token = new Token(id,"Keyword","skip",row,col);
+                    tokens.add(token);
+                    i+=3;
+                    col += 3;
+                }
+                else if((i+2) <= input.length() && input.charAt(i+1) == 'u' && input.charAt(i+2) == 'b')
+                {
+                    Token token = new Token(id,"Keyword","sub",row,col);
+                    tokens.add(token);
+                    i+=2;
+                    col += 2;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: For tokens \"sqrt\", \"skip\" or \"sub\", Expected \"qrt\", \"kip\" or \"ub\" after the character \'s\' at line " + row + " between columns " + col + "and " + (col+3) + ".");
+                    System.exit(0);
+                }
+            }
+            else if(input.charAt(i) == 't')
+            {
+                if((i+3) <= input.length() && input.charAt(i+1) == 'e' && input.charAt(i+2) == 'x' && input.charAt(i+3) == 't')
+                {
+                    Token token = new Token(id,"Keyword","text",row,col);
+                    tokens.add(token);
+                    i+=3;
+                    col += 3;
+                }
+                else if((i+3) <= input.length() && input.charAt(i+1) == 'h' && input.charAt(i+2) == 'e' && input.charAt(i+3) == 'n')
+                {
+                    Token token = new Token(id,"Keyword","then",row,col);
+                    tokens.add(token);
+                    i+=3;
+                    col += 3;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: For tokens \"text\" or \"then\", Expected \"ext\" or \"hen\" after the character \'t\' at line " + row + " between columns " + col + "and " + (col+3) + ".");
+                    System.exit(0);
+                }
+            }
+            else if(input.charAt(i) == 'v')
+            {
+                if((i+2) <= input.length() && input.charAt(i+1) == 'o' && input.charAt(i+2) == 'i' && input.charAt(i+3) == 'd')
+                {
+                    Token token = new Token(id,"Keyword","void",row,col);
+                    tokens.add(token);
+                    i+=3;
+                    col += 3;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: For token \"void\", Expected \"oid\" after the character \'v\' at line " + row + " between columns " + col + "and " + (col+3) + ".");
+                    System.exit(0);
+                }
+            }
             else
             {
-                System.out.println("\u001B[31mLexing Error\u001B[0m: Invalid character " + input.charAt(i) + " at line " + row + " at column " + col + ".");
+                System.out.println("\u001B[31mLexing Error\u001B[0m: Invalid character which is not part of the language NOR a start of a token. Error at line " + row + " at column " + col + ".");
                 System.exit(0);
             }
-
         }
 
         return tokens;
@@ -399,8 +694,7 @@ public class Lexer
 
     public int FindEndTheEndOfTheToken_Function_Variable(String input, int startIndex)//test
     {
-        //possible error
-        int index=startIndex;
+        int index = startIndex;
 
         while(Character.isLowerCase(input.charAt(index))  || Character.isDigit(input.charAt(index)))
         {
