@@ -111,7 +111,7 @@ public class Parser
         }
         else
         {
-            if(tokens.get(index).getContent() == "main")
+            if(Objects.equals(tokens.get(index).getContent(), "main"))
             {
                 Node mainNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                 startNode.children.add(mainNode);
@@ -122,7 +122,7 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO(\"begin INSTRUC end\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO(\"begin INSTRUC end\") at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -138,7 +138,7 @@ public class Parser
                                if(index < tokens.size())
                                {
                                    System.out.println("\u001B[31mParsing Error\u001B[0m: invalid symbol at line "
-                                   + tokens.get(index).getRow() + " col " + tokens.get(index).getCol() + ", token: "
+                                   + tokens.get(index).getRow() + " col " + tokens.get(index-1).getCol() + ", token: "
                                    + tokens.get(index).getContent());
                                    System.exit(0);
                                    return false;
@@ -148,7 +148,7 @@ public class Parser
                        }
                        else
                        {
-                           System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Expected ALGO(\"begin INSTRUC end\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                           System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Expected ALGO(\"begin INSTRUC end\") at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                            System.exit(0);
                            return false;
                        }
@@ -156,7 +156,7 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected GLOBVARS at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected GLOBVARS at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -164,7 +164,7 @@ public class Parser
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"main\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"main\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -179,42 +179,42 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO(\"begin INSTRUC end\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO(\"begin INSTRUC end\") at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
-        else if(tokens.get(index).getType() == "Keyword")
+        else if(Objects.equals(tokens.get(index).getType(), "Keyword"))
         {
-            if(tokens.get(index).getContent() == "begin")
+            if(Objects.equals(tokens.get(index).getContent(), "begin"))
             {
                 //if GLOBVARS is nullable
                 return true;
             }
-            else if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
+            else if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "text"))
             {
                 Boolean VType = parseVTYP(globalNode);
                 if(VType)
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME after VTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME after VTYPE at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
 
-                    if(tokens.get(index).getType() == "VNAME")
+                    if(Objects.equals(tokens.get(index).getType(), "VNAME"))
                     {
                         Boolean VName = parseVNAME(globalNode);
                         if(VName)
                         {
                             if(index >= tokens.size())
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") after VNAME at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") after VNAME at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
 
-                            if(tokens.get(index).getContent() == ",")
+                            if(Objects.equals(tokens.get(index).getContent(), ","))
                             {
                                 Node commaNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                 globalNode.children.add(commaNode);
@@ -222,34 +222,34 @@ public class Parser
 
                                 if(index >= tokens.size())
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO(\"begin INSTRUC end\") after VNAME at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO(\"begin INSTRUC end\") after VNAME at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
                                 else
                                 {
-                                    if(tokens.get(index).getType() == "Keyword")
+                                    if(Objects.equals(tokens.get(index).getType(), "Keyword"))
                                     {
-                                        if(tokens.get(index).getContent() == "begin")
+                                        if(Objects.equals(tokens.get(index).getContent(), "begin"))
                                         {
                                             //if GLOBVARS is nullable
                                             return true;
                                         }
-                                        else if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
+                                        else if(Objects.equals(tokens.get(index).getContent(), "num") || tokens.get(index).getContent() == "text")
                                         {
                                             parseGLOBVARS(globalNode);
                                             return true;
                                         }
                                         else
                                         {
-                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"begin\" or \"num\" or \"text\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"begin\" or \"num\" or \"text\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                             System.exit(0);
                                             return false;
                                         }
                                     }
                                     else
                                     {
-                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"begin\" or \"num\" or \"text\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"begin\" or \"num\" or \"text\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                         System.exit(0);
                                         return false;
                                     }
@@ -257,7 +257,7 @@ public class Parser
                             }
                             else
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") after VNAME at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") after VNAME at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
@@ -265,35 +265,35 @@ public class Parser
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME after VTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME after VTYPE at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
                     }
                     else
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME after VTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME after VTYPE at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME after VTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME after VTYPE at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"begin\" or \"num\" or \"text\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"begin\" or \"num\" or \"text\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
         }
         else
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"begin\" or \"num\" or \"text\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"begin\" or \"num\" or \"text\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -306,12 +306,12 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME after VTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME after VTYPE at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
 
-        if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
+        if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "text"))
         {
             Node TypeNode = new Node(id++, "Terminal", tokens.get(index).getContent());
             VTypNode.children.add(TypeNode);
@@ -319,7 +319,7 @@ public class Parser
 
             if(index >= tokens.size())
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME after VTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME after VTYPE at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -330,7 +330,7 @@ public class Parser
         }
         else
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\" or \"text\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\" or \"text\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -341,7 +341,7 @@ public class Parser
         Node NameNode = new Node(id++, "Non-Terminal", "VNAME");
         parent.children.add(NameNode);
 
-        if(tokens.get(index).getType() == "VNAME")
+        if(Objects.equals(tokens.get(index).getType(), "VNAME"))
         {
             Node Name = new Node(id++, "Terminal", tokens.get(index).getContent());
             NameNode.children.add(Name);
@@ -350,25 +350,25 @@ public class Parser
             if(index >= tokens.size())
             {
                 //  , |  ; | < input | = | )
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") or \"< input \" or \"=\" or \";\" or \")\" after VNAME at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") or \"< input \" or \"=\" or \";\" or \")\" after VNAME at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
 
-            if(tokens.get(index).getContent() == "," || tokens.get(index).getContent() == "< input" || tokens.get(index).getContent() == "=" || tokens.get(index).getContent() == ";" || tokens.get(index).getContent() == ")")
+            if(Objects.equals(tokens.get(index).getContent(), ",") || Objects.equals(tokens.get(index).getContent(), "< input") || Objects.equals(tokens.get(index).getContent(), "=") || Objects.equals(tokens.get(index).getContent(), ";") || Objects.equals(tokens.get(index).getContent(), ")"))
             {
                 return true;
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") or \"< input \" or \"=\" or \";\" or \")\" after VNAME at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") or \"< input \" or \"=\" or \";\" or \")\" after VNAME at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
         }
         else
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -379,7 +379,7 @@ public class Parser
         Node AlgoNode = new Node(id++, "Non-Terminal", "ALGO");
         parent.children.add(AlgoNode);
 
-        if(tokens.get(index).getContent() == "begin")
+        if(Objects.equals(tokens.get(index).getContent(), "begin"))
         {
             Node beginNode = new Node(id++, "Terminal", tokens.get(index).getContent());
             AlgoNode.children.add(beginNode);
@@ -387,7 +387,7 @@ public class Parser
 
             if(index >= tokens.size())
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected INSTRUC at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected INSTRUC at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -398,13 +398,13 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected end at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected end at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
                     else
                     {
-                        if(tokens.get(index).getContent() == "end")
+                        if(Objects.equals(tokens.get(index).getContent(), "end"))
                         {
                             Node endNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                             AlgoNode.children.add(endNode);
@@ -420,13 +420,13 @@ public class Parser
                                 }
                                 else
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FUNCTIONS at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FUNCTIONS at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
 
                             }
-                            else if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void" || tokens.get(index).getContent() == "}" || tokens.get(index).getContent() == "else" || tokens.get(index).getContent() == ";")
+                            else if(Objects.equals(tokens.get(index).getContent(), "num") || tokens.get(index).getContent() == "void" || tokens.get(index).getContent() == "}" || tokens.get(index).getContent() == "else" || tokens.get(index).getContent() == ";")
                             {
                                 if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void")
                                 {
@@ -438,7 +438,7 @@ public class Parser
                                     }
                                     else
                                     {
-                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FUNCTIONS at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FUNCTIONS at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                         System.exit(0);
                                         return false;
                                     }
@@ -448,14 +448,14 @@ public class Parser
                             }
                             else
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\" or \"void\" or \"}\" or \"else\" or \";\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\" or \"void\" or \"}\" or \"else\" or \";\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"end\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"end\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -463,7 +463,7 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected INSTRUC at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected INSTRUC at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -471,7 +471,7 @@ public class Parser
         }
         else
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"begin\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"begin\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -482,10 +482,10 @@ public class Parser
         Node InstrucNode = new Node(id++, "Non-Terminal", "INSTRUC");
         parent.children.add(InstrucNode);
 
-        if(tokens.get(index).getContent() == "print" || tokens.get(index).getContent() == "skip" || tokens.get(index).getContent() == "halt" ||
-        tokens.get(index).getContent() == "if" || tokens.get(index).getType() == "VNAME" || tokens.get(index).getType() == "FNAME" || tokens.get(index).getContent() == "end")
+        if(Objects.equals(tokens.get(index).getContent(), "print") || Objects.equals(tokens.get(index).getContent(), "skip") || Objects.equals(tokens.get(index).getContent(), "halt") ||
+                Objects.equals(tokens.get(index).getContent(), "if") || Objects.equals(tokens.get(index).getType(), "VNAME") || Objects.equals(tokens.get(index).getType(), "FNAME") || Objects.equals(tokens.get(index).getContent(), "end"))
         {
-            if(tokens.get(index).getContent() == "end")
+            if(Objects.equals(tokens.get(index).getContent(), "end"))
             {
                 return true;
             }
@@ -496,11 +496,11 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
-                    else if(tokens.get(index).getContent() == ";")
+                    else if(Objects.equals(tokens.get(index).getContent(), ";"))
                     {
                         Node colonNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                         InstrucNode.children.add(colonNode);
@@ -508,30 +508,30 @@ public class Parser
 
                         if(index >= tokens.size())
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected end at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected end at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
-                        else if(tokens.get(index).getContent() == "end")
+                        else if(Objects.equals(tokens.get(index).getContent(), "end"))
                         {
                             return true;
                         }
                         else
                         {
-                            parseINSTRUC(parent); //calling itself
+                            parseINSTRUC(InstrucNode); //calling itself
                             return true;//consult
                         }
                     }
                     else
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected COMMAND at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected COMMAND at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -540,7 +540,7 @@ public class Parser
         }
         else
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"print\" or \"skip\" or \"halt\" or \"if\" or \"VNAME\" or \"FNAME\" or \"end\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"print\" or \"skip\" or \"halt\" or \"if\" or \"VNAME\" or \"FNAME\" or \"end\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -554,17 +554,21 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"print\" or \"skip\" or \"halt\" or \"if\" or \"VNAME\" or \"FNAME\" or \"end\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"print\" or \"skip\" or \"halt\" or \"if\" or \"VNAME\" or \"FNAME\" or \"end\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
         else
         {
-            if(tokens.get(index).getContent() == "skip" || tokens.get(index).getContent() == "halt")
+            if(Objects.equals(tokens.get(index).getContent(), "skip") || Objects.equals(tokens.get(index).getContent(), "halt"))
             {
+                Node nextNode = new Node(id++, "Terminal", tokens.get(index).getContent());
+                commandNode.children.add(nextNode);
+                index++;
+
                 return true;
             }
-            else if(tokens.get(index).getContent() == "print")
+            else if(Objects.equals(tokens.get(index).getContent(), "print"))
             {
                 //print ATOMIC
                 Node printNode = new Node(id++, "Terminal", tokens.get(index).getContent());
@@ -573,20 +577,20 @@ public class Parser
 
                 if(index >= tokens.size())
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ATOMIC at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ATOMIC at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
                 else
                 {
-                    if(tokens.get(index).getType() == "VNAME" || tokens.get(index).getType() == "CONST")
+                    if(Objects.equals(tokens.get(index).getType(), "VNAME") || Objects.equals(tokens.get(index).getType(), "CONST"))
                     {
                         Boolean atomic = parseATOMIC(commandNode);
                         if(atomic)
                         {
                             if(index >= tokens.size())
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
@@ -596,27 +600,27 @@ public class Parser
                             }
                             else
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ATOMIC at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ATOMIC at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
                     }
                     else
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME or FNAME after \"print\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME or CONST after \"print\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
                 }
             }
-            else if(tokens.get(index).getContent() == "if")
+            else if(Objects.equals(tokens.get(index).getContent(), "if"))
             {
                 //Branch
                 Boolean branch = parseBRANCH(commandNode);
@@ -624,19 +628,19 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"BRANCH\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"BRANCH\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
                     else
                     {
-                        if(tokens.get(index).getContent() == ";")
+                        if(Objects.equals(tokens.get(index).getContent(), ";"))
                         {
                             return true;
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"BRANCH\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"BRANCH\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -644,12 +648,12 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"BRANCH\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"BRANCH\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
             }
-            else if(tokens.get(index).getType() == "VNAME")
+            else if(Objects.equals(tokens.get(index).getType(), "VNAME"))
             {
                 //ASSIGN
                 Boolean assign = parseASSIGN(commandNode);
@@ -657,19 +661,19 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"ASSIGN\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"ASSIGN\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
                     else
                     {
-                        if(tokens.get(index).getContent() == ";")
+                        if(Objects.equals(tokens.get(index).getContent(), ";"))
                         {
                             return true;
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"ASSIGN\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"ASSIGN\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -677,12 +681,12 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ASSIGN\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ASSIGN\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
             }
-            else if(tokens.get(index).getType() == "FNAME")
+            else if(Objects.equals(tokens.get(index).getType(), "FNAME"))
             {
                 //CALL
                 Boolean call = parseCALL(commandNode);
@@ -690,19 +694,19 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"CALL\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"CALL\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
                     else
                     {
-                        if(tokens.get(index).getContent() == ";")
+                        if(Objects.equals(tokens.get(index).getContent(), ";"))
                         {
                             return true;
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"CALL\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"CALL\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -710,14 +714,14 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"CALL\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"CALL\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"print\" or \"skip\" or \"halt\" or \"if\" or \"VNAME\" or \"FNAME\" or \"end\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"print\" or \"skip\" or \"halt\" or \"if\" or \"VNAME\" or \"FNAME\" or \"end\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -732,26 +736,26 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
         else
         {
-            if(tokens.get(index).getType() == "VNAME")
+            if(Objects.equals(tokens.get(index).getType(), "VNAME"))
             {
                 Boolean vname = parseVNAME(assignNode);
                 if(vname)
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"< input\" or \"=\" after \"VNAME\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"< input\" or \"=\" after \"VNAME\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
                     else
                     {
-                        if(tokens.get(index).getContent() == "< input")
+                        if(Objects.equals(tokens.get(index).getContent(), "< input"))
                         {
                             Node inputNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                             assignNode.children.add(inputNode);
@@ -759,25 +763,25 @@ public class Parser
 
                             if(index >= tokens.size())
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"< input\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"< input\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
                             else
                             {
-                                if(tokens.get(index).getContent() == ";")
+                                if(Objects.equals(tokens.get(index).getContent(), ";"))
                                 {
                                     return true;
                                 }
                                 else
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"< input\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"< input\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
                             }
                         }
-                        else if(tokens.get(index).getContent() == "=")
+                        else if(Objects.equals(tokens.get(index).getContent(), "="))
                         {
                             Node equalNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                             assignNode.children.add(equalNode);
@@ -785,17 +789,17 @@ public class Parser
 
                             if(index >= tokens.size())
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"TERM\" after \"=\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"TERM\" after \"=\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
                             else
                             {
                                 //TERM = CALL | OP | ATOMIC
-                                if(tokens.get(index).getContent() == "add" || tokens.get(index).getContent() == "sub" ||
-                                tokens.get(index).getContent() == "mul" || tokens.get(index).getContent() == "div" ||
-                                tokens.get(index).getType() == "FNAME" || tokens.get(index).getType() == "VNAME" ||
-                                tokens.get(index).getType() == "CONST" || tokens.get(index).getContent() == "sqrt"
+                                if(Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") ||
+                                        Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div") ||
+                                        Objects.equals(tokens.get(index).getType(), "FNAME") || Objects.equals(tokens.get(index).getType(), "VNAME") ||
+                                        Objects.equals(tokens.get(index).getType(), "CONST") || tokens.get(index).getContent() == "sqrt"
                                 )
                                 {
                                     Boolean term = parseTERM(assignNode);
@@ -803,7 +807,7 @@ public class Parser
                                     {
                                         if(index >= tokens.size())
                                         {
-                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"TERM\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"TERM\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                             System.exit(0);
                                             return false;
                                         }
@@ -815,7 +819,7 @@ public class Parser
                                             }
                                             else
                                             {
-                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"TERM\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"TERM\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                 System.exit(0);
                                                 return false;
                                             }
@@ -823,14 +827,14 @@ public class Parser
                                     }
                                     else
                                     {
-                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"TERM\" after \"=\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"TERM\" after \"=\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                         System.exit(0);
                                         return false;
                                     }
                                 }
                                 else
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"TERM\" after \"=\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"TERM\" after \"=\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
@@ -838,7 +842,7 @@ public class Parser
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"< input\" or \"=\" after \"VNAME\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"< input\" or \"=\" after \"VNAME\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -846,14 +850,14 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -868,7 +872,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"TERM\" after \"=\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"TERM\" after \"=\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -881,7 +885,7 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"OP\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -893,7 +897,7 @@ public class Parser
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -901,7 +905,7 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"OP\" after \"=\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"OP\" after \"=\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -913,7 +917,7 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"CALL\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"CALL\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -925,7 +929,7 @@ public class Parser
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -933,7 +937,7 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"CALL\" after \"=\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"CALL\" after \"=\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -945,7 +949,7 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"TERM\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"TERM\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -957,7 +961,7 @@ public class Parser
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -965,14 +969,14 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"=\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"=\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"TERM\" after \"=\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"TERM\" after \"=\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -986,7 +990,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"OP\" after \"=\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"OP\" after \"=\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -999,7 +1003,7 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after \"OP\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -1013,7 +1017,7 @@ public class Parser
 
                             if(index >= tokens.size())
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \"(\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \"(\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
@@ -1023,7 +1027,7 @@ public class Parser
                             {
                                 if(index >= tokens.size())
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ARG\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ARG\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
@@ -1037,7 +1041,7 @@ public class Parser
 
                                         if(index >= tokens.size())
                                         {
-                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \",\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \",\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                             System.exit(0);
                                             return false;
                                         }
@@ -1047,7 +1051,7 @@ public class Parser
                                         {
                                             if(index >= tokens.size())
                                             {
-                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"ARG\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"ARG\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                 System.exit(0);
                                                 return false;
                                             }
@@ -1060,7 +1064,7 @@ public class Parser
 
                                                 if(index >= tokens.size())
                                                 {
-                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \")\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \")\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                     System.exit(0);
                                                     return false;
                                                 }
@@ -1072,7 +1076,7 @@ public class Parser
                                                     }
                                                     else
                                                     {
-                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \")\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \")\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                         System.exit(0);
                                                         return false;
                                                     }
@@ -1080,21 +1084,21 @@ public class Parser
                                             }
                                             else
                                             {
-                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"ARG\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"ARG\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                 System.exit(0);
                                                 return false;
                                             }
                                         }
                                         else
                                         {
-                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \",\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \",\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                             System.exit(0);
                                             return false;
                                         }
                                     }
                                     else
                                     {
-                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ARG\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ARG\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                         System.exit(0);
                                         return false;
                                     }
@@ -1102,14 +1106,14 @@ public class Parser
                             }
                             else
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \"(\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \"(\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \"OP\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -1117,7 +1121,7 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"BINOP\" after \"=\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"BINOP\" after \"=\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -1129,7 +1133,7 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                       System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                       System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after \"OP\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -1143,7 +1147,7 @@ public class Parser
 
                             if(index >= tokens.size())
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \"(\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \"(\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
@@ -1153,7 +1157,7 @@ public class Parser
                             {
                                 if(index >= tokens.size())
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"ARG\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"ARG\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
@@ -1167,7 +1171,7 @@ public class Parser
 
                                         if(index >= tokens.size())
                                         {
-                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \")\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \")\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                             System.exit(0);
                                             return false;
                                         }
@@ -1179,7 +1183,7 @@ public class Parser
                                             }
                                             else
                                             {
-                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \")\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \")\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                 System.exit(0);
                                                 return false;
                                             }
@@ -1187,7 +1191,7 @@ public class Parser
                                     }
                                     else
                                     {
-                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"ARG\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"ARG\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                         System.exit(0);
                                         return false;
                                     }
@@ -1195,14 +1199,14 @@ public class Parser
                             }
                             else
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \"(\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \"(\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \"OP\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -1212,14 +1216,14 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"UNOP\" after \"=\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"UNOP\" after \"=\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"add\" or \"sub\" or \"mul\" or \"div\" or \"sqrt\" after \"=\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"add\" or \"sub\" or \"mul\" or \"div\" or \"sqrt\" after \"=\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -1233,7 +1237,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"OP\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"OP\" after \"OP\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -1248,7 +1252,7 @@ public class Parser
                     ///
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" or \")\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" or \")\" after \"OP\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -1260,7 +1264,7 @@ public class Parser
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" or \")\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" or \")\" after \"OP\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -1268,7 +1272,7 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"OP\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"OP\" after \"OP\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -1281,7 +1285,7 @@ public class Parser
                     ///
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" or \")\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" or \")\" after \"OP\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -1293,7 +1297,7 @@ public class Parser
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" or \")\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" or \")\" after \"OP\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -1301,14 +1305,14 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"OP\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"OP\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \"(\" or \",\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ARG\" after \"(\" or \",\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -1322,7 +1326,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"if\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"if\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -1333,7 +1337,7 @@ public class Parser
             {
                 if(index >= tokens.size())
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after \"FNAME\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after \"FNAME\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -1347,7 +1351,7 @@ public class Parser
 
                         if(index >= tokens.size())
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"(\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"(\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -1358,7 +1362,7 @@ public class Parser
                             {
                                 if(index >= tokens.size())
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
@@ -1372,7 +1376,7 @@ public class Parser
 
                                         if(index >= tokens.size())
                                         {
-                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \",\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \",\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                             System.exit(0);
                                             return false;
                                         }
@@ -1383,7 +1387,7 @@ public class Parser
                                             {
                                                 if(index >= tokens.size())
                                                 {
-                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                     System.exit(0);
                                                     return false;
                                                 }
@@ -1397,7 +1401,7 @@ public class Parser
 
                                                         if(index >= tokens.size())
                                                         {
-                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \",\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \",\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                             System.exit(0);
                                                             return false;
                                                         }
@@ -1408,7 +1412,7 @@ public class Parser
                                                             {
                                                                 if(index >= tokens.size())
                                                                 {
-                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"ATOMIC\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"ATOMIC\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                     System.exit(0);
                                                                     return false;
                                                                 }
@@ -1422,7 +1426,7 @@ public class Parser
 
                                                                         if(index >= tokens.size())
                                                                         {
-                                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \")\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \")\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                             System.exit(0);
                                                                             return false;
                                                                         }
@@ -1434,7 +1438,7 @@ public class Parser
                                                                             }
                                                                             else
                                                                             {
-                                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"COMMAND\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \";\" after \"COMMAND\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                                 System.exit(0);
                                                                                 return false;
                                                                             }
@@ -1442,7 +1446,7 @@ public class Parser
                                                                     }
                                                                     else
                                                                     {
-                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"ATOMIC\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"ATOMIC\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                         System.exit(0);
                                                                         return false;
                                                                     }
@@ -1450,7 +1454,7 @@ public class Parser
                                                             }
                                                             else
                                                             {
-                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \",\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \",\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                 System.exit(0);
                                                                 return false;
                                                             }
@@ -1458,7 +1462,7 @@ public class Parser
                                                     }
                                                     else
                                                     {
-                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                         System.exit(0);
                                                         return false;
                                                     }
@@ -1466,7 +1470,7 @@ public class Parser
                                             }
                                             else
                                             {
-                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \",\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \",\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                 System.exit(0);
                                                 return false;
                                             }
@@ -1474,7 +1478,7 @@ public class Parser
                                     }
                                     else
                                     {
-                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                         System.exit(0);
                                         return false;
                                     }
@@ -1482,7 +1486,7 @@ public class Parser
                             }
                             else
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"(\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"(\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
@@ -1490,7 +1494,7 @@ public class Parser
                     }
                     else
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after \"FNAME\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after \"FNAME\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -1498,7 +1502,7 @@ public class Parser
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FNAME\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FNAME\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -1518,7 +1522,7 @@ public class Parser
 
             if(index >= tokens.size())
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after FNAME at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after FNAME at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -1529,14 +1533,14 @@ public class Parser
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after FNAME at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after FNAME at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
         }
         else
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FNAME at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FNAME at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -1549,7 +1553,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"if\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"if\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -1561,7 +1565,7 @@ public class Parser
 
             if(index >= tokens.size())
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -1572,7 +1576,7 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -1586,7 +1590,7 @@ public class Parser
 
                             if(index >= tokens.size())
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"then\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"then\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
@@ -1597,7 +1601,7 @@ public class Parser
                                 {
                                     if (index >= tokens.size())
                                     {
-                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"else\" or Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"else\" or Colon(\";\") at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                         System.exit(0);
                                         return false;
                                     }
@@ -1611,7 +1615,7 @@ public class Parser
 //
                                             if (index >= tokens.size())
                                             {
-                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"else\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"else\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                 System.exit(0);
                                                 return false;
                                             }
@@ -1622,7 +1626,7 @@ public class Parser
                                                 {
                                                     if (index >= tokens.size())
                                                     {
-                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") after ALGO at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") after ALGO at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                         System.exit(0);
                                                         return false;
                                                     }
@@ -1632,14 +1636,14 @@ public class Parser
                                                     }
                                                     else
                                                     {
-                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Colon(\";\") at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                         System.exit(0);
                                                         return false;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"else\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"else\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                     System.exit(0);
                                                     return false;
                                                 }
@@ -1647,7 +1651,7 @@ public class Parser
                                         }
                                         else
                                         {
-                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"else\" after \"ALGO\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"else\" after \"ALGO\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                             System.exit(0);
                                             return false;
                                         }
@@ -1655,7 +1659,7 @@ public class Parser
                                 }
                                 else
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"then\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected ALGO after \"then\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
@@ -1663,7 +1667,7 @@ public class Parser
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -1671,7 +1675,7 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" word at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" word at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -1687,7 +1691,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected COND after \"if\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected COND after \"if\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -1696,7 +1700,7 @@ public class Parser
             int test = index + 2;
             if(test >= tokens.size())
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected at least 1 argument(s) in \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected at least 1 argument(s) in \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -1708,7 +1712,7 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -1718,14 +1722,14 @@ public class Parser
                     }
                     else
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -1738,7 +1742,7 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -1748,14 +1752,14 @@ public class Parser
                     }
                     else
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -1770,7 +1774,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"or\" or \"and\" or \"eq\" or \"grt\" or \"not\" or \"sqrt\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"or\" or \"and\" or \"eq\" or \"grt\" or \"not\" or \"sqrt\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -1783,7 +1787,7 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -1797,7 +1801,7 @@ public class Parser
 
                             if(index >= tokens.size())
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
@@ -1810,7 +1814,7 @@ public class Parser
                                     {
                                         if(index >= tokens.size())
                                         {
-                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                             System.exit(0);
                                             return false;
                                         }
@@ -1824,7 +1828,7 @@ public class Parser
 
                                                 if(index >= tokens.size())
                                                 {
-                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Comma(,)\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Comma(,)\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                     System.exit(0);
                                                     return false;
                                                 }
@@ -1837,7 +1841,7 @@ public class Parser
                                                         {
                                                             if(index >= tokens.size())
                                                             {
-                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"ATOMIC\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"ATOMIC\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                 System.exit(0);
                                                                 return false;
                                                             }
@@ -1851,7 +1855,7 @@ public class Parser
 
                                                                     if(index >= tokens.size())
                                                                     {
-                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"Closing Bracket ')' \" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"Closing Bracket ')' \" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                         System.exit(0);
                                                                         return false;
                                                                     }
@@ -1863,7 +1867,7 @@ public class Parser
                                                                         }
                                                                         else
                                                                         {
-                                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                             System.exit(0);
                                                                             return false;
                                                                         }
@@ -1871,7 +1875,7 @@ public class Parser
                                                                 }
                                                                 else
                                                                 {
-                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"SIMPLE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"SIMPLE\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                     System.exit(0);
                                                                     return false;
                                                                 }
@@ -1879,14 +1883,14 @@ public class Parser
                                                         }
                                                         else
                                                         {
-                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Comma(,)\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Comma(,)\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                             System.exit(0);
                                                             return false;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Comma(,)\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Comma(,)\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                         System.exit(0);
                                                         return false;
                                                     }
@@ -1894,7 +1898,7 @@ public class Parser
                                             }
                                             else
                                             {
-                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"SIMPLE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"SIMPLE\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                 System.exit(0);
                                                 return false;
                                             }
@@ -1902,14 +1906,14 @@ public class Parser
                                     }
                                     else
                                     {
-                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                         System.exit(0);
                                         return false;
                                     }
                                 }
                                 else
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
@@ -1917,7 +1921,7 @@ public class Parser
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -1925,7 +1929,7 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected BINOP after \"if\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected BINOP after \"if\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -1937,7 +1941,7 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -1951,7 +1955,7 @@ public class Parser
 
                             if (index >= tokens.size())
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
@@ -1965,7 +1969,7 @@ public class Parser
                                     {
                                         if(index >= tokens.size())
                                         {
-                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"ATOMIC\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"ATOMIC\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                             System.exit(0);
                                             return false;
                                         }
@@ -1979,7 +1983,7 @@ public class Parser
 
                                                 if(index >= tokens.size())
                                                 {
-                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"Closing Bracket ')' \" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"Closing Bracket ')' \" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                     System.exit(0);
                                                     return false;
                                                 }
@@ -1991,7 +1995,7 @@ public class Parser
                                                     }
                                                     else
                                                     {
-                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                         System.exit(0);
                                                         return false;
                                                     }
@@ -1999,7 +2003,7 @@ public class Parser
                                             }
                                             else
                                             {
-                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"SIMPLE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"SIMPLE\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                 System.exit(0);
                                                 return false;
                                             }
@@ -2007,14 +2011,14 @@ public class Parser
                                     }
                                     else
                                     {
-                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                         System.exit(0);
                                         return false;
                                     }
                                 }
                                 else
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SIMPLE\" after \"Opening Bracket : (\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
@@ -2022,7 +2026,7 @@ public class Parser
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"UNOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"UNOP\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -2030,14 +2034,14 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"UNOP\" after \"if\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"UNOP\" after \"if\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"or\" or \"and\" or \"eq\" or \"grt\" or \"not\" or \"sqrt\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"or\" or \"and\" or \"eq\" or \"grt\" or \"not\" or \"sqrt\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -2051,7 +2055,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"not\" or \"sqrt\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"not\" or \"sqrt\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -2065,7 +2069,7 @@ public class Parser
 
                 if(index >= tokens.size())
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"UNOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"UNOP\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -2077,7 +2081,7 @@ public class Parser
                     }
                     else
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"UNOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"UNOP\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -2085,7 +2089,7 @@ public class Parser
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"not\" or \"sqrt\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"not\" or \"sqrt\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -2099,7 +2103,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected COND after \"if\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected COND after \"if\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -2112,7 +2116,7 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -2126,7 +2130,7 @@ public class Parser
 
                             if(index >= tokens.size())
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Opening Bracket : (\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
@@ -2139,7 +2143,7 @@ public class Parser
                                     {
                                         if(index >= tokens.size())
                                         {
-                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                             System.exit(0);
                                             return false;
                                         }
@@ -2153,7 +2157,7 @@ public class Parser
 
                                                 if(index >= tokens.size())
                                                 {
-                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Comma(,)\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Comma(,)\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                     System.exit(0);
                                                     return false;
                                                 }
@@ -2166,7 +2170,7 @@ public class Parser
                                                         {
                                                             if(index >= tokens.size())
                                                             {
-                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"ATOMIC\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"ATOMIC\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                 System.exit(0);
                                                                 return false;
                                                             }
@@ -2180,7 +2184,7 @@ public class Parser
 
                                                                     if(index >= tokens.size())
                                                                     {
-                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"Closing Bracket ')' \" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"Closing Bracket ')' \" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                         System.exit(0);
                                                                         return false;
                                                                     }
@@ -2192,7 +2196,7 @@ public class Parser
                                                                         }
                                                                         else
                                                                         {
-                                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                             System.exit(0);
                                                                             return false;
                                                                         }
@@ -2200,7 +2204,7 @@ public class Parser
                                                                 }
                                                                 else
                                                                 {
-                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"ATOMIC\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Closing Bracket ')' \" after \"ATOMIC\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                     System.exit(0);
                                                                     return false;
                                                                 }
@@ -2208,14 +2212,14 @@ public class Parser
                                                         }
                                                         else
                                                         {
-                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Comma(,)\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Comma(,)\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                             System.exit(0);
                                                             return false;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Comma(,)\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Comma(,)\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                         System.exit(0);
                                                         return false;
                                                     }
@@ -2223,7 +2227,7 @@ public class Parser
                                             }
                                             else
                                             {
-                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"ATOMIC\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                 System.exit(0);
                                                 return false;
                                             }
@@ -2231,14 +2235,14 @@ public class Parser
                                     }
                                     else
                                     {
-                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Opening Bracket : (\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                         System.exit(0);
                                         return false;
                                     }
                                 }
                                 else
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Opening Bracket : (\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ATOMIC\" after \"Opening Bracket : (\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
@@ -2246,7 +2250,7 @@ public class Parser
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -2254,14 +2258,14 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected BINOP after \"if\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected BINOP after \"if\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"or\" or \"and\" or \"eq\" or \"grt\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"or\" or \"and\" or \"eq\" or \"grt\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -2275,7 +2279,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"or\" or \"and\" or \"eq\" or \"grt\" or \"sub\" or \"add\" or \"mul\" or \"div\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"or\" or \"and\" or \"eq\" or \"grt\" or \"sub\" or \"add\" or \"mul\" or \"div\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -2289,7 +2293,7 @@ public class Parser
 
                 if(index >= tokens.size())
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -2301,7 +2305,7 @@ public class Parser
                     }
                     else
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"Opening Bracket : (\" after \"BINOP\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -2309,7 +2313,7 @@ public class Parser
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"or\" or \"and\" or \"eq\" or \"grt\" or \"sub\" or \"add\" or \"mul\" or \"div\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"or\" or \"and\" or \"eq\" or \"grt\" or \"sub\" or \"add\" or \"mul\" or \"div\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -2323,7 +2327,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" or \"CONST\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" or \"CONST\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -2338,7 +2342,7 @@ public class Parser
             {
                 if(index >= tokens.size())
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") or \";\" or \")\" after CONST at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") or \";\" or \")\" after CONST at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -2348,21 +2352,21 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\" ,\") or \";\" or \")\" after CONST at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\" ,\") or \";\" or \")\" after CONST at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"CONST\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"CONST\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
         }
         else
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" or \"CONST\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" or \"CONST\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -2375,13 +2379,13 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"CONST\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"CONST\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
         else
         {
-            if(tokens.get(index).getType() == "CONST")
+            if(Objects.equals(tokens.get(index).getType(), "CONST"))
             {
                 Node printNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                 constNode.children.add(printNode);
@@ -2389,18 +2393,18 @@ public class Parser
 
                 if(index >= tokens.size())
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") or \";\" or \")\" after CONST at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") or \";\" or \")\" after CONST at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
 
-                if(tokens.get(index).getContent() == "," || tokens.get(index).getContent() == ";" || tokens.get(index).getContent() == ")")
+                if(Objects.equals(tokens.get(index).getContent(), ",") || Objects.equals(tokens.get(index).getContent(), ";") || Objects.equals(tokens.get(index).getContent(), ")"))
                 {
                     return true;
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") or \";\" or \")\" after CONST at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected Comma(\",\") or \";\" or \")\" after CONST at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -2408,7 +2412,7 @@ public class Parser
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"CONST\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"CONST\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -2439,14 +2443,14 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"DECL\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"DECL\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"DECL\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"DECL\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -2460,7 +2464,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"DECL\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"DECL\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -2473,7 +2477,7 @@ public class Parser
                 {
                     if(index >= tokens.size())
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"BODY\" after \"HEADER\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"BODY\" after \"HEADER\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -2493,21 +2497,21 @@ public class Parser
                             }
                             else
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\",\"void\" or end of program at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\",\"void\" or end of program at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"BODY\" after \"HEADER\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"BODY\" after \"HEADER\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
                     }
                     else
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"{\" after \"HEADER\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"{\" after \"HEADER\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -2515,14 +2519,14 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"HEADER\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"HEADER\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\" or \"void\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\" or \"void\" after \"{\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -2536,7 +2540,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"{\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -2547,7 +2551,7 @@ public class Parser
             {
                 if(index >= tokens.size())
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -2559,7 +2563,7 @@ public class Parser
                     {
                         if(index >= tokens.size())
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ALGO\" after \"LOCALVARS\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ALGO\" after \"LOCALVARS\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -2571,7 +2575,7 @@ public class Parser
                             {
                                 if(index >= tokens.size())
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"EPILOG\" after \"ALGO\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"EPILOG\" after \"ALGO\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
@@ -2583,7 +2587,7 @@ public class Parser
                                   {
                                       if(index >= tokens.size())
                                       {
-                                          System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SUBFUNCT\" after \"ALGO\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                          System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SUBFUNCT\" after \"ALGO\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                           System.exit(0);
                                           return false;
                                       }
@@ -2595,7 +2599,7 @@ public class Parser
                                           {
                                               if(index >= tokens.size())
                                               {
-                                                  System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"end\" after \"SUBFUNCS\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                  System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"end\" after \"SUBFUNCS\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                   System.exit(0);
                                                   return false;
                                               }
@@ -2617,42 +2621,42 @@ public class Parser
                                                   }
                                                   else
                                                   {
-                                                      System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\" or \"void\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                      System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\" or \"void\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                       System.exit(0);
                                                       return false;
                                                   }
                                               }
                                               else
                                               {
-                                                  System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"end\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                  System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"end\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                   System.exit(0);
                                                   return false;
                                               }
                                           }
                                           else
                                           {
-                                              System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SUBFUNCS\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                              System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SUBFUNCS\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                               System.exit(0);
                                               return false;
                                           }
                                       }
                                       else
                                       {
-                                          System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"void\" or \"num\" or \"end\"  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                          System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"void\" or \"num\" or \"end\"  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                           System.exit(0);
                                           return false;
                                       }
                                   }
                                   else
                                   {
-                                      System.out.println("\u001B[31mParsing Error\u001B[0m: Expected EPILOG: } at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                      System.out.println("\u001B[31mParsing Error\u001B[0m: Expected EPILOG: } at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                       System.exit(0);
                                       return false;
                                   }
                                 }
                                 else
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected EPILOG: } at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected EPILOG: } at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
@@ -2660,21 +2664,21 @@ public class Parser
                             }
                             else
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ALGO\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"ALGO\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"begin\" after comma: \",\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"begin\" after comma: \",\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
                     }
                     else
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"LOCALVARS\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"LOCALVARS\" after \"{\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -2682,14 +2686,14 @@ public class Parser
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"PROLOG: {\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"PROLOG: {\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -2703,7 +2707,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FUNCS\" or \"end\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FUNCS\" or \"end\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -2721,14 +2725,14 @@ public class Parser
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FUNCTIONS at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FUNCTIONS at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
         }
         else
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FUNCS\" or \"end\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FUNCS\" or \"end\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -2741,7 +2745,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VTYPE at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -2753,7 +2757,7 @@ public class Parser
             {
                 if(index >= tokens.size())
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -2765,7 +2769,7 @@ public class Parser
                     {
                         if(index >= tokens.size())
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -2779,7 +2783,7 @@ public class Parser
                             ///
                             if(index >= tokens.size())
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
@@ -2791,7 +2795,7 @@ public class Parser
                                 {
                                     if(index >= tokens.size())
                                     {
-                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                         System.exit(0);
                                         return false;
                                     }
@@ -2803,7 +2807,7 @@ public class Parser
                                         {
                                             if(index >= tokens.size())
                                             {
-                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                 System.exit(0);
                                                 return false;
                                             }
@@ -2817,7 +2821,7 @@ public class Parser
                                                 ///
                                                 if(index >= tokens.size())
                                                 {
-                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                     System.exit(0);
                                                     return false;
                                                 }
@@ -2829,7 +2833,7 @@ public class Parser
                                                     {
                                                         if(index >= tokens.size())
                                                         {
-                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                             System.exit(0);
                                                             return false;
                                                         }
@@ -2841,7 +2845,7 @@ public class Parser
                                                             {
                                                                 if(index >= tokens.size())
                                                                 {
-                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                     System.exit(0);
                                                                     return false;
                                                                 }
@@ -2855,7 +2859,7 @@ public class Parser
                                                                     ///
                                                                     if(index >= tokens.size())
                                                                     {
-                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"algo(begin)\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"algo(begin)\" after \"VNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                         System.exit(0);
                                                                         return false;
                                                                     }
@@ -2866,14 +2870,14 @@ public class Parser
                                                                     }
                                                                     else
                                                                     {
-                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"algo(begin)\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"algo(begin)\" after \"VNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                         System.exit(0);
                                                                         return false;
                                                                     }
                                                                 }
                                                                 else
                                                                 {
-                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                     System.exit(0);
                                                                     return false;
                                                                 }
@@ -2881,35 +2885,35 @@ public class Parser
                                                             }
                                                             else
                                                             {
-                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                 System.exit(0);
                                                                 return false;
                                                             }
                                                         }
                                                         else
                                                         {
-                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                             System.exit(0);
                                                             return false;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                         System.exit(0);
                                                         return false;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                     System.exit(0);
                                                     return false;
                                                 }
                                             }
                                             else
                                             {
-                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                 System.exit(0);
                                                 return false;
                                             }
@@ -2917,35 +2921,35 @@ public class Parser
                                         }
                                         else
                                         {
-                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                             System.exit(0);
                                             return false;
                                         }
                                     }
                                     else
                                     {
-                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                         System.exit(0);
                                         return false;
                                     }
                                 }
                                 else
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
                             }
                             else
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
                         }
                         else
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -2953,28 +2957,28 @@ public class Parser
                     }
                     else
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
                 }
                 else
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"VTYPE\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
         }
         else
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VTYPE at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -2987,7 +2991,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FTYPE at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -2998,7 +3002,7 @@ public class Parser
             {
                 if(index >= tokens.size())
                 {
-                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FNAME\" after \"FTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FNAME\" after \"FTYPE\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                     System.exit(0);
                     return false;
                 }
@@ -3009,7 +3013,7 @@ public class Parser
                     {
                         if(index >= tokens.size())
                         {
-                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FNAME\" after \"FTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FNAME\" after \"FTYPE\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                             System.exit(0);
                             return false;
                         }
@@ -3023,7 +3027,7 @@ public class Parser
 
                                 if(index >= tokens.size())
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"FNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"FNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
@@ -3035,7 +3039,7 @@ public class Parser
                                     {
                                         if(index >= tokens.size())
                                         {
-                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                             System.exit(0);
                                             return false;
                                         }
@@ -3048,7 +3052,7 @@ public class Parser
 
                                             if(index >= tokens.size())
                                             {
-                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                 System.exit(0);
                                                 return false;
                                             }
@@ -3060,7 +3064,7 @@ public class Parser
                                                 {
                                                     if(index >= tokens.size())
                                                     {
-                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                         System.exit(0);
                                                         return false;
                                                     }
@@ -3073,7 +3077,7 @@ public class Parser
 
                                                         if(index >= tokens.size())
                                                         {
-                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                             System.exit(0);
                                                             return false;
                                                         }
@@ -3085,7 +3089,7 @@ public class Parser
                                                             {
                                                                 if(index >= tokens.size())
                                                                 {
-                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                     System.exit(0);
                                                                     return false;
                                                                 }
@@ -3098,7 +3102,7 @@ public class Parser
 
                                                                     if(index >= tokens.size())
                                                                     {
-                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                         System.exit(0);
                                                                         return false;
                                                                     }
@@ -3109,77 +3113,77 @@ public class Parser
                                                                     }
                                                                     else
                                                                     {
-                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"{\" after \"Function DECL\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"{\" after \"Function DECL\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                         System.exit(0);
                                                                         return false;
                                                                     }
                                                                 }
                                                                 else
                                                                 {
-                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \")\" after \"VNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                     System.exit(0);
                                                                     return false;
                                                                 }
                                                             }
                                                             else
                                                             {
-                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                                 System.exit(0);
                                                                 return false;
                                                             }
                                                         }
                                                         else
                                                         {
-                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                             System.exit(0);
                                                             return false;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                         System.exit(0);
                                                         return false;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"FNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"FNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                     System.exit(0);
                                                     return false;
                                                 }
                                             }
                                             else
                                             {
-                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"FNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"FNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                                 System.exit(0);
                                                 return false;
                                             }
                                         }
                                         else
                                         {
-                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \",\" after \"VNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                             System.exit(0);
                                             return false;
                                         }
                                     }
                                     else
                                     {
-                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \",\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                         System.exit(0);
                                         return false;
                                     }
                                 }
                                 else
                                 {
-                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"FNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VNAME\" after \"FNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                     System.exit(0);
                                     return false;
                                 }
                             }
                             else
                             {
-                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after \"FNAME\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"(\" after \"FNAME\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                                 System.exit(0);
                                 return false;
                             }
@@ -3188,7 +3192,7 @@ public class Parser
                     }
                     else
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FNAME\" after \"FTYPE\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FNAME\" after \"FTYPE\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -3196,7 +3200,7 @@ public class Parser
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FTYP\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FTYP\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -3210,7 +3214,7 @@ public class Parser
         parent.children.add(prologNode);
 
         if (index >= tokens.size()) {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected PROLOG: { at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected PROLOG: { at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -3222,7 +3226,7 @@ public class Parser
             index++;
 
             if (index >= tokens.size()) {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected LOCALVARS  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected LOCALVARS  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -3233,14 +3237,14 @@ public class Parser
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"VTYPE\" after \"{\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
         }
         else
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected PROLOG: { at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected PROLOG: { at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -3253,7 +3257,7 @@ public class Parser
         parent.children.add(epilogNode);
 
         if (index >= tokens.size()) {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected EPILOG: }  at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected EPILOG: }  at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -3265,7 +3269,7 @@ public class Parser
             index++;
 
             if (index >= tokens.size()) {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SUBFUNCTION\" or \"end\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"SUBFUNCTION\" or \"end\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -3276,14 +3280,14 @@ public class Parser
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FUNCTIONS\" or \"end\" after \"}\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FUNCTIONS\" or \"end\" after \"}\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
         }
         else
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected EPILOG: } at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected EPILOG: } at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -3297,7 +3301,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FTYPE at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -3310,7 +3314,7 @@ public class Parser
 
             if(index >= tokens.size())
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FNAME after FTYPE at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FNAME after FTYPE at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                 System.exit(0);
                 return false;
             }
@@ -3321,7 +3325,7 @@ public class Parser
         }
         else
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\" or \"void\" at line " + tokens.get(index).getRow() + " col " + tokens.get(index).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"num\" or \"void\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }

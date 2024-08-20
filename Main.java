@@ -15,7 +15,7 @@ public class Main
              System.out.print("Enter file name: ");
              String fileName = scanner.nextLine();
              Parser parser = new Parser(fileName);
-             //root = parser.parse();
+             root = parser.parse();
             //  Scoping scope = new Scoping();
             //  scope.Scope(root);
             //  Translation translation = new Translation();

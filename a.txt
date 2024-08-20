@@ -1,1 +1,7 @@
-"Faname"mul
+main text V_a,num V_b2,text V_c21a,
+begin
+skip;
+halt;
+print V_a;
+print 0;
+end
