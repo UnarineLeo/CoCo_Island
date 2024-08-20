@@ -2,12 +2,12 @@
 <TokenStream>
 <Token>
 <ID> 1 </ID>
-<Type> FNAME </Type>
-<Content> F_aname </Content>
+<Type> CONST </Type>
+<Content> "Faname" </Content>
 </Token>
 <Token>
 <ID> 2 </ID>
-<Type> VNAME </Type>
-<Content> V_adsa </Content>
+<Type> Keyword </Type>
+<Content> mul </Content>
 </Token>
 </TokenStream>
