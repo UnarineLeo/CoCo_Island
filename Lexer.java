@@ -300,7 +300,8 @@ public class Lexer {
                 if ((i + 6) <= input.length() && input.charAt(i + 1) == ' ' && input.charAt(i + 2) == 'i' && input.charAt(i + 3) == 'n' && input.charAt(i + 4) == 'p' && input.charAt(i + 5) == 'u' && input.charAt(i + 6) == 't') {
                     Token token = new Token(id, "Keyword", "< input", row, col);
                     tokens.add(token);
-                    i += 7;
+                    i += 6;
+                    col += 6;
                 } else {
                     System.out.println("\u001B[31mLexing Error\u001B[0m: For token \"< input\", Expected \" input\" after the character \'<\' at line " + row + " between columns " + col + "and " + (col + 6) + ".");
                     System.exit(0);

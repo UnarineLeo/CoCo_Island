@@ -3,5 +3,7 @@ begin
 skip;
 halt;
 print V_a;
-print 0;
+print -5015;
+print "Abcdegh";
+V_a < input;
 end

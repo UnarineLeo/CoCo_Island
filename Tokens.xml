@@ -98,7 +98,7 @@
 <Token>
 <ID> 31 </ID>
 <Type> CONST </Type>
-<Content> 0 </Content>
+<Content> -5015 </Content>
 </Token>
 <Token>
 <ID> 32 </ID>
@@ -107,6 +107,36 @@
 </Token>
 <Token>
 <ID> 34 </ID>
+<Type> Keyword </Type>
+<Content> print </Content>
+</Token>
+<Token>
+<ID> 36 </ID>
+<Type> CONST </Type>
+<Content> "Abcdegh" </Content>
+</Token>
+<Token>
+<ID> 37 </ID>
+<Type> Symbol </Type>
+<Content> ; </Content>
+</Token>
+<Token>
+<ID> 39 </ID>
+<Type> VNAME </Type>
+<Content> V_a </Content>
+</Token>
+<Token>
+<ID> 41 </ID>
+<Type> Keyword </Type>
+<Content> <input </Content>
+</Token>
+<Token>
+<ID> 42 </ID>
+<Type> Symbol </Type>
+<Content> ; </Content>
+</Token>
+<Token>
+<ID> 44 </ID>
 <Type> Keyword </Type>
 <Content> end </Content>
 </Token>

@@ -65,7 +65,7 @@ public class Parser
                 writer.write("<Token>\n");
                 writer.write("<ID> " + tokens.get(i).getId() + " </ID>\n");
                 writer.write("<Type> " + tokens.get(i).getType() + " </Type>\n");
-                writer.write("<Content> " + tokens.get(i).getContent() + " </Content>\n");
+                writer.write("<Content> " + tokens.get(i).getContent().replaceAll("\\s", "") + " </Content>\n");
                 writer.write("</Token>\n");
             }
             writer.write("</TokenStream>\n");
@@ -799,7 +799,7 @@ public class Parser
                                 if(Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") ||
                                         Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div") ||
                                         Objects.equals(tokens.get(index).getType(), "FNAME") || Objects.equals(tokens.get(index).getType(), "VNAME") ||
-                                        Objects.equals(tokens.get(index).getType(), "CONST") || tokens.get(index).getContent() == "sqrt"
+                                        Objects.equals(tokens.get(index).getType(), "CONST") || Objects.equals(tokens.get(index).getContent(), "sqrt")
                                 )
                                 {
                                     Boolean term = parseTERM(assignNode);
@@ -813,7 +813,7 @@ public class Parser
                                         }
                                         else
                                         {
-                                            if(tokens.get(index).getContent() == ";")
+                                            if(Objects.equals(tokens.get(index).getContent(), ";"))
                                             {
                                                 return true;
                                             }
@@ -878,7 +878,9 @@ public class Parser
         }
         else
         {
-            if(tokens.get(index).getContent() == "add" || tokens.get(index).getContent() == "sub" || tokens.get(index).getContent() == "mul" || tokens.get(index).getContent() == "div" || tokens.get(index).getContent() == "sqrt")
+            if(Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") ||
+                    Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div") ||
+                    Objects.equals(tokens.get(index).getContent(), "sqrt"))
             {
                 Boolean op = parseOP(termNode);
                 if(op)
@@ -891,7 +893,7 @@ public class Parser
                     }
                     else
                     {
-                        if(tokens.get(index).getContent() == ";")
+                        if(Objects.equals(tokens.get(index).getContent(), ";"))
                         {
                             return true;
                         }
@@ -910,7 +912,7 @@ public class Parser
                     return false;
                 }
             }
-            else if(tokens.get(index).getType() == "FNAME" )
+            else if(Objects.equals(tokens.get(index).getType(), "FNAME"))
             {
                 Boolean call = parseCALL(termNode);
                 if(call)
@@ -923,7 +925,7 @@ public class Parser
                     }
                     else
                     {
-                        if(tokens.get(index).getContent() == ";")
+                        if(Objects.equals(tokens.get(index).getContent(), ";"))
                         {
                             return true;
                         }
@@ -942,7 +944,7 @@ public class Parser
                     return false;
                 }
             }
-            else if(tokens.get(index).getType() == "VNAME" || tokens.get(index).getType() == "CONST")
+            else if(Objects.equals(tokens.get(index).getType(), "VNAME") || Objects.equals(tokens.get(index).getType(), "CONST"))
             {
                 Boolean atomic = parseATOMIC(termNode);
                 if(atomic)
@@ -955,7 +957,7 @@ public class Parser
                     }
                     else
                     {
-                        if(tokens.get(index).getContent() == ";")
+                        if(Objects.equals(tokens.get(index).getContent(), ";"))
                         {
                             return true;
                         }
