@@ -601,7 +601,7 @@ public class Parser
                                 System.exit(0);
                                 return false;
                             }
-                            else if(tokens.get(index).getContent() == ";")
+                            else if(Objects.equals(tokens.get(index).getContent(), ";"))
                             {
                                 return true;
                             }
@@ -1742,7 +1742,7 @@ public class Parser
                             return false;
                         }
                         //consult
-                        else if(tokens.get(index).getContent() == "then")
+                        else if(Objects.equals(tokens.get(index).getContent(), "then"))
                         {
                             return true;
                         }
@@ -2636,7 +2636,7 @@ public class Parser
                                     return false;
                                 }
 
-                                if(tokens.get(index).getContent() == "}")
+                                if(Objects.equals(tokens.get(index).getContent(), "}"))
                                 {
                                   Boolean epilog = parseEPILOG(BodyNode);
                                   if(epilog)
@@ -2648,7 +2648,7 @@ public class Parser
                                           return false;
                                       }
 
-                                      if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void" || tokens.get(index).getContent() == "end")
+                                      if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void") || tokens.get(index).getContent() == "end")
                                       {
                                           Boolean subfuncs = parseSUBFUNCTS(BodyNode);
                                           if(subfuncs)
@@ -2830,7 +2830,7 @@ public class Parser
                             return false;
                         }
 
-                        if(Objects.equals(tokens.get(index).getType(), ","))
+                        if(Objects.equals(tokens.get(index).getContent(), ","))
                         {
                             Node commaNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                             localVars.children.add(commaNode);
@@ -2868,7 +2868,7 @@ public class Parser
                                                 return false;
                                             }
 
-                                            if(Objects.equals(tokens.get(index).getType(), ","))
+                                            if(Objects.equals(tokens.get(index).getContent(), ","))
                                             {
                                                 Node commaNode2 = new Node(id++, "Terminal", tokens.get(index).getContent());
                                                 localVars.children.add(commaNode2);
@@ -2906,7 +2906,7 @@ public class Parser
                                                                     return false;
                                                                 }
 
-                                                                if(Objects.equals(tokens.get(index).getType(), ","))
+                                                                if(Objects.equals(tokens.get(index).getContent(), ","))
                                                                 {
                                                                     Node commaNode3 = new Node(id++, "Terminal", tokens.get(index).getContent());
                                                                     localVars.children.add(commaNode3);
@@ -3330,7 +3330,7 @@ public class Parser
                 return false;
             }
 
-            if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void") || Objects.equals(tokens.get(index).getType(), "end"))
+            if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void") || Objects.equals(tokens.get(index).getContent(), "end"))
             {
                 return true;
             }

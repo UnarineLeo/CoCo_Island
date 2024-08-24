@@ -2000,4 +2000,119 @@
 <Type> Keyword </Type>
 <Content> end </Content>
 </Token>
+<Token>
+<ID> 401 </ID>
+<Type> Keyword </Type>
+<Content> void </Content>
+</Token>
+<Token>
+<ID> 402 </ID>
+<Type> FNAME </Type>
+<Content> F_a </Content>
+</Token>
+<Token>
+<ID> 403 </ID>
+<Type> Symbol </Type>
+<Content> ( </Content>
+</Token>
+<Token>
+<ID> 404 </ID>
+<Type> VNAME </Type>
+<Content> V_a </Content>
+</Token>
+<Token>
+<ID> 405 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 406 </ID>
+<Type> VNAME </Type>
+<Content> V_b </Content>
+</Token>
+<Token>
+<ID> 407 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 408 </ID>
+<Type> VNAME </Type>
+<Content> V_c </Content>
+</Token>
+<Token>
+<ID> 409 </ID>
+<Type> Symbol </Type>
+<Content> ) </Content>
+</Token>
+<Token>
+<ID> 410 </ID>
+<Type> Symbol </Type>
+<Content> { </Content>
+</Token>
+<Token>
+<ID> 411 </ID>
+<Type> Keyword </Type>
+<Content> num </Content>
+</Token>
+<Token>
+<ID> 412 </ID>
+<Type> VNAME </Type>
+<Content> V_a </Content>
+</Token>
+<Token>
+<ID> 413 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 414 </ID>
+<Type> Keyword </Type>
+<Content> text </Content>
+</Token>
+<Token>
+<ID> 415 </ID>
+<Type> VNAME </Type>
+<Content> V_b </Content>
+</Token>
+<Token>
+<ID> 416 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 417 </ID>
+<Type> Keyword </Type>
+<Content> num </Content>
+</Token>
+<Token>
+<ID> 418 </ID>
+<Type> VNAME </Type>
+<Content> V_c </Content>
+</Token>
+<Token>
+<ID> 419 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 420 </ID>
+<Type> Keyword </Type>
+<Content> begin </Content>
+</Token>
+<Token>
+<ID> 421 </ID>
+<Type> Keyword </Type>
+<Content> end </Content>
+</Token>
+<Token>
+<ID> 422 </ID>
+<Type> Symbol </Type>
+<Content> } </Content>
+</Token>
+<Token>
+<ID> 423 </ID>
+<Type> Keyword </Type>
+<Content> end </Content>
+</Token>
 </TokenStream>
