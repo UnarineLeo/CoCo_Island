@@ -1527,6 +1527,13 @@ public class Parser
         Node FNameNode = new Node(id++, "Non-Terminal", "FNAME");
         parent.children.add(FNameNode);
 
+        if(index >= tokens.size())
+        {
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected FNAME at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
+            System.exit(0);
+            return false;
+        }
+
         if(Objects.equals(tokens.get(index).getType(), "FNAME"))
         {
             Node Name = new Node(id++, "Terminal", tokens.get(index).getContent());
@@ -2348,11 +2355,11 @@ public class Parser
             System.exit(0);
             return false;
         }
-        else if(tokens.get(index).getType() == "VNAME")
+        else if(Objects.equals(tokens.get(index).getType(), "VNAME"))
         {
             return parseVNAME(atomicNode);//consult
         }
-        else if(tokens.get(index).getType() == "CONST")
+        else if(Objects.equals(tokens.get(index).getType(), "CONST"))
         {
             Boolean constant = parseCONST(atomicNode);
             if(constant)
@@ -2363,7 +2370,7 @@ public class Parser
                     System.exit(0);
                     return false;
                 }
-                else if(tokens.get(index).getContent() == "," || tokens.get(index).getContent() == ";" || tokens.get(index).getContent() == ")")
+                else if(Objects.equals(tokens.get(index).getContent(), ",") || Objects.equals(tokens.get(index).getContent(), ";") || Objects.equals(tokens.get(index).getContent(), ")"))
                 {
                     return true;//consult
                 }
@@ -3036,7 +3043,7 @@ public class Parser
                         }
                         else
                         {
-                            if(tokens.get(index).getContent() == "(")
+                            if(Objects.equals(tokens.get(index).getContent(), "("))
                             {
                                 Node openingBraceNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                 HeaderNode.children.add(openingBraceNode);
@@ -3049,7 +3056,7 @@ public class Parser
                                     return false;
                                 }
 
-                                if(tokens.get(index).getType() == "VNAME")
+                                if(Objects.equals(tokens.get(index).getType(), "VNAME"))
                                 {
                                     Boolean vname = parseVNAME(HeaderNode);
                                     if(vname)
@@ -3061,7 +3068,7 @@ public class Parser
                                             return false;
                                         }
 
-                                        if(tokens.get(index).getContent() == ",")
+                                        if(Objects.equals(tokens.get(index).getContent(), ","))
                                         {
                                             Node commaNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                             HeaderNode.children.add(commaNode);
@@ -3074,7 +3081,7 @@ public class Parser
                                                 return false;
                                             }
 
-                                            if(tokens.get(index).getType() == "VNAME")
+                                            if(Objects.equals(tokens.get(index).getType(), "VNAME"))
                                             {
                                                 Boolean vname2 = parseVNAME(HeaderNode);
                                                 if(vname2)
