@@ -1717,6 +1717,7 @@ public class Parser
         }
         else
         {
+            //consult
             int test = index + 2;
             if(test >= tokens.size())
             {
@@ -1726,23 +1727,35 @@ public class Parser
             }
             else if(Objects.equals(tokens.get(test).getType(), "VNAME") || Objects.equals(tokens.get(test).getType(), "CONST"))
             {
-                //Simple
-                Boolean simple = parseSIMPLE(condNode);
-                if(simple)
+                if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and")
+                || Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt")
+                )
                 {
-                    if(index >= tokens.size())
+                    //Simple
+                    Boolean simple = parseSIMPLE(condNode);
+                    if(simple)
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
-                        System.exit(0);
-                        return false;
-                    }
-                    else if(tokens.get(index).getContent() == "then")
-                    {
-                        return true;
+                        if(index >= tokens.size())
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                        //consult
+                        else if(tokens.get(index).getContent() == "then")
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
+                            System.exit(0);
+                            return false;
+                        }
                     }
                     else
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -1753,26 +1766,39 @@ public class Parser
                     System.exit(0);
                     return false;
                 }
+
             }
             else
             {
-                //Composite
-                Boolean composite = parseCOMPOSIT(condNode);
-                if(composite)
+                if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and")
+                        || Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt")
+                    || Objects.equals(tokens.get(index).getContent(), "not")
+                )
                 {
-                    if(index >= tokens.size())
+                    //Composite
+                    Boolean composite = parseCOMPOSIT(condNode);
+                    if(composite)
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
-                        System.exit(0);
-                        return false;
-                    }
-                    else if(Objects.equals(tokens.get(index).getContent(), "then"))
-                    {
-                        return true;
+                        if(index >= tokens.size())
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
+                            System.exit(0);
+                            return false;
+                        }
+                        else if(Objects.equals(tokens.get(index).getContent(), "then"))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
+                            System.exit(0);
+                            return false;
+                        }
                     }
                     else
                     {
-                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"then\" after \"COND\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"COND\" after \"if\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
                         System.exit(0);
                         return false;
                     }
@@ -1783,6 +1809,7 @@ public class Parser
                     System.exit(0);
                     return false;
                 }
+
             }
         }
     }
@@ -1954,6 +1981,7 @@ public class Parser
                     return false;
                 }
             }
+            //consult
             else if(Objects.equals(tokens.get(index).getContent(), "not") || Objects.equals(tokens.get(index).getContent(), "sqrt"))
             {
                 Boolean unop = parseUNOP(compositeNode);
@@ -1981,6 +2009,7 @@ public class Parser
                             }
                             else
                             {
+                                //Composite Unop(Simple)
                                 //Simple => BINOP(ATOMIC,ATOMIC)
                                 if (Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and")
                                         || Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt"))
@@ -2212,7 +2241,10 @@ public class Parser
                                                                     }
                                                                     else
                                                                     {
-                                                                        if(Objects.equals(tokens.get(index).getContent(), "then"))
+                                                                        //consult
+                                                                        if(Objects.equals(tokens.get(index).getContent(), "then") || Objects.equals(tokens.get(index).getContent(), ")")
+                                                                                || Objects.equals(tokens.get(index).getContent(), ",")
+                                                                        )
                                                                         {
                                                                            return true;
                                                                         }
