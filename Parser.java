@@ -60,18 +60,16 @@ public class Parser
             }
 
             writer.write("<TokenStream>\n");
-            for(int i = 0; i < tokens.size(); i++)
-            {
-                String content = tokens.get(i).getContent();
+            for (Token token : tokens) {
+                String content = token.getContent();
 
-                if(content == "< input")
-                {
+                if (Objects.equals(content, "< input")) {
                     content = "&lt; input";
                 }
 
                 writer.write("<Token>\n");
-                writer.write("<ID> " + tokens.get(i).getId() + " </ID>\n");
-                writer.write("<Type> " + tokens.get(i).getType() + " </Type>\n");
+                writer.write("<ID> " + token.getId() + " </ID>\n");
+                writer.write("<Type> " + token.getType() + " </Type>\n");
                 writer.write("<Content> " + content + " </Content>\n");
                 writer.write("</Token>\n");
             }
@@ -242,7 +240,7 @@ public class Parser
                                             //if GLOBVARS is nullable
                                             return true;
                                         }
-                                        else if(Objects.equals(tokens.get(index).getContent(), "num") || tokens.get(index).getContent() == "text")
+                                        else if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "text"))
                                         {
                                             parseGLOBVARS(globalNode);
                                             return true;
@@ -433,9 +431,11 @@ public class Parser
                                 }
 
                             }
-                            else if(Objects.equals(tokens.get(index).getContent(), "num") || tokens.get(index).getContent() == "void" || tokens.get(index).getContent() == "}" || tokens.get(index).getContent() == "else" || tokens.get(index).getContent() == ";")
+                            else if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void")
+                                    || Objects.equals(tokens.get(index).getContent(), "}") || Objects.equals(tokens.get(index).getContent(), "else") ||
+                                    Objects.equals(tokens.get(index).getContent(), ";"))
                             {
-                                if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void")
+                                if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void"))
                                 {
                                     //confirm if parent or AlgoNode
                                     Boolean functions = parseFUNCTIONS(parent); //shares same parent as Algo
@@ -1005,7 +1005,7 @@ public class Parser
         }
         else
         {
-            if(tokens.get(index).getContent() == "add" || tokens.get(index).getContent() == "sub" || tokens.get(index).getContent() == "mul" || tokens.get(index).getContent() == "div")
+            if(Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") || Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div"))
             {
                 Boolean binop = parseBINOP(opNode);
                 if(binop)
@@ -1018,7 +1018,7 @@ public class Parser
                     }
                     else
                     {
-                        if(tokens.get(index).getContent() == "(")
+                        if(Objects.equals(tokens.get(index).getContent(), "("))
                         {
                             Node openBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                             opNode.children.add(openBracketNode);
@@ -1042,7 +1042,7 @@ public class Parser
                                 }
                                 else
                                 {
-                                    if(tokens.get(index).getContent() == ",")
+                                    if(Objects.equals(tokens.get(index).getContent(), ","))
                                     {
                                         Node commaNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                         opNode.children.add(commaNode);
@@ -1065,7 +1065,7 @@ public class Parser
                                                 return false;
                                             }
 
-                                            if(tokens.get(index).getContent() == ")")
+                                            if(Objects.equals(tokens.get(index).getContent(), ")"))
                                             {
                                                 Node closingBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                                 opNode.children.add(closingBracketNode);
@@ -1079,7 +1079,8 @@ public class Parser
                                                 }
                                                 else
                                                 {
-                                                    if(tokens.get(index).getContent() == ";")
+                                                    //confirm
+                                                    if(Objects.equals(tokens.get(index).getContent(), ";") || Objects.equals(tokens.get(index).getContent(), ","))
                                                     {
                                                         return true;
                                                     }
@@ -1135,7 +1136,7 @@ public class Parser
                     return false;
                 }
             }
-            else if(tokens.get(index).getContent() == "sqrt")
+            else if(Objects.equals(tokens.get(index).getContent(), "sqrt"))
             {
                 Boolean unop = parseUNOP(opNode);
                 if(unop)
@@ -1148,7 +1149,7 @@ public class Parser
                     }
                     else
                     {
-                        if(tokens.get(index).getContent() == "(")
+                        if(Objects.equals(tokens.get(index).getContent(), "("))
                         {
                             Node openBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                             opNode.children.add(openBracketNode);
@@ -1172,7 +1173,7 @@ public class Parser
                                 }
                                 else
                                 {
-                                    if(tokens.get(index).getContent() == ")")
+                                    if(Objects.equals(tokens.get(index).getContent(), ")"))
                                     {
                                         Node closingBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                         opNode.children.add(closingBracketNode);
@@ -1186,7 +1187,8 @@ public class Parser
                                         }
                                         else
                                         {
-                                            if(tokens.get(index).getContent() == ";")
+                                            //consult
+                                            if(Objects.equals(tokens.get(index).getContent(), ";") || Objects.equals(tokens.get(index).getContent(), ")"))
                                             {
                                                 return true;
                                             }
@@ -1268,7 +1270,7 @@ public class Parser
                     }
                     else
                     {
-                        if(tokens.get(index).getContent() == "," || tokens.get(index).getContent() == ")")
+                        if(Objects.equals(tokens.get(index).getContent(), ",") || Objects.equals(tokens.get(index).getContent(), ")"))
                         {
                             return true;
                         }
@@ -1301,7 +1303,7 @@ public class Parser
                     }
                     else
                     {
-                        if(tokens.get(index).getContent() == "," || tokens.get(index).getContent() == ")")
+                        if(Objects.equals(tokens.get(index).getContent(), ",") || Objects.equals(tokens.get(index).getContent(), ")"))
                         {
                             return true;
                         }
@@ -1353,7 +1355,7 @@ public class Parser
                 }
                 else
                 {
-                    if(tokens.get(index).getContent() == "(")
+                    if(Objects.equals(tokens.get(index).getContent(), "("))
                     {
                         Node openingBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                         callNode.children.add(openingBracketNode);
@@ -1378,7 +1380,7 @@ public class Parser
                                 }
                                 else
                                 {
-                                    if(tokens.get(index).getContent() == ",")
+                                    if(Objects.equals(tokens.get(index).getContent(), ","))
                                     {
                                         Node commaNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                         callNode.children.add(commaNode);
@@ -1403,7 +1405,7 @@ public class Parser
                                                 }
                                                 else
                                                 {
-                                                    if(tokens.get(index).getContent() == ",")
+                                                    if(Objects.equals(tokens.get(index).getContent(), ","))
                                                     {
                                                         Node commaNode2 = new Node(id++, "Terminal", tokens.get(index).getContent());
                                                         callNode.children.add(commaNode2);
@@ -1428,7 +1430,7 @@ public class Parser
                                                                 }
                                                                 else
                                                                 {
-                                                                    if(tokens.get(index).getContent() == ")")
+                                                                    if(Objects.equals(tokens.get(index).getContent(), ")"))
                                                                     {
                                                                         Node closingBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                                                         callNode.children.add(closingBracketNode);
@@ -1442,7 +1444,7 @@ public class Parser
                                                                         }
                                                                         else
                                                                         {
-                                                                            if(tokens.get(index).getContent() == ";")
+                                                                            if(Objects.equals(tokens.get(index).getContent(), ";"))
                                                                             {
                                                                                 return true;
                                                                             }
@@ -1524,7 +1526,7 @@ public class Parser
         Node FNameNode = new Node(id++, "Non-Terminal", "FNAME");
         parent.children.add(FNameNode);
 
-        if(tokens.get(index).getType() == "FNAME")
+        if(Objects.equals(tokens.get(index).getType(), "FNAME"))
         {
             Node Name = new Node(id++, "Terminal", tokens.get(index).getContent());
             FNameNode.children.add(Name);
@@ -1537,7 +1539,7 @@ public class Parser
                 return false;
             }
 
-            if(tokens.get(index).getContent() == "(")
+            if(Objects.equals(tokens.get(index).getContent(), "("))
             {
                 return true;
             }
@@ -1592,7 +1594,7 @@ public class Parser
                     }
                     else
                     {
-                        if(tokens.get(index).getContent() == "then")
+                        if(Objects.equals(tokens.get(index).getContent(), "then"))
                         {
                             Node thenNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                             branchNode.children.add(thenNode);
@@ -1617,7 +1619,7 @@ public class Parser
                                     }
                                     else
                                     {
-                                        if (tokens.get(index).getContent() == "else")
+                                        if (Objects.equals(tokens.get(index).getContent(), "else"))
                                         {
                                             Node elseNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                             branchNode.children.add(elseNode);
@@ -1640,7 +1642,7 @@ public class Parser
                                                         System.exit(0);
                                                         return false;
                                                     }
-                                                    else if (tokens.get(index).getContent() == ";")
+                                                    else if (Objects.equals(tokens.get(index).getContent(), ";"))
                                                     {
                                                         return true;
                                                     }
@@ -1714,7 +1716,7 @@ public class Parser
                 System.exit(0);
                 return false;
             }
-            else if(tokens.get(test).getType() == "VNAME" || tokens.get(test).getType() == "CONST")
+            else if(Objects.equals(tokens.get(test).getType(), "VNAME") || Objects.equals(tokens.get(test).getType(), "CONST"))
             {
                 //Simple
                 Boolean simple = parseSIMPLE(condNode);
@@ -1756,7 +1758,7 @@ public class Parser
                         System.exit(0);
                         return false;
                     }
-                    else if(tokens.get(index).getContent() == "then")
+                    else if(Objects.equals(tokens.get(index).getContent(), "then"))
                     {
                         return true;
                     }
@@ -1790,7 +1792,7 @@ public class Parser
         }
         else
         {
-            if(tokens.get(index).getContent() == "or" || tokens.get(index).getContent() == "and" || tokens.get(index).getContent() == "eq" || tokens.get(index).getContent() == "grt")
+            if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") || Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt"))
             {
                 Boolean binop = parseBINOP(compositeNode);
                 if(binop)
@@ -1803,7 +1805,7 @@ public class Parser
                     }
                     else
                     {
-                        if(tokens.get(index).getContent() == "(")
+                        if(Objects.equals(tokens.get(index).getContent(), "("))
                         {
                             Node openBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                             compositeNode.children.add(openBracketNode);
@@ -1817,7 +1819,7 @@ public class Parser
                             }
                             else
                             {
-                                if(tokens.get(index).getContent() == "or" || tokens.get(index).getContent() == "and" || tokens.get(index).getContent() == "eq" || tokens.get(index).getContent() == "grt")
+                                if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") || Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt"))
                                 {
                                     Boolean simple = parseSIMPLE(compositeNode);
                                     if(simple)
@@ -1830,7 +1832,7 @@ public class Parser
                                         }
                                         else
                                         {
-                                            if(tokens.get(index).getContent() == ",")
+                                            if(Objects.equals(tokens.get(index).getContent(), ","))
                                             {
                                                 Node commaNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                                 compositeNode.children.add(commaNode);
@@ -1844,7 +1846,7 @@ public class Parser
                                                 }
                                                 else
                                                 {
-                                                    if(tokens.get(index).getContent() == "or" || tokens.get(index).getContent() == "and" || tokens.get(index).getContent() == "eq" || tokens.get(index).getContent() == "grt")
+                                                    if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") || Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt"))
                                                     {
                                                         Boolean simple2 = parseSIMPLE(compositeNode);
                                                         if(simple2)
@@ -1857,7 +1859,7 @@ public class Parser
                                                             }
                                                             else
                                                             {
-                                                                if(tokens.get(index).getContent() == ")")
+                                                                if(Objects.equals(tokens.get(index).getContent(), ")"))
                                                                 {
                                                                     Node closingBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                                                     compositeNode.children.add(closingBracketNode);
@@ -1871,7 +1873,7 @@ public class Parser
                                                                     }
                                                                     else
                                                                     {
-                                                                        if(tokens.get(index).getContent() == "then")
+                                                                        if(Objects.equals(tokens.get(index).getContent(), "then"))
                                                                         {
                                                                             return true;
                                                                         }
@@ -1944,7 +1946,7 @@ public class Parser
                     return false;
                 }
             }
-            else if(tokens.get(index).getContent() == "not" || tokens.get(index).getContent() == "sqrt")
+            else if(Objects.equals(tokens.get(index).getContent(), "not") || Objects.equals(tokens.get(index).getContent(), "sqrt"))
             {
                 Boolean unop = parseUNOP(compositeNode);
                 if(unop)
@@ -1957,7 +1959,7 @@ public class Parser
                     }
                     else
                     {
-                        if (tokens.get(index).getContent() == "(")
+                        if (Objects.equals(tokens.get(index).getContent(), "("))
                         {
                             Node openBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                             compositeNode.children.add(openBracketNode);
@@ -1972,7 +1974,8 @@ public class Parser
                             else
                             {
                                 //Simple => BINOP(ATOMIC,ATOMIC)
-                                if (tokens.get(index).getContent() == "or" || tokens.get(index).getContent() == "and" || tokens.get(index).getContent() == "eq" || tokens.get(index).getContent() == "grt")
+                                if (Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and")
+                                        || Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt"))
                                 {
                                     Boolean simple = parseSIMPLE(compositeNode);
                                     if (simple)
@@ -1985,7 +1988,7 @@ public class Parser
                                         }
                                         else
                                         {
-                                            if(tokens.get(index).getContent() == ")")
+                                            if(Objects.equals(tokens.get(index).getContent(), ")"))
                                             {
                                                 Node closingBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                                 compositeNode.children.add(closingBracketNode);
@@ -1999,7 +2002,7 @@ public class Parser
                                                 }
                                                 else
                                                 {
-                                                    if(tokens.get(index).getContent() == "then")
+                                                    if(Objects.equals(tokens.get(index).getContent(), "then"))
                                                     {
                                                         return true;
                                                     }
@@ -2071,7 +2074,7 @@ public class Parser
         }
         else
         {
-            if(tokens.get(index).getContent() == "not" || tokens.get(index).getContent() == "sqrt")
+            if(Objects.equals(tokens.get(index).getContent(), "not") || Objects.equals(tokens.get(index).getContent(), "sqrt"))
             {
                 Node unaryNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                 unopNode.children.add(unaryNode);
@@ -2085,7 +2088,7 @@ public class Parser
                 }
                 else
                 {
-                    if(tokens.get(index).getContent() == "(")
+                    if(Objects.equals(tokens.get(index).getContent(), "("))
                     {
                         return true;
                     }
@@ -2119,7 +2122,8 @@ public class Parser
         }
         else
         {
-            if(tokens.get(index).getContent() == "or" || tokens.get(index).getContent() == "and" || tokens.get(index).getContent() == "eq" || tokens.get(index).getContent() == "grt")
+            if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and")
+                    || Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt"))
             {
                 Boolean binop = parseBINOP(simpleNode);
                 if(binop)
@@ -2132,7 +2136,7 @@ public class Parser
                     }
                     else
                     {
-                        if(tokens.get(index).getContent() == "(")
+                        if(Objects.equals(tokens.get(index).getContent(), "("))
                         {
                             Node openBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                             simpleNode.children.add(openBracketNode);
@@ -2146,7 +2150,7 @@ public class Parser
                             }
                             else
                             {
-                                if(tokens.get(index).getType() == "VNAME" || tokens.get(index).getType() == "CONST")
+                                if(Objects.equals(tokens.get(index).getType(), "VNAME") || Objects.equals(tokens.get(index).getType(), "CONST"))
                                 {
                                     Boolean atomic = parseATOMIC(simpleNode);
                                     if(atomic)
@@ -2159,7 +2163,7 @@ public class Parser
                                         }
                                         else
                                         {
-                                            if(tokens.get(index).getContent() == ",")
+                                            if(Objects.equals(tokens.get(index).getContent(), ","))
                                             {
                                                 Node commaNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                                 simpleNode.children.add(commaNode);
@@ -2173,7 +2177,7 @@ public class Parser
                                                 }
                                                 else
                                                 {
-                                                    if(tokens.get(index).getType() == "VNAME" || tokens.get(index).getType() == "CONST")
+                                                    if(Objects.equals(tokens.get(index).getType(), "VNAME") || Objects.equals(tokens.get(index).getType(), "CONST"))
                                                     {
                                                         Boolean atomic2 = parseATOMIC(simpleNode);
                                                         if(atomic2)
@@ -2186,7 +2190,7 @@ public class Parser
                                                             }
                                                             else
                                                             {
-                                                                if(tokens.get(index).getContent() == ")")
+                                                                if(Objects.equals(tokens.get(index).getContent(), ")"))
                                                                 {
                                                                     Node closingBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                                                     simpleNode.children.add(closingBracketNode);
@@ -2200,7 +2204,7 @@ public class Parser
                                                                     }
                                                                     else
                                                                     {
-                                                                        if(tokens.get(index).getContent() == "then")
+                                                                        if(Objects.equals(tokens.get(index).getContent(), "then"))
                                                                         {
                                                                            return true;
                                                                         }
@@ -2295,7 +2299,9 @@ public class Parser
         }
         else
         {
-            if(tokens.get(index).getContent() == "or" || tokens.get(index).getContent() == "and" || tokens.get(index).getContent() == "eq" || tokens.get(index).getContent() == "grt" || tokens.get(index).getContent() == "sub" || tokens.get(index).getContent() == "add" || tokens.get(index).getContent() == "mul" || tokens.get(index).getContent() == "div")
+            if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") || Objects.equals(tokens.get(index).getContent(), "eq") ||
+                    Objects.equals(tokens.get(index).getContent(), "grt") || Objects.equals(tokens.get(index).getContent(), "sub") || Objects.equals(tokens.get(index).getContent(), "add")
+                    || Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div"))
             {
                 Node binaryNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                 binopNode.children.add(binaryNode);
@@ -2309,7 +2315,7 @@ public class Parser
                 }
                 else
                 {
-                    if(tokens.get(index).getContent() == "(")
+                    if(Objects.equals(tokens.get(index).getContent(), "("))
                     {
                         return true;
                     }
@@ -2447,7 +2453,7 @@ public class Parser
                 {
                     return true;
                 }
-                else if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void")
+                else if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void"))
                 {
                     return parseFUNCTIONS(parent);
                 }
@@ -2480,7 +2486,7 @@ public class Parser
         }
         else
         {
-            if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void")
+            if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void"))
             {
                 Boolean header = parseHEADER(DeclNode);
                 if(header)
@@ -2492,7 +2498,7 @@ public class Parser
                         return false;
                     }
 
-                    if(tokens.get(index).getContent() == "{")
+                    if(Objects.equals(tokens.get(index).getContent(), "{"))
                     {
                         Boolean body = parseBODY(DeclNode);
                         if(body)
@@ -2501,7 +2507,7 @@ public class Parser
                             {
                                 return true;
                             }
-                            else if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void")
+                            else if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void"))
                             {
                                return true;
                             }
@@ -2566,7 +2572,7 @@ public class Parser
                     return false;
                 }
 
-                if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
+                if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "text"))
                 {
                     Boolean localvars = parseLOCALVARS(BodyNode);
                     if(localvars)
@@ -2578,7 +2584,7 @@ public class Parser
                             return false;
                         }
 
-                        if(tokens.get(index).getContent() == "begin")
+                        if(Objects.equals(tokens.get(index).getContent(), "begin"))
                         {
                             Boolean algo = parseALGO(BodyNode);
                             if(algo)
@@ -2760,7 +2766,7 @@ public class Parser
             return false;
         }
 
-        if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
+        if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "text"))
         {
             Boolean vtype = parseVTYP(localVars);
             if(vtype)
@@ -2772,7 +2778,7 @@ public class Parser
                     return false;
                 }
 
-                if(tokens.get(index).getType() == "VNAME")
+                if(Objects.equals(tokens.get(index).getType(), "VNAME"))
                 {
                     Boolean vname = parseVNAME(localVars);
                     if(vname)
@@ -2784,7 +2790,7 @@ public class Parser
                             return false;
                         }
 
-                        if(tokens.get(index).getType() == ",")
+                        if(Objects.equals(tokens.get(index).getType(), ","))
                         {
                             Node commaNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                             localVars.children.add(commaNode);
@@ -2798,7 +2804,7 @@ public class Parser
                                 return false;
                             }
 
-                            if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
+                            if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "text"))
                             {
                                 Boolean vtype2 = parseVTYP(localVars);
                                 if(vtype2)
@@ -2810,7 +2816,7 @@ public class Parser
                                         return false;
                                     }
 
-                                    if(tokens.get(index).getType() == "VNAME")
+                                    if(Objects.equals(tokens.get(index).getType(), "VNAME"))
                                     {
                                         Boolean vname2 = parseVNAME(localVars);
                                         if(vname2)
@@ -2822,7 +2828,7 @@ public class Parser
                                                 return false;
                                             }
 
-                                            if(tokens.get(index).getType() == ",")
+                                            if(Objects.equals(tokens.get(index).getType(), ","))
                                             {
                                                 Node commaNode2 = new Node(id++, "Terminal", tokens.get(index).getContent());
                                                 localVars.children.add(commaNode2);
@@ -2836,7 +2842,7 @@ public class Parser
                                                     return false;
                                                 }
 
-                                                if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
+                                                if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "text"))
                                                 {
                                                     Boolean vtype3 = parseVTYP(localVars);
                                                     if(vtype3)
@@ -2848,7 +2854,7 @@ public class Parser
                                                             return false;
                                                         }
 
-                                                        if(tokens.get(index).getType() == "VNAME")
+                                                        if(Objects.equals(tokens.get(index).getType(), "VNAME"))
                                                         {
                                                             Boolean vname3 = parseVNAME(localVars);
                                                             if(vname3)
@@ -2860,7 +2866,7 @@ public class Parser
                                                                     return false;
                                                                 }
 
-                                                                if(tokens.get(index).getType() == ",")
+                                                                if(Objects.equals(tokens.get(index).getType(), ","))
                                                                 {
                                                                     Node commaNode3 = new Node(id++, "Terminal", tokens.get(index).getContent());
                                                                     localVars.children.add(commaNode3);
@@ -2874,7 +2880,7 @@ public class Parser
                                                                         return false;
                                                                     }
 
-                                                                    if(tokens.get(index).getContent() == "begin")
+                                                                    if(Objects.equals(tokens.get(index).getContent(), "begin"))
                                                                     {
                                                                         return true;
                                                                     }
@@ -3104,7 +3110,7 @@ public class Parser
                                                                     return false;
                                                                 }
 
-                                                                if(tokens.get(index).getContent() == ")")
+                                                                if(Objects.equals(tokens.get(index).getContent(), ")"))
                                                                 {
                                                                     Node closeBracketNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                                                     HeaderNode.children.add(closeBracketNode);
@@ -3117,7 +3123,7 @@ public class Parser
                                                                         return false;
                                                                     }
 
-                                                                    if(tokens.get(index).getContent() == "{")
+                                                                    if(Objects.equals(tokens.get(index).getContent(), "{"))
                                                                     {
                                                                         return true;
                                                                     }
@@ -3229,7 +3235,7 @@ public class Parser
             return false;
         }
 
-        if(tokens.get(index).getContent() == "{")
+        if(Objects.equals(tokens.get(index).getContent(), "{"))
         {
             Node openingBraceNode = new Node(id++, "Terminal", tokens.get(index).getContent());
             prologNode.children.add(openingBraceNode);
@@ -3241,7 +3247,7 @@ public class Parser
                 return false;
             }
 
-            if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "text")
+            if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "text"))
             {
                 return true;
             }
@@ -3272,7 +3278,7 @@ public class Parser
             return false;
         }
 
-        if(tokens.get(index).getContent() == "}")
+        if(Objects.equals(tokens.get(index).getContent(), "}"))
         {
             Node openingBraceNode = new Node(id++, "Terminal", tokens.get(index).getContent());
             epilogNode.children.add(openingBraceNode);
@@ -3284,7 +3290,7 @@ public class Parser
                 return false;
             }
 
-            if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void" || tokens.get(index).getType() == "end")
+            if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void") || Objects.equals(tokens.get(index).getType(), "end"))
             {
                 return true;
             }
@@ -3316,7 +3322,7 @@ public class Parser
             return false;
         }
 
-        if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void")
+        if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void"))
         {
             Node TypeNode = new Node(id++, "Terminal", tokens.get(index).getContent());
             FTypNode.children.add(TypeNode);
