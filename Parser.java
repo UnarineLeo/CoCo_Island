@@ -1080,7 +1080,7 @@ public class Parser
                                                 else
                                                 {
                                                     //confirm
-                                                    if(Objects.equals(tokens.get(index).getContent(), ";") || Objects.equals(tokens.get(index).getContent(), ","))
+                                                    if(Objects.equals(tokens.get(index).getContent(), ";") || Objects.equals(tokens.get(index).getContent(), ")") || Objects.equals(tokens.get(index).getContent(), ","))
                                                     {
                                                         return true;
                                                     }
@@ -1188,7 +1188,7 @@ public class Parser
                                         else
                                         {
                                             //consult
-                                            if(Objects.equals(tokens.get(index).getContent(), ";") || Objects.equals(tokens.get(index).getContent(), ")"))
+                                            if(Objects.equals(tokens.get(index).getContent(), ";") || Objects.equals(tokens.get(index).getContent(), ")") || Objects.equals(tokens.get(index).getContent(), ","))
                                             {
                                                 return true;
                                             }
@@ -1270,6 +1270,7 @@ public class Parser
                     }
                     else
                     {
+                        //consult
                         if(Objects.equals(tokens.get(index).getContent(), ",") || Objects.equals(tokens.get(index).getContent(), ")"))
                         {
                             return true;
