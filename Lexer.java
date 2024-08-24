@@ -44,12 +44,15 @@ public class Lexer {
             col++;
 
             if (input.charAt(i) == ' ') {
+                id--;
                 continue;
             } else if (input.charAt(i) == '\n') {
+                id--;
                 row++;
                 col = 1;
                 continue;
             } else if (input.charAt(i) == '\t') {
+                id--;
                 continue;
             } else if (input.charAt(i) == ',') {
                 Token token = new Token(id, "Symbol", ",", row, col);

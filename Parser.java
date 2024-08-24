@@ -62,10 +62,17 @@ public class Parser
             writer.write("<TokenStream>\n");
             for(int i = 0; i < tokens.size(); i++)
             {
+                String content = tokens.get(i).getContent();
+
+                if(content == "< input")
+                {
+                    content = "&lt; input";
+                }
+
                 writer.write("<Token>\n");
                 writer.write("<ID> " + tokens.get(i).getId() + " </ID>\n");
                 writer.write("<Type> " + tokens.get(i).getType() + " </Type>\n");
-                writer.write("<Content> " + tokens.get(i).getContent().replaceAll("\\s", "") + " </Content>\n");
+                writer.write("<Content> " + content + " </Content>\n");
                 writer.write("</Token>\n");
             }
             writer.write("</TokenStream>\n");
@@ -1245,8 +1252,9 @@ public class Parser
         }
         else
         {
-            if(tokens.get(index).getContent() == "add" || tokens.get(index).getContent() == "sub" || tokens.get(index).getContent() == "mul" ||
-                    tokens.get(index).getContent() == "div" || tokens.get(index).getContent() == "sqrt")
+            if(Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") ||
+                    Objects.equals(tokens.get(index).getContent(), "mul") ||
+                    Objects.equals(tokens.get(index).getContent(), "div") || Objects.equals(tokens.get(index).getContent(), "sqrt"))
             {
                 Boolean opnode2 = parseOP(argNode);
                 if(opnode2)
@@ -1279,7 +1287,7 @@ public class Parser
                     return false;
                 }
             }
-            else if(tokens.get(index).getType() == "VNAME" || tokens.get(index).getType() == "CONST")
+            else if(Objects.equals(tokens.get(index).getType(), "VNAME") || Objects.equals(tokens.get(index).getType(), "CONST"))
             {
                 Boolean atomic = parseATOMIC(argNode);
                 if(atomic)

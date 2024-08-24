@@ -6,4 +6,8 @@ print V_a;
 print -5015;
 print "Abcdegh";
 V_a < input;
+V_a = V_a;
+V_b2 = 52.15;
+V_c21a = "Dabjha";
+V_a = sqrt(V_a);
 end
