@@ -2749,7 +2749,7 @@ public class Parser
                                           return false;
                                       }
 
-                                      if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void") || tokens.get(index).getContent() == "end")
+                                      if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void") || Objects.equals(tokens.get(index).getContent(), "end"))
                                       {
                                           Boolean subfuncs = parseSUBFUNCTS(BodyNode);
                                           if(subfuncs)
@@ -2761,7 +2761,7 @@ public class Parser
                                                   return false;
                                               }
 
-                                              if(tokens.get(index).getContent() == "end")
+                                              if(Objects.equals(tokens.get(index).getContent(), "end"))
                                               {
                                                   Node endNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                                                   BodyNode.children.add(endNode);
