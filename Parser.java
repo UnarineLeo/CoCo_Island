@@ -30,7 +30,7 @@ public class Parser
         {
             FileWriter writer = new FileWriter("Tokens.xml");
             writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-            printTree(tokens, writer, 0);
+            printTokens(tokens, writer, 0);
             writer.close();
 
         } catch (IOException e)
@@ -39,7 +39,7 @@ public class Parser
         }
     }
 
-    private void printTree(List<Token> tokens, FileWriter writer, int level)
+    private void printTokens(List<Token> tokens, FileWriter writer, int level)
     {
         if (tokens.isEmpty())
         {
@@ -80,14 +80,84 @@ public class Parser
         }
     }
 
+    private void writeTreeXML()
+    {
+        try
+        {
+            FileWriter writer = new FileWriter("Tree.xml");
+            writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+            printTree(root, writer, 0);
+            writer.close();
+
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void printTree(Node node, FileWriter writer, int level)
+    {
+        try
+        {
+            for (int i = 0; i < level; i++) {
+                writer.write("\t");
+            }
+
+            writer.write("<SyntaxTree>\n");
+
+            writer.write("<Root>\n");
+
+            writer.write("<UniqueID>" + node.getId() + "</UniqueID>\n");
+            writer.write("<StartSymbol>" + node.getContent() + "</StartSymbol>\n");
+            writer.write("<Children>\n");
+            for(Node child : node.children)
+            {
+                writer.write("<Child>\n");
+                writer.write("<UniqueID> " + child.getId() + " </UniqueID>\n");
+                writer.write("<Type> " + child.getType() + " </Type>\n");
+                writer.write("<Content> " + child.getContent() + " </Content>\n");
+                writer.write("</Child>\n");
+            }
+            writer.write("</Children>\n");
+
+            writer.write("</Root>\n");
+
+            writer.write("<InnerNodes>\n");
+            for(Node child : node.children)
+            {
+                if(child.getContent().equals("main"))
+                {
+                    writer.write("<Leaf>\n");
+                    writer.write("<UniqueID> " + child.getId() + " </UniqueID>\n");
+                    writer.write("<Type> " + child.getType() + " </Type>\n");
+                    writer.write("<Content> " + child.getContent() + " </Content>\n");
+                    writer.write("</Leaf>\n");
+                }
+                else
+                {
+                    writer.write("<IN>\n");
+
+                    writer.write("</IN>\n");
+                }
+
+            }
+            writer.write("</InnerNodes>\n");
+
+            writer.write("</SyntaxTree>\n");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Node parse()
     {
         if(parsePROG(null))
         {
             System.out.println("\u001B[32mSuccess\u001B[0m: Parsing successful");
+            System.out.println("Open Tree.xml file to view the tree" );
+            writeTreeXML();
             return root;
-//            System.out.println("Tree: " );
-//            System.out.println(root.toStringTree());
         }
         else
         {
@@ -805,8 +875,11 @@ public class Parser
                                 //TERM = CALL | OP | ATOMIC
                                 if(Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") ||
                                         Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div") ||
+                                        Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") ||
+                                        Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt") ||
                                         Objects.equals(tokens.get(index).getType(), "FNAME") || Objects.equals(tokens.get(index).getType(), "VNAME") ||
-                                        Objects.equals(tokens.get(index).getType(), "CONST") || Objects.equals(tokens.get(index).getContent(), "sqrt")
+                                        Objects.equals(tokens.get(index).getType(), "CONST") || Objects.equals(tokens.get(index).getContent(), "sqrt") ||
+                                        Objects.equals(tokens.get(index).getContent(), "not")
                                 )
                                 {
                                     Boolean term = parseTERM(assignNode);
@@ -887,7 +960,11 @@ public class Parser
         {
             if(Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") ||
                     Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div") ||
-                    Objects.equals(tokens.get(index).getContent(), "sqrt"))
+                    Objects.equals(tokens.get(index).getContent(), "sqrt") || Objects.equals(tokens.get(index).getContent(), "or") ||
+                    Objects.equals(tokens.get(index).getContent(), "and") ||
+                    Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt") ||
+                    Objects.equals(tokens.get(index).getContent(), "not")
+            )
             {
                 Boolean op = parseOP(termNode);
                 if(op)
@@ -1005,7 +1082,11 @@ public class Parser
         }
         else
         {
-            if(Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") || Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div"))
+            if(Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub")
+            || Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div")
+            || Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") ||
+            Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt")
+            )
             {
                 Boolean binop = parseBINOP(opNode);
                 if(binop)
@@ -1136,7 +1217,7 @@ public class Parser
                     return false;
                 }
             }
-            else if(Objects.equals(tokens.get(index).getContent(), "sqrt"))
+            else if(Objects.equals(tokens.get(index).getContent(), "sqrt") || Objects.equals(tokens.get(index).getContent(), "not"))
             {
                 Boolean unop = parseUNOP(opNode);
                 if(unop)
@@ -1255,8 +1336,11 @@ public class Parser
         else
         {
             if(Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") ||
-                    Objects.equals(tokens.get(index).getContent(), "mul") ||
-                    Objects.equals(tokens.get(index).getContent(), "div") || Objects.equals(tokens.get(index).getContent(), "sqrt"))
+            Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div") ||
+            Objects.equals(tokens.get(index).getContent(), "sqrt") || Objects.equals(tokens.get(index).getContent(), "or") ||
+            Objects.equals(tokens.get(index).getContent(), "and") || Objects.equals(tokens.get(index).getContent(), "not") ||
+            Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt")
+            )
             {
                 Boolean opnode2 = parseOP(argNode);
                 if(opnode2)
@@ -1727,9 +1811,10 @@ public class Parser
             }
             else if(Objects.equals(tokens.get(test).getType(), "VNAME") || Objects.equals(tokens.get(test).getType(), "CONST"))
             {
-                if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and")
-                || Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt")
-                )
+                if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") ||
+                Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt") ||
+                Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") ||
+                Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div"))
                 {
                     //Simple
                     Boolean simple = parseSIMPLE(condNode);
@@ -1770,10 +1855,11 @@ public class Parser
             }
             else
             {
-                if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and")
-                        || Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt")
-                    || Objects.equals(tokens.get(index).getContent(), "not")
-                )
+                if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") ||
+                Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt") ||
+                Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") ||
+                Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div") ||
+                Objects.equals(tokens.get(index).getContent(), "not") || Objects.equals(tokens.get(index).getContent(), "sqrt"))
                 {
                     //Composite
                     Boolean composite = parseCOMPOSIT(condNode);
@@ -1827,7 +1913,10 @@ public class Parser
         }
         else
         {
-            if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") || Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt"))
+            if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") ||
+            Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt") ||
+            Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") ||
+            Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div"))
             {
                 Boolean binop = parseBINOP(compositeNode);
                 if(binop)
@@ -1854,7 +1943,10 @@ public class Parser
                             }
                             else
                             {
-                                if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") || Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt"))
+                                if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") ||
+                                Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt") ||
+                                Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") ||
+                                Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div"))
                                 {
                                     Boolean simple = parseSIMPLE(compositeNode);
                                     if(simple)
@@ -1881,7 +1973,10 @@ public class Parser
                                                 }
                                                 else
                                                 {
-                                                    if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") || Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt"))
+                                                    if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") ||
+                                                    Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt") ||
+                                                    Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") ||
+                                                    Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div"))
                                                     {
                                                         Boolean simple2 = parseSIMPLE(compositeNode);
                                                         if(simple2)
@@ -2011,8 +2106,10 @@ public class Parser
                             {
                                 //Composite Unop(Simple)
                                 //Simple => BINOP(ATOMIC,ATOMIC)
-                                if (Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and")
-                                        || Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt"))
+                                if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") ||
+                                Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt") ||
+                                Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") ||
+                                Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div"))
                                 {
                                     Boolean simple = parseSIMPLE(compositeNode);
                                     if (simple)
@@ -2159,8 +2256,10 @@ public class Parser
         }
         else
         {
-            if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and")
-                    || Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt"))
+            if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") ||
+            Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt") ||
+            Objects.equals(tokens.get(index).getContent(), "add") || Objects.equals(tokens.get(index).getContent(), "sub") ||
+            Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div"))
             {
                 Boolean binop = parseBINOP(simpleNode);
                 if(binop)
@@ -2242,8 +2341,9 @@ public class Parser
                                                                     else
                                                                     {
                                                                         //consult
-                                                                        if(Objects.equals(tokens.get(index).getContent(), "then") || Objects.equals(tokens.get(index).getContent(), ")")
-                                                                                || Objects.equals(tokens.get(index).getContent(), ",")
+                                                                        if(Objects.equals(tokens.get(index).getContent(), "then") ||
+                                                                        Objects.equals(tokens.get(index).getContent(), ")")
+                                                                        || Objects.equals(tokens.get(index).getContent(), ",")
                                                                         )
                                                                         {
                                                                            return true;
@@ -2339,9 +2439,10 @@ public class Parser
         }
         else
         {
-            if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") || Objects.equals(tokens.get(index).getContent(), "eq") ||
-                    Objects.equals(tokens.get(index).getContent(), "grt") || Objects.equals(tokens.get(index).getContent(), "sub") || Objects.equals(tokens.get(index).getContent(), "add")
-                    || Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div"))
+            if(Objects.equals(tokens.get(index).getContent(), "or") || Objects.equals(tokens.get(index).getContent(), "and") ||
+            Objects.equals(tokens.get(index).getContent(), "eq") || Objects.equals(tokens.get(index).getContent(), "grt") ||
+            Objects.equals(tokens.get(index).getContent(), "sub") || Objects.equals(tokens.get(index).getContent(), "add") ||
+            Objects.equals(tokens.get(index).getContent(), "mul") || Objects.equals(tokens.get(index).getContent(), "div"))
             {
                 Node binaryNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                 binopNode.children.add(binaryNode);
@@ -2671,7 +2772,7 @@ public class Parser
                                                       return true;
                                                   }
 
-                                                  if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void")
+                                                  if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void"))
                                                   {
                                                       return true;
                                                   }
@@ -2768,11 +2869,11 @@ public class Parser
             return false;
         }
 
-        if(tokens.get(index).getContent() == "end")
+        if(Objects.equals(tokens.get(index).getContent(), "end"))
         {
             return true;
         }
-        else if(tokens.get(index).getContent() == "num" || tokens.get(index).getContent() == "void")
+        else if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void"))
         {
             Boolean functions = parseFUNCTIONS(subfuncs);
             if(functions)
@@ -3125,7 +3226,7 @@ public class Parser
                                                         return false;
                                                     }
 
-                                                    if(tokens.get(index).getContent() == ",")
+                                                    if(Objects.equals(tokens.get(index).getContent(), ","))
                                                     {
                                                         Node commaNode2 = new Node(id++, "Terminal", tokens.get(index).getContent());
                                                         HeaderNode.children.add(commaNode2);
@@ -3138,7 +3239,7 @@ public class Parser
                                                             return false;
                                                         }
 
-                                                        if(tokens.get(index).getType() == "VNAME")
+                                                        if(Objects.equals(tokens.get(index).getType(), "VNAME"))
                                                         {
                                                             Boolean vname3 = parseVNAME(HeaderNode);
                                                             if(vname3)
