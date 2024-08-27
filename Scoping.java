@@ -16,6 +16,8 @@ public class Scoping
     private List<String[]> calledList;
     public List<String[]> declaredList;
     private List<String[]> procList;
+    private List<String[]> lastProc;
+    private List<String[]> procArgs;
 
     public Scoping()
     {
@@ -23,6 +25,8 @@ public class Scoping
         calledList = new ArrayList<String[]>();
         declaredList = new ArrayList<String[]>();
         procList = new ArrayList<String[]>();
+        lastProc = new ArrayList<String[]>();
+        procArgs = new ArrayList<String[]>();
     }
 
     public void Scope(Node root)
@@ -37,10 +41,10 @@ public class Scoping
             System.out.println("\u001B[32mSuccess\u001B[0m: Scoping Successful");
             System.out.println("View the SymbolTable.html file for the symbol table");
 
-//            TypeChecking(root, "global", 1, false);
-//            System.out.println();
-//            System.out.println("\u001B[32mSuccess\u001B[0m: Type Checking Successful");
-//            System.out.println("\u001B[32mSuccess\u001B[0m: Sementic Analysis Successful");
+            TypeChecking(root, "global", 1, false);
+            System.out.println();
+            System.out.println("\u001B[32mSuccess\u001B[0m: Type Checking Successful");
+            System.out.println("\u001B[32mSuccess\u001B[0m: Sementic Analysis Successful");
 
         } catch (Exception e) {
             System.out.println("\u001B[31mScoping Error: " + e.getMessage());
@@ -140,6 +144,39 @@ public class Scoping
                 }
 
             }
+            else if(node.getContent().equals("CALL"))
+            {
+                //wait for spec, might have to remove it
+                String var = getType(node.children.getFirst());
+
+                if(calledList.isEmpty())
+                {
+                    calledList.add(new String[]{var});
+                }
+                else
+                {
+                    boolean found = false;
+                    for(String[] val: calledList)
+                    {
+                        if(val[0].equals(var))
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if(!found)
+                    {
+                        calledList.add(new String[]{var});
+                    }
+                }
+
+
+                for(Node child: node.children)
+                {
+                    createTable(child, currentScope, currentScopeID, false);
+                }
+            }
             else if(node.getContent().equals("HEADER"))
             {
                 String type = getType(node.children.getFirst());
@@ -154,6 +191,8 @@ public class Scoping
                         System.exit(0);
                     }
                 }
+
+                addArgs(node, var);
 
                 procList.add(new String[]{var, type, currentScope, String.valueOf(node.children.get(1).getId())});
                 String[] value = {var, type, "Function", String.valueOf(currentScopeID), currentScope};
@@ -210,7 +249,6 @@ public class Scoping
                     //consult
                     if(val[0].equals(var))
                     {
-                        calledList.add(new String[]{var, val[1], "Function", String.valueOf(currentScopeID), currentScope});
                         found = true;
                         break;
                     }
@@ -230,13 +268,13 @@ public class Scoping
             else if(node.getContent().equals("HEADER"))
             {
                 //might remove this
-                String var = getName(node.children.get(1));
+                String fun = getName(node.children.get(1));
 
                 //consult
                 boolean found = false;
                 for(String[] val: calledList)
                 {
-                    if(val[0].equals(var))
+                    if(val[0].equals(fun))
                     {
                         found = true;
                         break;
@@ -244,11 +282,14 @@ public class Scoping
                 }
 
                 //wait for spec
-//                if(!found)
-//                {
-//                    System.out.println("\u001B[31mSemantic Error: Function \"" + var + "\" is defined but is never called");
-//                    System.exit(0);
-//                }
+                if(!found)
+                {
+                    System.out.println("\u001B[31mSemantic Error: Function \"" + fun + "\" is defined but is never called");
+                    System.exit(0);
+                }
+
+                //caters for if duplicate function names are not allowed
+
 
                 for(Node child: node.children)
                 {
@@ -270,6 +311,174 @@ public class Scoping
 
     }
 
+    private void TypeChecking(Node node,String currentScope, int currentScopeID, boolean isDeclaration)
+    {
+        if(node == null)
+        {
+            return;
+        }
+
+        if(node.getType().equals("Non-Terminal"))
+        {
+            if(node.getContent().equals("ASSIGN") && !node.children.get(1).getContent().equals("< input"))
+            {
+                Node variableNode = node.children.getFirst();
+                Node termChild = node.children.get(2).children.getFirst();
+
+                String leftType = "";
+
+                for(String[] val: declaredList)
+                {
+                    if(val[0].equals(getName(variableNode)) && val[2].equals(currentScope))
+                    {
+                        leftType = val[1];
+                        break;
+                    }
+                }
+
+                if(termChild.getContent().equals("ATOMIC"))
+                {
+                    String rightType = "";
+                    Node rightValue = termChild.children.getFirst().children.getFirst();
+
+                    if(rightValue.getContent().charAt(0) == 'V')
+                    {
+                        for(String[] val: declaredList)
+                        {
+                            if(val[0].equals(rightValue.getContent()) && val[2].equals(currentScope))
+                            {
+                                rightType = val[1];
+                                break;
+                            }
+                        }
+                    }
+
+                    if(rightValue.getContent().charAt(0) == '"' || rightType.equals("text"))
+                    {
+                        if(leftType.equals("num"))
+                        {
+                            System.out.println("\u001B[31mSemantic Error: The variable \"" + getName(variableNode) + "\" which is a num cannot be assigned to a text");
+                            System.exit(0);
+                        }
+                    }
+                    else
+                    {
+                        if(leftType.equals("text"))
+                        {
+                            System.out.println("\u001B[31mSemantic Error: The variable \"" + getName(variableNode) + "\" which is a text cannot be assigned to a num");
+                            System.exit(0);
+                        }
+                    }
+
+                }
+                else if(termChild.getContent().equals("OP"))
+                {
+
+                }
+                else if(termChild.getContent().equals("CALL"))
+                {
+                    Node functionNode = termChild.children.getFirst();
+                    //Problem: Allow same function names???
+                    if(leftType.equals("num"))
+                    {
+                        //look for function type
+                        String functionType = "";
+                        for(String[] val: procList)
+                        {
+                            if(val[0].equals(getName(functionNode)))
+                            {
+                                functionType = val[1];
+                                break;
+                            }
+                        }
+
+                        if(!functionType.equals("num"))
+                        {
+                            System.out.println("\u001B[31mSemantic Error: The function \"" + getName(functionNode) + "\" is supposed to return a num");
+                            System.exit(0);
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mSemantic Error: The variable \"" + getName(variableNode) + "\" is supposed to be num so that we can assign it with a num function");
+                        System.exit(0);
+                    }
+
+                    //verify the args
+                    verifyArgs(getName(functionNode), termChild);
+                }
+                else
+                {
+                    for(Node child : node.children)
+                    {
+                        TypeChecking(child, currentScope, currentScopeID, false);
+                    }
+                }
+            }
+            else if(node.getContent().equals("COMMAND"))
+            {
+                Node callNode = node.children.getFirst();
+                if(callNode.getContent().equals("CALL"))
+                {
+                    Node functionNode = callNode.children.getFirst();
+
+                    String functionType = "";
+                    for(String[] val: procList)
+                    {
+                        if(val[0].equals(getName(functionNode)))
+                        {
+                            functionType = val[1];
+                            break;
+                        }
+                    }
+
+                    if(!functionType.equals("void"))
+                    {
+                        System.out.println("\u001B[31mSemantic Error: The function \"" + getName(functionNode) + "\" is supposed to return a void");
+                        System.exit(0);
+                    }
+
+                    //verify the args
+                    verifyArgs(getName(functionNode), callNode);
+                }
+            }
+            else if(node.getContent().equals("HEADER"))
+            {
+                String type = getType(node.children.getFirst());
+                String var = getName(node.children.get(1));
+
+                lastProc.add(new String[]{var, type, currentScope, String.valueOf(node.children.get(1).getId())});
+
+                for(Node child: node.children)
+                {
+                    TypeChecking(child, currentScope, currentScopeID, false);
+                }
+            }
+            else if(node.getContent().equals("BODY"))
+            {
+                String currScope = lastProc.getLast()[0];
+                int procId = Integer.parseInt(lastProc.getLast()[3]);
+
+                for(Node child: node.children)
+                {
+                    TypeChecking(child, currScope, procId, false);
+                }
+            }
+            else
+            {
+                for(Node child : node.children)
+                {
+                    TypeChecking(child, currentScope, currentScopeID, false);
+                }
+
+            }
+        }
+        else
+        {
+            TypeChecking(null, currentScope, currentScopeID, false);
+        }
+    }
+
     public String getName(Node node)
     {
         //must be on VNAME OR FNAME
@@ -280,6 +489,31 @@ public class Scoping
     {
         //must be on VTYPE OR FTYPE
         return node.children.getFirst().getContent();
+    }
+
+    private void addArgs(Node node, String fun)
+    {
+        //node must be call
+        String var1 = getName(node.children.get(3));
+        String var2 = getName(node.children.get(5));
+        String var3 = getName(node.children.get(7));
+
+        String scope = "";
+        if(procList.isEmpty())
+        {
+            scope = "global";
+        }
+        else
+        {
+            scope = procList.getLast()[0];
+        }
+
+        procArgs.add(new String[]{var1, var2, var3, fun, scope});
+    }
+
+    private void verifyArgs(String func, Node callNode)
+    {
+        //node must be call
     }
 
     private void createHTMLTable()
