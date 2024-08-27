@@ -278,7 +278,7 @@
 <Token>
 <ID> 56 </ID>
 <Type> FNAME </Type>
-<Content> F_nn3 </Content>
+<Content> F_unc34 </Content>
 </Token>
 <Token>
 <ID> 57 </ID>
@@ -1057,26 +1057,81 @@
 </Token>
 <Token>
 <ID> 212 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
+<Type> VNAME </Type>
+<Content> V_name </Content>
 </Token>
 <Token>
 <ID> 213 </ID>
 <Type> Symbol </Type>
-<Content> } </Content>
+<Content> = </Content>
 </Token>
 <Token>
 <ID> 214 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
+<Type> FNAME </Type>
+<Content> F_unc4 </Content>
 </Token>
 <Token>
 <ID> 215 </ID>
+<Type> Symbol </Type>
+<Content> ( </Content>
+</Token>
+<Token>
+<ID> 216 </ID>
+<Type> VNAME </Type>
+<Content> V_abc </Content>
+</Token>
+<Token>
+<ID> 217 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 218 </ID>
+<Type> VNAME </Type>
+<Content> V_def </Content>
+</Token>
+<Token>
+<ID> 219 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 220 </ID>
+<Type> VNAME </Type>
+<Content> V_ghi </Content>
+</Token>
+<Token>
+<ID> 221 </ID>
+<Type> Symbol </Type>
+<Content> ) </Content>
+</Token>
+<Token>
+<ID> 222 </ID>
+<Type> Symbol </Type>
+<Content> ; </Content>
+</Token>
+<Token>
+<ID> 223 </ID>
 <Type> Keyword </Type>
 <Content> end </Content>
 </Token>
 <Token>
-<ID> 216 </ID>
+<ID> 224 </ID>
+<Type> Symbol </Type>
+<Content> } </Content>
+</Token>
+<Token>
+<ID> 225 </ID>
+<Type> Keyword </Type>
+<Content> end </Content>
+</Token>
+<Token>
+<ID> 226 </ID>
+<Type> Keyword </Type>
+<Content> end </Content>
+</Token>
+<Token>
+<ID> 227 </ID>
 <Type> Keyword </Type>
 <Content> end </Content>
 </Token>

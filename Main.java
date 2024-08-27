@@ -20,10 +20,6 @@ public class Main
               scope.Scope(root);
             //  Translation translation = new Translation();
             //  translation.Translate(root, scope);
-            //  for(int i=0; i<tokens.size(); i++)
-            //  {
-            //      System.out.println(tokens.get(i));
-            //  }
 
              System.out.print("Do you want to enter another file? (y/n): ");
              response = scanner.nextLine();

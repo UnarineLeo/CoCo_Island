@@ -30,7 +30,7 @@ public class Scoping
         try
         {
             createTable(root, "global", 1, false);
-//            checkCalls(root, "global", 1, false);
+            checkCalls(root, "global", 1, false);
             createHTMLTable();
 
             System.out.println();
@@ -147,6 +147,7 @@ public class Scoping
 
                 for(String[] val: procList)
                 {
+                    //are duplicates allowed? if in different scopes
                     if(val[0].equals(var) && val[2].equals(currentScope))
                     {
                         System.out.println("\u001B[31mSemantic Error: Function \"" + var + "\" is being declared more than once in the same scope");
@@ -185,6 +186,88 @@ public class Scoping
         {
             createTable(null, currentScope, currentScopeID, false);
         }
+    }
+
+    private void checkCalls(Node node, String currentScope, int currentScopeID, boolean isDeclaration)
+    {
+        if(node == null)
+        {
+            return;
+        }
+
+        //might need a revamp, might have to move it up to createTable
+        //to accomodate for situations whereby the call is inside a function
+        //wait for spec
+        if(node.getType().equals("Non-Terminal"))
+        {
+            if(node.getContent().equals("CALL"))
+            {
+                String var = getType(node.children.getFirst());
+
+                boolean found = false;
+                for(String[] val: procList)
+                {
+                    //consult
+                    if(val[0].equals(var))
+                    {
+                        calledList.add(new String[]{var, val[1], "Function", String.valueOf(currentScopeID), currentScope});
+                        found = true;
+                        break;
+                    }
+                }
+
+                if(!found)
+                {
+                    System.out.println("\u001B[31mSemantic Error: Function \"" + var + "\" is being called while it is not defined");
+                    System.exit(0);
+                }
+
+                for(Node child: node.children)
+                {
+                    createTable(child, currentScope, currentScopeID, false);
+                }
+            }
+            else if(node.getContent().equals("HEADER"))
+            {
+                //might remove this
+                String var = getName(node.children.get(1));
+
+                //consult
+                boolean found = false;
+                for(String[] val: calledList)
+                {
+                    if(val[0].equals(var))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                //wait for spec
+//                if(!found)
+//                {
+//                    System.out.println("\u001B[31mSemantic Error: Function \"" + var + "\" is defined but is never called");
+//                    System.exit(0);
+//                }
+
+                for(Node child: node.children)
+                {
+                    createTable(child, currentScope, currentScopeID, false);
+                }
+            }
+            else
+            {
+                for(Node child: node.children)
+                {
+                    checkCalls(child, currentScope, currentScopeID, false);
+                }
+            }
+        }
+        else
+        {
+            checkCalls(null, currentScope, currentScopeID, false);
+        }
+
     }
 
     public String getName(Node node)
