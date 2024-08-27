@@ -157,8 +157,8 @@
 </Token>
 <Token>
 <ID> 32 </ID>
-<Type> CONST </Type>
-<Content> 155 </Content>
+<Type> VNAME </Type>
+<Content> V_surname </Content>
 </Token>
 <Token>
 <ID> 33 </ID>
@@ -743,7 +743,7 @@
 <Token>
 <ID> 149 </ID>
 <Type> FNAME </Type>
-<Content> F_nn3 </Content>
+<Content> F_unc3 </Content>
 </Token>
 <Token>
 <ID> 150 </ID>
@@ -793,7 +793,7 @@
 <Token>
 <ID> 159 </ID>
 <Type> VNAME </Type>
-<Content> V_name </Content>
+<Content> V_abc </Content>
 </Token>
 <Token>
 <ID> 160 </ID>
@@ -808,7 +808,7 @@
 <Token>
 <ID> 162 </ID>
 <Type> VNAME </Type>
-<Content> V_age </Content>
+<Content> V_def </Content>
 </Token>
 <Token>
 <ID> 163 </ID>
@@ -823,7 +823,7 @@
 <Token>
 <ID> 165 </ID>
 <Type> VNAME </Type>
-<Content> V_surname </Content>
+<Content> V_ghi </Content>
 </Token>
 <Token>
 <ID> 166 </ID>
@@ -847,6 +847,236 @@
 </Token>
 <Token>
 <ID> 170 </ID>
+<Type> Keyword </Type>
+<Content> num </Content>
+</Token>
+<Token>
+<ID> 171 </ID>
+<Type> FNAME </Type>
+<Content> F_unc4 </Content>
+</Token>
+<Token>
+<ID> 172 </ID>
+<Type> Symbol </Type>
+<Content> ( </Content>
+</Token>
+<Token>
+<ID> 173 </ID>
+<Type> VNAME </Type>
+<Content> V_abc </Content>
+</Token>
+<Token>
+<ID> 174 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 175 </ID>
+<Type> VNAME </Type>
+<Content> V_def </Content>
+</Token>
+<Token>
+<ID> 176 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 177 </ID>
+<Type> VNAME </Type>
+<Content> V_ghi </Content>
+</Token>
+<Token>
+<ID> 178 </ID>
+<Type> Symbol </Type>
+<Content> ) </Content>
+</Token>
+<Token>
+<ID> 179 </ID>
+<Type> Symbol </Type>
+<Content> { </Content>
+</Token>
+<Token>
+<ID> 180 </ID>
+<Type> Keyword </Type>
+<Content> text </Content>
+</Token>
+<Token>
+<ID> 181 </ID>
+<Type> VNAME </Type>
+<Content> V_jkl </Content>
+</Token>
+<Token>
+<ID> 182 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 183 </ID>
+<Type> Keyword </Type>
+<Content> num </Content>
+</Token>
+<Token>
+<ID> 184 </ID>
+<Type> VNAME </Type>
+<Content> V_mno </Content>
+</Token>
+<Token>
+<ID> 185 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 186 </ID>
+<Type> Keyword </Type>
+<Content> text </Content>
+</Token>
+<Token>
+<ID> 187 </ID>
+<Type> VNAME </Type>
+<Content> V_pqr </Content>
+</Token>
+<Token>
+<ID> 188 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 189 </ID>
+<Type> Keyword </Type>
+<Content> begin </Content>
+</Token>
+<Token>
+<ID> 190 </ID>
+<Type> Keyword </Type>
+<Content> end </Content>
+</Token>
+<Token>
+<ID> 191 </ID>
+<Type> Symbol </Type>
+<Content> } </Content>
+</Token>
+<Token>
+<ID> 192 </ID>
+<Type> Keyword </Type>
+<Content> num </Content>
+</Token>
+<Token>
+<ID> 193 </ID>
+<Type> FNAME </Type>
+<Content> F_unc5 </Content>
+</Token>
+<Token>
+<ID> 194 </ID>
+<Type> Symbol </Type>
+<Content> ( </Content>
+</Token>
+<Token>
+<ID> 195 </ID>
+<Type> VNAME </Type>
+<Content> V_def </Content>
+</Token>
+<Token>
+<ID> 196 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 197 </ID>
+<Type> VNAME </Type>
+<Content> V_mno </Content>
+</Token>
+<Token>
+<ID> 198 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 199 </ID>
+<Type> VNAME </Type>
+<Content> V_pqr </Content>
+</Token>
+<Token>
+<ID> 200 </ID>
+<Type> Symbol </Type>
+<Content> ) </Content>
+</Token>
+<Token>
+<ID> 201 </ID>
+<Type> Symbol </Type>
+<Content> { </Content>
+</Token>
+<Token>
+<ID> 202 </ID>
+<Type> Keyword </Type>
+<Content> text </Content>
+</Token>
+<Token>
+<ID> 203 </ID>
+<Type> VNAME </Type>
+<Content> V_stu </Content>
+</Token>
+<Token>
+<ID> 204 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 205 </ID>
+<Type> Keyword </Type>
+<Content> num </Content>
+</Token>
+<Token>
+<ID> 206 </ID>
+<Type> VNAME </Type>
+<Content> V_vwx </Content>
+</Token>
+<Token>
+<ID> 207 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 208 </ID>
+<Type> Keyword </Type>
+<Content> text </Content>
+</Token>
+<Token>
+<ID> 209 </ID>
+<Type> VNAME </Type>
+<Content> V_yza </Content>
+</Token>
+<Token>
+<ID> 210 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 211 </ID>
+<Type> Keyword </Type>
+<Content> begin </Content>
+</Token>
+<Token>
+<ID> 212 </ID>
+<Type> Keyword </Type>
+<Content> end </Content>
+</Token>
+<Token>
+<ID> 213 </ID>
+<Type> Symbol </Type>
+<Content> } </Content>
+</Token>
+<Token>
+<ID> 214 </ID>
+<Type> Keyword </Type>
+<Content> end </Content>
+</Token>
+<Token>
+<ID> 215 </ID>
+<Type> Keyword </Type>
+<Content> end </Content>
+</Token>
+<Token>
+<ID> 216 </ID>
 <Type> Keyword </Type>
 <Content> end </Content>
 </Token>

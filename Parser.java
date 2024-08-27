@@ -97,6 +97,7 @@ public class Parser
 
     private void printTree(Node node, FileWriter writer, int level)
     {
+        String content = "";
         try
         {
             for (int i = 0; i < level; i++) {
@@ -112,10 +113,15 @@ public class Parser
             writer.write("<Children>\n");
             for(Node child : node.children)
             {
+                content = child.getContent();
+                if (Objects.equals(content, "< input")) {
+                    content = "&lt; input";
+                }
+
                 writer.write("<Child>\n");
                 writer.write("<UniqueID> " + child.getId() + " </UniqueID>\n");
                 writer.write("<Type> " + child.getType() + " </Type>\n");
-                writer.write("<Content> " + child.getContent() + " </Content>\n");
+                writer.write("<Content> " + content + " </Content>\n");
                 writer.write("</Child>\n");
             }
             writer.write("</Children>\n");
@@ -123,25 +129,13 @@ public class Parser
             writer.write("</Root>\n");
 
             writer.write("<InnerNodes>\n");
-            for(Node child : node.children)
-            {
-                if(child.getContent().equals("main"))
-                {
-                    writer.write("<Leaf>\n");
-                    writer.write("<UniqueID> " + child.getId() + " </UniqueID>\n");
-                    writer.write("<Type> " + child.getType() + " </Type>\n");
-                    writer.write("<Content> " + child.getContent() + " </Content>\n");
-                    writer.write("</Leaf>\n");
-                }
-                else
-                {
-                    writer.write("<IN>\n");
+            // between the root and the leaf [Only Non-Terminals]
 
-                    writer.write("</IN>\n");
-                }
-
-            }
             writer.write("</InnerNodes>\n");
+
+            writer.write("<LeafNodes>\n");
+            //for only terminals also indicate parent
+            writer.write("</LeafNodes>\n");
 
             writer.write("</SyntaxTree>\n");
 
@@ -381,7 +375,7 @@ public class Parser
 
         if(index >= tokens.size())
         {
-            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected VNAME after VTYPE at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
+            System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"begin\" or \"num\" or \"text\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
             System.exit(0);
             return false;
         }
@@ -560,7 +554,7 @@ public class Parser
         parent.children.add(InstrucNode);
 
         if(Objects.equals(tokens.get(index).getContent(), "print") || Objects.equals(tokens.get(index).getContent(), "skip") || Objects.equals(tokens.get(index).getContent(), "halt") ||
-                Objects.equals(tokens.get(index).getContent(), "if") || Objects.equals(tokens.get(index).getType(), "VNAME") || Objects.equals(tokens.get(index).getType(), "FNAME") || Objects.equals(tokens.get(index).getContent(), "end"))
+        Objects.equals(tokens.get(index).getContent(), "if") || Objects.equals(tokens.get(index).getType(), "VNAME") || Objects.equals(tokens.get(index).getType(), "FNAME") || Objects.equals(tokens.get(index).getContent(), "end"))
         {
             if(Objects.equals(tokens.get(index).getContent(), "end"))
             {
@@ -2587,10 +2581,19 @@ public class Parser
         }
         else
         {
+            if(Objects.equals(tokens.get(index).getContent(), "end"))
+            {
+                return true;
+            }
+
             Boolean decl = parseDECL(functionsNode);
             if(decl)
             {
                 if(index >= tokens.size())
+                {
+                    return true;
+                }
+                else if(Objects.equals(tokens.get(index).getContent(), "end"))
                 {
                     return true;
                 }
@@ -2648,7 +2651,8 @@ public class Parser
                             {
                                 return true;
                             }
-                            else if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void"))
+                            else if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void")
+                            || Objects.equals(tokens.get(index).getContent(), "end"))
                             {
                                return true;
                             }
@@ -2772,7 +2776,8 @@ public class Parser
                                                       return true;
                                                   }
 
-                                                  if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void"))
+                                                  if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void")
+                                                  || Objects.equals(tokens.get(index).getContent(), "end"))
                                                   {
                                                       return true;
                                                   }
@@ -2869,16 +2874,36 @@ public class Parser
             return false;
         }
 
-        if(Objects.equals(tokens.get(index).getContent(), "end"))
-        {
-            return true;
-        }
-        else if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void"))
+        if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void") ||
+        Objects.equals(tokens.get(index).getContent(), "end"))
         {
             Boolean functions = parseFUNCTIONS(subfuncs);
             if(functions)
             {
-                return true;
+                if(index >= tokens.size())
+                {
+                    System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FUNCS\" or \"end\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
+                    System.exit(0);
+                    return false;
+                }
+                else
+                {
+                    if(Objects.equals(tokens.get(index).getContent(), "end"))
+                    {
+                        return true;
+                    }
+                    else if(Objects.equals(tokens.get(index).getContent(), "num") || Objects.equals(tokens.get(index).getContent(), "void"))
+                    {
+                        parseSUBFUNCTS(subfuncs);
+                        return true;
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"FUNCS\" or \"end\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
+                        System.exit(0);
+                        return false;
+                    }
+                }
             }
             else
             {
@@ -2897,7 +2922,7 @@ public class Parser
 
     private Boolean parseLOCALVARS(Node parent)
     {
-        Node localVars = new Node(id++, "Non-Terminal", "LOCALVARS");
+        Node localVars = new Node(id++, "Non-Terminal", "LOCVARS");
         parent.children.add(localVars);
 
         if(index >= tokens.size())

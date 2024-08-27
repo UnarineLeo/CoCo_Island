@@ -16,8 +16,8 @@ public class Main
              String fileName = scanner.nextLine();
              Parser parser = new Parser(fileName);
              root = parser.parse();
-            //  Scoping scope = new Scoping();
-            //  scope.Scope(root);
+              Scoping scope = new Scoping();
+              scope.Scope(root);
             //  Translation translation = new Translation();
             //  translation.Translate(root, scope);
             //  for(int i=0; i<tokens.size(); i++)

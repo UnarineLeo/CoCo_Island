@@ -1,4 +1,7 @@
-main text V_a,num V_b2,text V_c21a,
+main
+text V_a,
+num V_b2,
+text V_c21a,
 
 begin
 
