@@ -18,6 +18,7 @@ public class Scoping
     private List<String[]> procList;
     private List<String[]> lastProc;
     private List<String[]> procArgs;
+    private List<String> scopeOrder;
 
     public Scoping()
     {
@@ -27,12 +28,14 @@ public class Scoping
         procList = new ArrayList<String[]>();
         lastProc = new ArrayList<String[]>();
         procArgs = new ArrayList<String[]>();
+        scopeOrder = new ArrayList<String>();
     }
 
     public void Scope(Node root)
     {
         try
         {
+            scopeOrder.add("global");
             createTable(root, "global", 1, false);
             checkCalls(root, "global", 1, false);
             createHTMLTable();
@@ -192,7 +195,8 @@ public class Scoping
                     }
                 }
 
-                addArgs(node, var);
+                addFuncArgs(node, var);
+                scopeOrder.add(var);
 
                 procList.add(new String[]{var, type, currentScope, String.valueOf(node.children.get(1).getId())});
                 String[] value = {var, type, "Function", String.valueOf(currentScopeID), currentScope};
@@ -320,6 +324,7 @@ public class Scoping
 
         if(node.getType().equals("Non-Terminal"))
         {
+
             if(node.getContent().equals("ASSIGN") && !node.children.get(1).getContent().equals("< input"))
             {
                 Node variableNode = node.children.getFirst();
@@ -369,10 +374,17 @@ public class Scoping
                             System.exit(0);
                         }
                     }
-
                 }
                 else if(termChild.getContent().equals("OP"))
                 {
+
+                    if(leftType.equals("text"))
+                    {
+                        System.out.println("\u001B[31mSemantic Error: The variable \"" + getName(variableNode) + "\" which is a text cannot be assigned using a numerical operation");
+                        System.exit(0);
+                    }
+
+                    CheckARG(termChild, currentScope);
 
                 }
                 else if(termChild.getContent().equals("CALL"))
@@ -405,7 +417,8 @@ public class Scoping
                     }
 
                     //verify the args
-                    verifyArgs(getName(functionNode), termChild);
+                    verifyFuncArgs(getName(functionNode), termChild, currentScope);
+
                 }
                 else
                 {
@@ -414,33 +427,36 @@ public class Scoping
                         TypeChecking(child, currentScope, currentScopeID, false);
                     }
                 }
+
             }
-            else if(node.getContent().equals("COMMAND"))
+            else if(node.getContent().equals("COND"))
+            {
+                CheckCOND(node.children.getFirst(), currentScope);
+            }
+            else if(node.getContent().equals("COMMAND") && node.children.getFirst().getContent().equals("CALL"))
             {
                 Node callNode = node.children.getFirst();
-                if(callNode.getContent().equals("CALL"))
+
+                Node functionNode = callNode.children.getFirst();
+
+                String functionType = "";
+                for(String[] val: procList)
                 {
-                    Node functionNode = callNode.children.getFirst();
-
-                    String functionType = "";
-                    for(String[] val: procList)
+                    if(val[0].equals(getName(functionNode)))
                     {
-                        if(val[0].equals(getName(functionNode)))
-                        {
-                            functionType = val[1];
-                            break;
-                        }
+                        functionType = val[1];
+                        break;
                     }
-
-                    if(!functionType.equals("void"))
-                    {
-                        System.out.println("\u001B[31mSemantic Error: The function \"" + getName(functionNode) + "\" is supposed to return a void");
-                        System.exit(0);
-                    }
-
-                    //verify the args
-                    verifyArgs(getName(functionNode), callNode);
                 }
+
+                if(!functionType.equals("void"))
+                {
+                    System.out.println("\u001B[31mSemantic Error: The function \"" + getName(functionNode) + "\" is supposed to return a void");
+                    System.exit(0);
+                }
+
+                //verify the args
+                verifyFuncArgs(getName(functionNode), callNode, currentScope);
             }
             else if(node.getContent().equals("HEADER"))
             {
@@ -456,12 +472,12 @@ public class Scoping
             }
             else if(node.getContent().equals("BODY"))
             {
-                String currScope = lastProc.getLast()[0];
+                String funcScope = lastProc.getLast()[0];
                 int procId = Integer.parseInt(lastProc.getLast()[3]);
 
                 for(Node child: node.children)
                 {
-                    TypeChecking(child, currScope, procId, false);
+                    TypeChecking(child, funcScope, procId, false);
                 }
             }
             else
@@ -491,7 +507,7 @@ public class Scoping
         return node.children.getFirst().getContent();
     }
 
-    private void addArgs(Node node, String fun)
+    private void addFuncArgs(Node node, String fun)
     {
         //node must be call
         String var1 = getName(node.children.get(3));
@@ -511,9 +527,341 @@ public class Scoping
         procArgs.add(new String[]{var1, var2, var3, fun, scope});
     }
 
-    private void verifyArgs(String func, Node callNode)
+    private void verifyFuncArgs(String func, Node callNode, String callScope)
     {
-        //node must be call
+        //node must be call, this implementation assumes that only 1 unique name allowed
+        String[] toVerify = {};
+
+        Node call1 = callNode.children.get(2).children.getFirst().children.getFirst();
+        Node call2 = callNode.children.get(4).children.getFirst().children.getFirst();
+        Node call3 = callNode.children.get(6).children.getFirst().children.getFirst();
+
+        String typeCall1 = "";
+        String typeCall2 = "";
+        String typeCall3 = "";
+
+        Node[] calls = {call1, call2, call3};
+        String[] callTypes = {typeCall1, typeCall2, typeCall3};
+
+        int callIndex = 0;
+
+        for(int i = (procArgs.size()-1); i >= 0; i--)
+        {
+            if(procArgs.get(i)[4].equals(callScope))
+            {
+                callIndex = i;
+            }
+        }
+
+        for(int i = 0; i < calls.length; i++)
+        {
+            if(calls[i].getContent().charAt(0) == 'V')
+            {
+                for(int j = callIndex; j >= 0; j--)
+                {
+                    for(String[] val: declaredList)
+                    {
+                        if(val[0].equals(calls[i].getContent()) && val[2].equals(procArgs.get(j)[4]))
+                        {
+                            callTypes[i] = val[1];
+                            break;
+                        }
+                    }
+
+                    if(!callTypes[i].isEmpty())
+                    {
+                        break;
+                    }
+                }
+            }
+            else if(calls[i].getContent().charAt(0) == '"')
+            {
+                callTypes[i] = "text";
+            }
+            else
+            {
+                callTypes[i] = "num";
+            }
+        }
+
+        int index = 0;
+        for(String[] val: procArgs)
+        {
+            if(val[3].equals(func))
+            {
+                toVerify = val;
+                index = procArgs.indexOf(val);
+                break;
+            }
+        }
+
+        String arg1 = toVerify[0];
+        String arg2 = toVerify[1];
+        String arg3 = toVerify[2];
+
+        if(toVerify[4].equals("global"))
+        {
+            boolean pass1 = false;
+            boolean pass2 = false;
+            boolean pass3 = false;
+
+            for(String[] val: declaredList)
+            {
+                if(val[0].equals(arg1) && val[2].equals("global"))
+                {
+                    pass1 = true;
+                    if(!val[1].equals(callTypes[0]))
+                    {
+                        System.out.println("\u001B[31mSemantic Error: The function \"" + func + "\" is supposed to take a " + val[1] + " as the first argument");
+                        System.exit(0);
+                    }
+                }
+
+                if(val[0].equals(arg2) && val[2].equals("global"))
+                {
+                    pass2 = true;
+                    if(!val[1].equals(callTypes[1]))
+                    {
+                        System.out.println("\u001B[31mSemantic Error: The function \"" + func + "\" is supposed to take a " + val[1] + " as the second argument");
+                        System.exit(0);
+                    }
+                }
+
+                if(val[0].equals(arg3) && val[2].equals("global"))
+                {
+                    pass3 = true;
+                    if(!val[1].equals(callTypes[2]))
+                    {
+                        System.out.println("\u001B[31mSemantic Error: The function \"" + func + "\" is supposed to take a " + val[1] + " as the third argument");
+                        System.exit(0);
+                    }
+                }
+
+                if(pass1 && pass2 && pass3)
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            boolean found1 = false;
+            boolean found2 = false;
+            boolean found3 = false;
+
+            /*
+            for(int i = index; i >= 0; i--)
+            {
+                for(String[] val: declaredList)
+                {
+                    if(val[0].equals(arg1) && val[2].equals(procArgs.get(i)[4]) && !found1)
+                    {
+                        if (!val[1].equals(callTypes[0]))
+                        {
+                            System.out.println("\u001B[31mSemantic Error: The function \"" + func + "\" is supposed to take a " + val[1] + " as the first argument");
+                            System.exit(0);
+                        }
+                        found1 = true;
+                    }
+
+                    if(val[0].equals(arg2) && val[2].equals(procArgs.get(i)[4]) && !found2)
+                    {
+                        if (!val[1].equals(callTypes[1]))
+                        {
+                            System.out.println("\u001B[31mSemantic Error: The function \"" + func + "\" is supposed to take a " + val[1] + " as the second argument");
+                            System.exit(0);
+                        }
+                        found2 = true;
+                    }
+
+                    if(val[0].equals(arg3) && val[2].equals(procArgs.get(i)[4]) && !found3)
+                    {
+                        if (!val[1].equals(callTypes[2]))
+                        {
+                            System.out.println("\u001B[31mSemantic Error: The function \"" + func + "\" is supposed to take a " + val[1] + " as the third argument");
+                            System.exit(0);
+                        }
+                        found3 = true;
+                    }
+                }
+            }
+
+             */
+
+        }
+        boolean done = true;
+
+
+    }
+
+    private void CheckARG(Node node, String currentScope)
+    {
+        //Node must be OP || ATOMIC
+
+        if(node.getContent().equals("OP"))
+        {
+            Node argChild = node.children.getFirst();
+
+            if(argChild.getContent().equals("BINOP"))
+            {
+                Node exactBinop = argChild.children.getFirst();
+
+                if(Objects.equals(exactBinop.getContent(), "add") || Objects.equals(exactBinop.getContent(), "sub") ||
+                Objects.equals(exactBinop.getContent(), "mul") || Objects.equals(exactBinop.getContent(), "div")
+                )
+                {
+                    CheckARG(node.children.get(2).children.getFirst(), currentScope);
+                    CheckARG(node.children.get(4).children.getFirst(), currentScope);
+                }
+                else
+                {
+                    System.out.println("\u001B[31mSemantic Error: Expected \"add\", \"sub\", \"mul\" or \"div\" but got \"" + exactBinop.getContent() + "\" when assigning a value to a num variable");
+                    System.exit(0);
+                }
+
+
+            }
+            else
+            {
+                Node exactBinop = argChild.children.getFirst();
+
+                if(Objects.equals(exactBinop.getContent(), "sqrt"))
+                {
+                    CheckARG(node.children.get(2).children.getFirst(), currentScope);
+                }
+                else
+                {
+                    System.out.println("\u001B[31mSemantic Error: Expected \"sqrt\" but got \"" + exactBinop.getContent() + "\" when assigning a value to a num variable");
+                    System.exit(0);
+                }
+
+            }
+        }
+
+        if(node.getContent().equals("ATOMIC"))
+        {
+            Node value = node.children.getFirst().children.getFirst();
+            String atomicType = "";
+            if(value.getContent().charAt(0) == 'V')
+            {
+                int index = scopeOrder.indexOf(currentScope);
+                for(int i = index; i >= 0; i--)
+                {
+                    for(String[] val: declaredList)
+                    {
+                        if(val[0].equals(value.getContent()) && val[2].equals(scopeOrder.get(i)))
+                        {
+                            atomicType = val[1];
+                            break;
+                        }
+                    }
+
+                    if(!atomicType.isEmpty())
+                    {
+                        break;
+                    }
+                }
+            }
+            else if(value.getContent().charAt(0) == '"')
+            {
+                atomicType = "text";
+            }
+            else
+            {
+                atomicType = "num";
+            }
+
+            if(atomicType.equals("text"))
+            {
+                System.out.println("\u001B[31mSemantic Error: Assignment of a numeric value only works with a num and/or numerical operations");
+                System.exit(0);
+            }
+        }
+    }
+
+    private void CheckCOND(Node node, String currentScope)
+    {
+        //Node must be OP || ATOMIC
+
+        if(node.getContent().equals("SIMPLE") || node.getContent().equals("COMPOSIT"))
+        {
+            Node argChild = node.children.getFirst();
+
+            if(argChild.getContent().equals("BINOP"))
+            {
+                Node exactBinop = argChild.children.getFirst();
+
+                if(Objects.equals(exactBinop.getContent(), "or") || Objects.equals(exactBinop.getContent(), "and") ||
+                        Objects.equals(exactBinop.getContent(), "eq") || Objects.equals(exactBinop.getContent(), "grt")
+                )
+                {
+                    CheckCOND(node.children.get(2), currentScope);
+                    CheckCOND(node.children.get(4), currentScope);
+                }
+                else
+                {
+                    System.out.println("\u001B[31mSemantic Error: Expected \"or\", \"and\", \"eq\" or \"grt\" but got \"" + exactBinop.getContent() + "\" when looking for a boolean value");
+                    System.exit(0);
+                }
+
+
+            }
+            else
+            {
+                Node exactBinop = argChild.children.getFirst();
+
+                if(Objects.equals(exactBinop.getContent(), "not"))
+                {
+                    CheckCOND(node.children.get(2), currentScope);
+                }
+                else
+                {
+                    System.out.println("\u001B[31mSemantic Error: Expected \"not\" but got \"" + exactBinop.getContent() + "\" when looking for a boolean value");
+                    System.exit(0);
+                }
+
+            }
+        }
+
+        if(node.getContent().equals("ATOMIC"))
+        {
+            Node value = node.children.getFirst().children.getFirst();
+            String atomicType = "";
+            if(value.getContent().charAt(0) == 'V')
+            {
+                int index = scopeOrder.indexOf(currentScope);
+                for(int i = index; i >= 0; i--)
+                {
+                    for(String[] val: declaredList)
+                    {
+                        if(val[0].equals(value.getContent()) && val[2].equals(scopeOrder.get(i)))
+                        {
+                            atomicType = val[1];
+                            break;
+                        }
+                    }
+
+                    if(!atomicType.isEmpty())
+                    {
+                        break;
+                    }
+                }
+            }
+            else if(value.getContent().charAt(0) == '"')
+            {
+                atomicType = "text";
+            }
+            else
+            {
+                atomicType = "num";
+            }
+
+            if(atomicType.equals("text"))
+            {
+                System.out.println("\u001B[31mSemantic Error: Expected a numerical value while doing a CONDITION of an if statement");
+                System.exit(0);
+            }
+        }
     }
 
     private void createHTMLTable()

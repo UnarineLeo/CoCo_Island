@@ -418,7 +418,7 @@
 <Token>
 <ID> 84 </ID>
 <Type> CONST </Type>
-<Content> "Gndu" </Content>
+<Content> 54.884 </Content>
 </Token>
 <Token>
 <ID> 85 </ID>
@@ -537,8 +537,8 @@
 </Token>
 <Token>
 <ID> 108 </ID>
-<Type> CONST </Type>
-<Content> "Jhv" </Content>
+<Type> VNAME </Type>
+<Content> V_age </Content>
 </Token>
 <Token>
 <ID> 109 </ID>
@@ -638,7 +638,7 @@
 <Token>
 <ID> 128 </ID>
 <Type> CONST </Type>
-<Content> "Gomn" </Content>
+<Content> 522.64 </Content>
 </Token>
 <Token>
 <ID> 129 </ID>
@@ -672,8 +672,8 @@
 </Token>
 <Token>
 <ID> 135 </ID>
-<Type> CONST </Type>
-<Content> "Knedb" </Content>
+<Type> VNAME </Type>
+<Content> V_age </Content>
 </Token>
 <Token>
 <ID> 136 </ID>
@@ -957,8 +957,8 @@
 </Token>
 <Token>
 <ID> 192 </ID>
-<Type> VNAME </Type>
-<Content> V_def </Content>
+<Type> CONST </Type>
+<Content> 0 </Content>
 </Token>
 <Token>
 <ID> 193 </ID>
