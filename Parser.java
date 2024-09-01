@@ -553,7 +553,7 @@ public class Parser
         Node InstrucNode = new Node(id++, "Non-Terminal", "INSTRUC");
         parent.children.add(InstrucNode);
 
-        if(Objects.equals(tokens.get(index).getContent(), "print") || Objects.equals(tokens.get(index).getContent(), "skip") || Objects.equals(tokens.get(index).getContent(), "halt") ||
+        if(Objects.equals(tokens.get(index).getContent(), "print") || Objects.equals(tokens.get(index).getContent(), "return") || Objects.equals(tokens.get(index).getContent(), "skip") || Objects.equals(tokens.get(index).getContent(), "halt") ||
         Objects.equals(tokens.get(index).getContent(), "if") || Objects.equals(tokens.get(index).getType(), "VNAME") || Objects.equals(tokens.get(index).getType(), "FNAME") || Objects.equals(tokens.get(index).getContent(), "end"))
         {
             if(Objects.equals(tokens.get(index).getContent(), "end"))
@@ -639,9 +639,9 @@ public class Parser
 
                 return true;
             }
-            else if(Objects.equals(tokens.get(index).getContent(), "print"))
+            else if(Objects.equals(tokens.get(index).getContent(), "print") || Objects.equals(tokens.get(index).getContent(), "return"))
             {
-                //print ATOMIC
+                //print ATOMIC || return ATOMIC
                 Node printNode = new Node(id++, "Terminal", tokens.get(index).getContent());
                 commandNode.children.add(printNode);
                 index++;

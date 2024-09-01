@@ -444,7 +444,23 @@ public class Lexer {
                     System.out.println("\u001B[31mLexing Error\u001B[0m: For token \"print\", Expected \"rint\" after the character \'p\' at line " + row + " between columns " + col + "and " + (col + 4) + ".");
                     System.exit(0);
                 }
-            } else if (input.charAt(i) == 's') {
+            }
+            else if (input.charAt(i) == 'r')
+            {
+                if((i+5) <= input.length() && input.charAt(i+1) == 'e' && input.charAt(i+2) == 't' && input.charAt(i+3) == 'u' && input.charAt(i+4) == 'r' && input.charAt(i+5) == 'n')
+                {
+                    Token token = new Token(id, "Keyword", "return", row, col);
+                    tokens.add(token);
+                    i += 5;
+                    col += 5;
+                }
+                else
+                {
+                    System.out.println("\u001B[31mLexing Error\u001B[0m: For token \"return\", Expected \"eturn\" after the character \'r\' at line " + row + " between columns " + col + "and " + (col+5) + ".");
+                    System.exit(0);
+                }
+            }
+            else if (input.charAt(i) == 's') {
                 if ((i + 3) <= input.length() && input.charAt(i + 1) == 'q' && input.charAt(i + 2) == 'r' && input.charAt(i + 3) == 't') {
                     Token token = new Token(id, "Keyword", "sqrt", row, col);
                     tokens.add(token);
