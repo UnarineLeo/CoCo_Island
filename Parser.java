@@ -233,7 +233,7 @@ public class Parser
             }
             else
             {
-                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"main\" at line " + tokens.get(index-1).getRow() + " col " + tokens.get(index-1).getCol());
+                System.out.println("\u001B[31mParsing Error\u001B[0m: Expected \"main\" at the first line of the textfile.");
                 System.exit(0);
                 return false;
             }
