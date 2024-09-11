@@ -35,16 +35,18 @@ public class Scoping
     {
         try
         {
-            scopeOrder.add("global");
-            createTable(root, "global", 1, false);
-            checkCalls(root, "global", 1, false);
+            scopeOrder.add("main");
+            procList.add(new String[]{"main", "void", "global", "0"});
+
+            createTable(root, "main", 1, false);
+            checkCalls(root, "main", 1, false);
             createHTMLTable();
 
             System.out.println();
             System.out.println("\u001B[32mSuccess\u001B[0m: Scoping Successful");
             System.out.println("View the SymbolTable.html file for the symbol table");
 
-            TypeChecking(root, "global", 1, false);
+//            TypeChecking(root, "main", 1, false);
             System.out.println();
             System.out.println("\u001B[32mSuccess\u001B[0m: Type Checking Successful");
             System.out.println("\u001B[32mSuccess\u001B[0m: Sementic Analysis Successful");
@@ -95,29 +97,30 @@ public class Scoping
                 String var3 = getName(node.children.get(7));
 
                 //disallow duplicate variable names in the same scope && type
-                for(String[] val: declaredList)
+                if(!var1.equals(var2) && !var1.equals(var3) && !var2.equals(var3))
                 {
-                    //Needs clarification if duplicates allowed in same scope but different types
-                    if(val[0].equals(var1) && val[2].equals(currentScope))
+                    declaredList.add(new String[]{var1, type1, currentScope});
+                    declaredList.add(new String[]{var2, type2, currentScope});
+                    declaredList.add(new String[]{var3, type3, currentScope});
+                }
+                else
+                {
+                    if(var1.equals(var2))
                     {
                         System.out.println("\u001B[31mSemantic Error: Variable \"" + var1 + "\" is being declared more than once in the same scope");
                         System.exit(0);
                     }
-                    if(val[0].equals(var2) && val[2].equals(currentScope))
+                    else if(var1.equals(var3))
+                    {
+                        System.out.println("\u001B[31mSemantic Error: Variable \"" + var1 + "\" is being declared more than once in the same scope");
+                        System.exit(0);
+                    }
+                    else
                     {
                         System.out.println("\u001B[31mSemantic Error: Variable \"" + var2 + "\" is being declared more than once in the same scope");
                         System.exit(0);
                     }
-                    if(val[0].equals(var3) && val[2].equals(currentScope))
-                    {
-                        System.out.println("\u001B[31mSemantic Error: Variable \"" + var3 + "\" is being declared more than once in the same scope");
-                        System.exit(0);
-                    }
                 }
-
-                declaredList.add(new String[]{var1, type1, currentScope});
-                declaredList.add(new String[]{var2, type2, currentScope});
-                declaredList.add(new String[]{var3, type3, currentScope});
             }
 
             if(node.getContent().equals("VNAME"))
@@ -185,6 +188,18 @@ public class Scoping
                 String type = getType(node.children.getFirst());
                 String var = getName(node.children.get(1));
 
+                if(var.equals("main"))
+                {
+                    System.out.println("\u001B[31mSemantic Error: There should be no recursive calls to the main function");
+                    System.exit(0);
+                }
+
+                if(var.equals(currentScope))
+                {
+                    System.out.println("\u001B[31mSemantic Error: Function \"" + var + "\" is being declared with the same name as the current scope");
+                    System.exit(0);
+                }
+
                 for(String[] val: procList)
                 {
                     //are duplicates allowed? if in different scopes
@@ -248,19 +263,40 @@ public class Scoping
                 String var = getType(node.children.getFirst());
 
                 boolean found = false;
+                boolean checkIfImmediate = false;
                 for(String[] val: procList)
                 {
-                    //consult
-                    if(val[0].equals(var))
+                    if(var.equals(currentScope))
                     {
                         found = true;
                         break;
                     }
+
+                    if(checkIfImmediate)
+                    {
+                        if(val[0].equals(var) && val[2].equals(currentScope))
+                        {
+                            found = true;
+                            checkIfImmediate = false;
+                            break;
+                        }
+                        else
+                        {
+                            System.out.println("\u001B[31mSemantic Error: Function call of \"" + var + "\" under the scope of \"" + currentScope + "\" should be to an immediate child function or recursive");
+                            System.exit(0);
+                        }
+                    }
+
+                    if(val[0].equals(currentScope))
+                    {
+                        checkIfImmediate = true;
+                    }
+
                 }
 
                 if(!found)
                 {
-                    System.out.println("\u001B[31mSemantic Error: Function \"" + var + "\" is being called while it is not defined");
+                    System.out.println("\u001B[31mSemantic Error: Function call of \"" + var + "\" under the scope of \"" + currentScope + "\" should be to an immediate child function or recursive");
                     System.exit(0);
                 }
 
@@ -269,36 +305,26 @@ public class Scoping
                     createTable(child, currentScope, currentScopeID, false);
                 }
             }
-            else if(node.getContent().equals("HEADER"))
+            else if(node.getContent().equals("BODY"))
             {
-                //might remove this
-                String fun = getName(node.children.get(1));
-
-                //consult
-                boolean found = false;
-                for(String[] val: calledList)
+                int soonToBeScope = 0;
+                for(int i = 0; i < procList.size(); i++)
                 {
-                    if(val[0].equals(fun))
+                    if(procList.get(i)[0].equals(currentScope))
                     {
-                        found = true;
+                        soonToBeScope = i+1;
                         break;
                     }
                 }
 
-                //wait for spec
-                if(!found)
-                {
-                    System.out.println("\u001B[31mSemantic Error: Function \"" + fun + "\" is defined but is never called");
-                    System.exit(0);
-                }
-
-                //caters for if duplicate function names are not allowed
-
+                String lastProc = procList.get(soonToBeScope)[0];
+                int procId = Integer.parseInt(procList.get(soonToBeScope)[3]);
 
                 for(Node child: node.children)
                 {
-                    createTable(child, currentScope, currentScopeID, false);
+                    checkCalls(child, lastProc, procId, false);
                 }
+
             }
             else
             {
