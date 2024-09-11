@@ -46,7 +46,7 @@ public class Scoping
             System.out.println("\u001B[32mSuccess\u001B[0m: Scoping Successful");
             System.out.println("View the SymbolTable.html file for the symbol table");
 
-//            TypeChecking(root, "main", 1, false);
+            TypeChecking(root, "main", 1, false);
             System.out.println();
             System.out.println("\u001B[32mSuccess\u001B[0m: Type Checking Successful");
             System.out.println("\u001B[32mSuccess\u001B[0m: Sementic Analysis Successful");
@@ -142,6 +142,22 @@ public class Scoping
                         break;
                     }
                 }
+
+//                for(int i = (declaredList.size()-1); i >= 0; i--)
+//                {
+//                    if(declaredList.get(i)[0].equals(var) && declaredList.get(i)[2].equals(currentScope))
+//                    {
+//                        if(isDeclaration)
+//                        {
+//                            //getLast() returns the last element in the list, so it's ready to accommodate situation where there are multiple variables with the same name
+//                            String[] value = {var, declaredList.get(i)[1], "Variable", String.valueOf(currentScopeID), currentScope};
+//                            scopeTable.put(String.valueOf(node.getId()), value);
+//                        }
+//
+//                        found = true;
+//                        break;
+//                    }
+//                }
 
                 if(!found)
                 {
@@ -468,7 +484,7 @@ public class Scoping
                 String functionType = "";
                 for(String[] val: procList)
                 {
-                    if(val[0].equals(getName(functionNode)))
+                    if(val[0].equals(getName(functionNode)) && val[3].equals(String.valueOf(currentScopeID)))
                     {
                         functionType = val[1];
                         break;
@@ -477,12 +493,62 @@ public class Scoping
 
                 if(!functionType.equals("void"))
                 {
-                    System.out.println("\u001B[31mSemantic Error: The function \"" + getName(functionNode) + "\" is supposed to return a void");
+                    System.out.println("\u001B[31mSemantic Error: The function \"" + getName(functionNode) + "\" is supposed to be a void function");
                     System.exit(0);
                 }
 
                 //verify the args
                 verifyFuncArgs(getName(functionNode), callNode, currentScope);
+            }
+            else if(node.getContent().equals("COMMAND") && node.children.getFirst().getContent().equals("return"))
+            {
+                if(currentScope.equals("main"))
+                {
+                    System.out.println("\u001B[31mSemantic Error: The main function is not supposed to return anything");
+                    System.exit(0);
+                }
+
+                String var = node.children.get(1).children.getFirst().getContent();
+                Node grandchild = node.children.get(1).children.getFirst();
+                if(!var.equals("CONST"))
+                {
+                    String name = getName(grandchild);
+                    for(String[] val: declaredList)
+                    {
+                        if(val[0].equals(name) && val[2].equals(currentScope))
+                        {
+                            if(val[1].equals("text"))
+                            {
+                                System.out.println("\u001B[31mSemantic Error: The function \"" + currentScope + "\" is supposed to return a numeric value");
+                                System.exit(0);
+                            }
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    if (Character.isDigit(grandchild.children.getFirst().getContent().charAt(0)))
+                    {
+                        for(String[] val: procList)
+                        {
+                            //mbilu kuvhavha
+                            if(val[0].equals(currentScope) && val[3].equals(String.valueOf(currentScopeID)))
+                            {
+                                if(!val[1].equals("num"))
+                                {
+                                    System.out.println("\u001B[31mSemantic Error: The function \"" + currentScope + "\" cannot have a return command since it is void function");
+                                    System.exit(0);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("\u001B[31mSemantic Error: The function \"" + currentScope + "\" cannot have a return TEXT");
+                        System.exit(0);
+                    }
+                }
             }
             else if(node.getContent().equals("HEADER"))
             {
