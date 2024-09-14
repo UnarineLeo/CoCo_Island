@@ -19,6 +19,7 @@ public class Scoping
     private List<String[]> lastProc;
     private List<String[]> procArgs;
     private List<String> scopeOrder;
+    private String variableType;
 
     public Scoping()
     {
@@ -29,6 +30,7 @@ public class Scoping
         lastProc = new ArrayList<String[]>();
         procArgs = new ArrayList<String[]>();
         scopeOrder = new ArrayList<String>();
+        variableType = "";
     }
 
     public void Scope(Node root)
@@ -36,7 +38,7 @@ public class Scoping
         try
         {
             scopeOrder.add("main");
-            procList.add(new String[]{"main", "void", "global", "0"});
+            procList.add(new String[]{"main", "void", "global", "1", "1"});
 
             createTable(root, "main", 1, false);
             checkCalls(root, "main", 1, false);
@@ -82,7 +84,7 @@ public class Scoping
                     }
                 }
 
-                declaredList.add(new String[]{var, type, currentScope});
+                declaredList.add(new String[]{var, type, currentScope, String.valueOf(currentScopeID)});
             }
 
             if(node.getContent().equals("LOCVARS"))
@@ -99,9 +101,9 @@ public class Scoping
                 //disallow duplicate variable names in the same scope && type
                 if(!var1.equals(var2) && !var1.equals(var3) && !var2.equals(var3))
                 {
-                    declaredList.add(new String[]{var1, type1, currentScope});
-                    declaredList.add(new String[]{var2, type2, currentScope});
-                    declaredList.add(new String[]{var3, type3, currentScope});
+                    declaredList.add(new String[]{var1, type1, currentScope, String.valueOf(currentScopeID)});
+                    declaredList.add(new String[]{var2, type2, currentScope, String.valueOf(currentScopeID)});
+                    declaredList.add(new String[]{var3, type3, currentScope, String.valueOf(currentScopeID)});
                 }
                 else
                 {
@@ -219,7 +221,7 @@ public class Scoping
                 for(String[] val: procList)
                 {
                     //are duplicates allowed? if in different scopes
-                    if(val[0].equals(var) && val[2].equals(currentScope))
+                    if(val[0].equals(var) && val[2].equals(currentScope) && val[4].equals(String.valueOf(currentScopeID)))
                     {
                         System.out.println("\u001B[31mSemantic Error: Function \"" + var + "\" is being declared more than once in the same scope");
                         System.exit(0);
@@ -229,7 +231,7 @@ public class Scoping
                 addFuncArgs(node, var);
                 scopeOrder.add(var);
 
-                procList.add(new String[]{var, type, currentScope, String.valueOf(node.children.get(1).getId())});
+                procList.add(new String[]{var, type, currentScope, String.valueOf(node.children.get(1).getId()), String.valueOf(currentScopeID)});
                 String[] value = {var, type, "Function", String.valueOf(currentScopeID), currentScope};
                 scopeTable.put(String.valueOf(node.children.get(1).getId()), value);
 
@@ -282,7 +284,7 @@ public class Scoping
                 boolean checkIfImmediate = false;
                 for(String[] val: procList)
                 {
-                    if(var.equals(currentScope))
+                    if(var.equals(currentScope) && val[3].equals(String.valueOf(currentScopeID)))
                     {
                         found = true;
                         break;
@@ -303,7 +305,7 @@ public class Scoping
                         }
                     }
 
-                    if(val[0].equals(currentScope))
+                    if(val[0].equals(currentScope) && val[3].equals(String.valueOf(currentScopeID)))
                     {
                         checkIfImmediate = true;
                     }
@@ -326,7 +328,7 @@ public class Scoping
                 int soonToBeScope = 0;
                 for(int i = 0; i < procList.size(); i++)
                 {
-                    if(procList.get(i)[0].equals(currentScope))
+                    if(procList.get(i)[0].equals(currentScope) && procList.get(i)[3].equals(String.valueOf(currentScopeID)))
                     {
                         soonToBeScope = i+1;
                         break;
@@ -366,7 +368,6 @@ public class Scoping
 
         if(node.getType().equals("Non-Terminal"))
         {
-
             if(node.getContent().equals("ASSIGN") && !node.children.get(1).getContent().equals("< input"))
             {
                 Node variableNode = node.children.getFirst();
@@ -374,14 +375,8 @@ public class Scoping
 
                 String leftType = "";
 
-                for(String[] val: declaredList)
-                {
-                    if(val[0].equals(getName(variableNode)) && val[2].equals(currentScope))
-                    {
-                        leftType = val[1];
-                        break;
-                    }
-                }
+                findTheScope(currentScope, currentScopeID, getName(variableNode), true);
+                leftType = variableType;
 
                 if(termChild.getContent().equals("ATOMIC"))
                 {
@@ -390,21 +385,15 @@ public class Scoping
 
                     if(rightValue.getContent().charAt(0) == 'V')
                     {
-                        for(String[] val: declaredList)
-                        {
-                            if(val[0].equals(rightValue.getContent()) && val[2].equals(currentScope))
-                            {
-                                rightType = val[1];
-                                break;
-                            }
-                        }
+                        findTheScope(currentScope, currentScopeID, getName(rightValue), true);
+                        rightType = variableType;
                     }
 
                     if(rightValue.getContent().charAt(0) == '"' || rightType.equals("text"))
                     {
                         if(leftType.equals("num"))
                         {
-                            System.out.println("\u001B[31mSemantic Error: The variable \"" + getName(variableNode) + "\" which is a num cannot be assigned to a text");
+                            System.out.println("\u001B[31mType Checking Error: The variable \"" + getName(variableNode) + "\" which is a num cannot be assigned to a text");
                             System.exit(0);
                         }
                     }
@@ -412,7 +401,7 @@ public class Scoping
                     {
                         if(leftType.equals("text"))
                         {
-                            System.out.println("\u001B[31mSemantic Error: The variable \"" + getName(variableNode) + "\" which is a text cannot be assigned to a num");
+                            System.out.println("\u001B[31mType Checking Error: The variable \"" + getName(variableNode) + "\" which is a text cannot be assigned to a num");
                             System.exit(0);
                         }
                     }
@@ -422,7 +411,7 @@ public class Scoping
 
                     if(leftType.equals("text"))
                     {
-                        System.out.println("\u001B[31mSemantic Error: The variable \"" + getName(variableNode) + "\" which is a text cannot be assigned using a numerical operation");
+                        System.out.println("\u001B[31mType Checking Error: The variable \"" + getName(variableNode) + "\" which is a text cannot be assigned using a numerical operation");
                         System.exit(0);
                     }
 
@@ -448,13 +437,13 @@ public class Scoping
 
                         if(!functionType.equals("num"))
                         {
-                            System.out.println("\u001B[31mSemantic Error: The function \"" + getName(functionNode) + "\" is supposed to return a num");
+                            System.out.println("\u001B[31mType Checking Error: The function \"" + getName(functionNode) + "\" is supposed to return a num");
                             System.exit(0);
                         }
                     }
                     else
                     {
-                        System.out.println("\u001B[31mSemantic Error: The variable \"" + getName(variableNode) + "\" is supposed to be num so that we can assign it with a num function");
+                        System.out.println("\u001B[31mType Checking Error: The variable \"" + getName(variableNode) + "\" is supposed to be num so that we can assign it with a num function");
                         System.exit(0);
                     }
 
@@ -470,6 +459,13 @@ public class Scoping
                     }
                 }
 
+            }
+            if(node.getContent().equals("ASSIGN") && node.children.get(1).getContent().equals("< input"))
+            {
+                Node child = node.children.getFirst();
+                String var = getName(child);
+
+                findTheScope(currentScope, currentScopeID, var, false);
             }
             else if(node.getContent().equals("COND"))
             {
@@ -493,7 +489,7 @@ public class Scoping
 
                 if(!functionType.equals("void"))
                 {
-                    System.out.println("\u001B[31mSemantic Error: The function \"" + getName(functionNode) + "\" is supposed to be a void function");
+                    System.out.println("\u001B[31mType Checking Error: The function \"" + getName(functionNode) + "\" is supposed to be a void function");
                     System.exit(0);
                 }
 
@@ -504,7 +500,7 @@ public class Scoping
             {
                 if(currentScope.equals("main"))
                 {
-                    System.out.println("\u001B[31mSemantic Error: The main function is not supposed to return anything");
+                    System.out.println("\u001B[31mType Checking Error: The main function is not supposed to return anything");
                     System.exit(0);
                 }
 
@@ -513,22 +509,11 @@ public class Scoping
                 if(!var.equals("CONST"))
                 {
                     String name = getName(grandchild);
-                    for(String[] val: declaredList)
-                    {
-                        if(val[0].equals(name) && val[2].equals(currentScope))
-                        {
-                            if(val[1].equals("text"))
-                            {
-                                System.out.println("\u001B[31mSemantic Error: The function \"" + currentScope + "\" is supposed to return a numeric value");
-                                System.exit(0);
-                            }
-                            break;
-                        }
-                    }
+                    findTheScope(currentScope, currentScopeID, name, false);
                 }
                 else
                 {
-                    if (Character.isDigit(grandchild.children.getFirst().getContent().charAt(0)))
+                    if(Character.isDigit(grandchild.children.getFirst().getContent().charAt(0)))
                     {
                         for(String[] val: procList)
                         {
@@ -537,15 +522,16 @@ public class Scoping
                             {
                                 if(!val[1].equals("num"))
                                 {
-                                    System.out.println("\u001B[31mSemantic Error: The function \"" + currentScope + "\" cannot have a return command since it is void function");
+                                    System.out.println("\u001B[31mType Checking Error: The function \"" + currentScope + "\" cannot have a return command since it is void function");
                                     System.exit(0);
                                 }
+                                break;
                             }
                         }
                     }
                     else
                     {
-                        System.out.println("\u001B[31mSemantic Error: The function \"" + currentScope + "\" cannot have a return TEXT");
+                        System.out.println("\u001B[31mType Checking Error: The function \"" + currentScope + "\" cannot have a return TEXT");
                         System.exit(0);
                     }
                 }
@@ -584,6 +570,91 @@ public class Scoping
         else
         {
             TypeChecking(null, currentScope, currentScopeID, false);
+        }
+    }
+
+    private void findTheScope(String currentScope, int currentScopeID, String var, boolean shouldReturn)
+    {
+        //shouldReturn is true if node == "ASSIGN" else false
+        for(String[] val: declaredList)
+        {
+            if(val[3].equals(String.valueOf(currentScopeID)))
+            {
+                if(val[0].equals(var) && val[2].equals(currentScope))
+                {
+                    if(val[1].equals("text"))
+                    {
+                        if(!shouldReturn)
+                        {
+                            System.out.println("\u001B[31mType Checking Error: The variable \"" + var + "\" which is a text cannot be assigned using an input or returned in a function");
+                            System.exit(0);
+                        }
+                        variableType = "text";
+                    }
+                    else
+                    {
+                        variableType = "num";
+                    }
+                    break;
+                }
+                else
+                {
+                    int indexOfDeclared = declaredList.indexOf(val);
+                    boolean goBack = true;
+                    for(int i = indexOfDeclared; i < declaredList.size(); i++)
+                    {
+                        if(val[3].equals(String.valueOf(currentScopeID)))
+                        {
+                            if(declaredList.get(i)[0].equals(var) && declaredList.get(i)[2].equals(currentScope))
+                            {
+                                if(declaredList.get(i)[1].equals("text"))
+                                {
+                                    if(!shouldReturn)
+                                    {
+                                        System.out.println("\u001B[31mType Checking Error: The variable \"" + var + "\" which is a text cannot be assigned using an input or returned in a function");
+                                        System.exit(0);
+                                    }
+                                    variableType = "text";
+                                }
+                                else
+                                {
+                                    variableType = "num";
+                                }
+                                goBack = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    if(goBack)
+                    {
+                        for(int i = indexOfDeclared; i >= 0; i--)
+                        {
+                            if(declaredList.get(i)[0].equals(var))
+                            {
+                                if(declaredList.get(i)[1].equals("text"))
+                                {
+                                    if(!shouldReturn) {
+                                        System.out.println("\u001B[31mType Checking Error: The variable \"" + var + "\" which is a text cannot be assigned using an input or returned in a function");
+                                        System.exit(0);
+                                    }
+                                    variableType = "text";
+                                }
+                                else
+                                {
+                                    variableType = "num";
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+            }
         }
     }
 
