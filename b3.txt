@@ -8,8 +8,9 @@ num  F_f1(V_v1 , V_v2, V_v3 )
 {
      num V_v4 ,  text V_v5, num V_v6 ,
 
-    begin end
-    return V_v4
+     begin 
+    return V_v4;
+    end
 }
 end
 

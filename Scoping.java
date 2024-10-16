@@ -70,7 +70,7 @@ public class Scoping
         {
             if(node.getContent().equals("GLOBVARS") && !node.children.isEmpty())
             {
-                String type = getType(node.children.getFirst());
+                String type = getType(node.children.get(0));
                 String var = getName(node.children.get(1));
 
                 //disallow duplicate variable names in the same scope && type
