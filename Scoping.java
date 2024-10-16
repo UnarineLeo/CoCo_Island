@@ -70,7 +70,7 @@ public class Scoping
         {
             if(node.getContent().equals("GLOBVARS") && !node.children.isEmpty())
             {
-                String type = getType(node.children.get(0));
+                String type = getType(node.children.getFirst());
                 String var = getName(node.children.get(1));
 
                 //disallow duplicate variable names in the same scope && type
@@ -131,12 +131,11 @@ public class Scoping
                 boolean found = false;
                 for(String[] val: declaredList)
                 {
-                    if(val[0].equals(var))
+                    if(val[0].equals(var) && val[2].equals(currentScope))
                     {
                         if(isDeclaration)
                         {
-                            //getLast() returns the last element in the list, so it's ready to accommodate situation where there are multiple variables with the same name
-                            String[] value = {var, declaredList.getLast()[1], "Variable", String.valueOf(currentScopeID), currentScope};
+                            String[] value = {var, val[1], "Variable", String.valueOf(currentScopeID), currentScope};
                             scopeTable.put(String.valueOf(node.getId()), value);
                         }
 
@@ -952,7 +951,11 @@ public class Scoping
             fileWriter.write("<th>Class</th>\n");
             fileWriter.write("<th>ScopeID</th>\n");
             fileWriter.write("<th>ScopeName</th>\n");
+            fileWriter.write("<th>UniqueName</th>\n");
             fileWriter.write("</tr>\n");
+
+            char uniqueName = 'A';
+            String unqName = "";
 
             for(String key: scopeTable.keySet()){
                 String[] value = scopeTable.get(key);
@@ -963,6 +966,23 @@ public class Scoping
                 fileWriter.write("<td>" + value[2] + "</td>\n");
                 fileWriter.write("<td>" + value[3] + "</td>\n");
                 fileWriter.write("<td>" + value[4] + "</td>\n");
+                if(value[2].equals("Variable"))
+                {
+                    if(value[1].equals("num"))
+                    {
+                        unqName = String.valueOf(uniqueName);
+                    }
+                    else
+                    {
+                        unqName = uniqueName + "$";
+                    }
+                    fileWriter.write("<td>" + unqName + "</td>\n");
+                    uniqueName += 1;
+                }
+                else
+                {
+                    fileWriter.write("<td>" + "-" + "</td>\n");
+                }
                 fileWriter.write("</tr>\n");
             }
 

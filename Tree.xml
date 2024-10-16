@@ -15,12 +15,12 @@
 <Content> GLOBVARS </Content>
 </Child>
 <Child>
-<UniqueID> 27 </UniqueID>
+<UniqueID> 21 </UniqueID>
 <Type> Non-Terminal </Type>
 <Content> ALGO </Content>
 </Child>
 <Child>
-<UniqueID> 37 </UniqueID>
+<UniqueID> 898 </UniqueID>
 <Type> Non-Terminal </Type>
 <Content> FUNCTIONS </Content>
 </Child>

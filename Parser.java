@@ -149,8 +149,8 @@ public class Parser
         if(parsePROG(null))
         {
             System.out.println("\u001B[32mSuccess\u001B[0m: Parsing successful");
-            System.out.println("Open Tree.xml file to view the tree" );
-            writeTreeXML();
+//            System.out.println("Open Tree.xml file to view the tree" );
+//            writeTreeXML();
             return root;
         }
         else
