@@ -1,0 +1,13 @@
+main
+
+
+begin if and( and(1, 1) , and(1, 1)) then begin end else begin end ; end
+
+num  F_f1(V_v1 , V_v2, V_3 )
+{
+    V_v4 , V_v5, V_v6 ,
+
+    begin end
+    return V_v4
+}
+end

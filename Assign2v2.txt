@@ -1,0 +1,13 @@
+main
+
+
+begin V_v6 = or(1, 0) ;  V_v6 = and(1 , 1) ;  V_v6 = eq(1, 1) ; V_v6 = grt(1, 1) ;  V_v6 = add(1, 1) ;  V_v6 = sub (1 , 1) ;  V_v6 = mul(1 ,  1) ;  V_v6 = div( 1 , 1) ;     end
+
+num  F_f1(V_v1 , V_v2, V_3 )
+{
+    V_v4 , V_v5, V_v6 ,
+
+    begin end
+    return V_v4
+}
+end
