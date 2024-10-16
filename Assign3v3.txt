@@ -1,11 +1,13 @@
 main
 
+num V_v6 ,  num V_v61 ,  num V_v62 ,  num V_v63 ,  num V_v64 ,  num V_v65 ,  num V_v66 ,  num V_v67 , 
 
-begin V_v6 = or(sqrt(1) , sqrt(5)) ;  V_v6 = and(sqrt(5) , 1) ;  V_v6 = eq(1, 1) ; V_v6 = grt(or(1, 0), 1) ;  V_v6 = add(1, 1) ;  V_v6 = sub (add(1, 1) , 1) ;  V_v6 = mul(1 ,  1) ;  V_v6 = div( 1 , 1) ;     end
 
-num  F_f1(V_v1 , V_v2, V_3 )
+begin V_v6 = or(sqrt(1) , sqrt(25)) ;  V_v61 = and(sqrt(25) , 1) ;  V_v62 = eq(1, 1) ; V_v63 = grt(or(1, 0), 1) ;  V_v64 = add(1, 1) ;  V_v65 = sub (add(1, 1) , 1) ;  V_v66 = mul(1 , 1) ;  V_v67 = div( 1 , 1) ;     end
+
+num  F_f1(V_v6 , V_v61, V_v62 )
 {
-    V_v4 , V_v5, V_v6 ,
+      num V_v4 ,  text V_v5, num V_v6 ,
 
     begin end
     return V_v4

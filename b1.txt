@@ -1,11 +1,13 @@
 main
 
 
+num V_v6 ,  num V_v61 ,  num V_v62 ,
+
 begin skip; end
 
-num  F_f1(V_v1 , V_v2, V_3 )
+num  F_f1(V_v6 , V_v61, V_v62 )
 {
-    V_v4 , V_v5, V_v6 ,
+    num V_v4 ,  text V_v5 , num V_v6 ,
 
     begin end
     return V_v4

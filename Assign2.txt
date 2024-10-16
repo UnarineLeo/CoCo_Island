@@ -1,11 +1,12 @@
 main
 
+num V_v6 , text V_v61 , num V_v62 ,
 
-begin V_v6 = 50 ;  V_v6 = "Bas";  V_v6 = sqrt(5);   end
+begin V_v6 = 50 ;  V_v61 = "Bas";  V_v62 = sqrt(25);   end
 
-num  F_f1(V_v1 , V_v2, V_3 )
+num  F_f1(V_v6 , V_v61, V_v62 )
 {
-    V_v4 , V_v5, V_v6 ,
+    num V_v4 ,  text V_v5, num V_v6 ,
 
     begin end
     return V_v4
