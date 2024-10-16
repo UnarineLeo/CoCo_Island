@@ -8,12 +8,12 @@
 <Token>
 <ID> 2 </ID>
 <Type> Keyword </Type>
-<Content> text </Content>
+<Content> num </Content>
 </Token>
 <Token>
 <ID> 3 </ID>
 <Type> VNAME </Type>
-<Content> V_name </Content>
+<Content> V_v6 </Content>
 </Token>
 <Token>
 <ID> 4 </ID>
@@ -28,7 +28,7 @@
 <Token>
 <ID> 6 </ID>
 <Type> VNAME </Type>
-<Content> V_age </Content>
+<Content> V_v1 </Content>
 </Token>
 <Token>
 <ID> 7 </ID>
@@ -38,12 +38,12 @@
 <Token>
 <ID> 8 </ID>
 <Type> Keyword </Type>
-<Content> text </Content>
+<Content> num </Content>
 </Token>
 <Token>
 <ID> 9 </ID>
 <Type> VNAME </Type>
-<Content> V_surname </Content>
+<Content> V_v2 </Content>
 </Token>
 <Token>
 <ID> 10 </ID>
@@ -58,7 +58,7 @@
 <Token>
 <ID> 12 </ID>
 <Type> VNAME </Type>
-<Content> V_networth </Content>
+<Content> V_v3 </Content>
 </Token>
 <Token>
 <ID> 13 </ID>
@@ -72,1601 +72,151 @@
 </Token>
 <Token>
 <ID> 15 </ID>
-<Type> Keyword </Type>
-<Content> skip </Content>
+<Type> VNAME </Type>
+<Content> V_v6 </Content>
 </Token>
 <Token>
 <ID> 16 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
+<Type> Keyword </Type>
+<Content> &lt; input </Content>
 </Token>
 <Token>
 <ID> 17 </ID>
-<Type> Keyword </Type>
-<Content> halt </Content>
+<Type> Symbol </Type>
+<Content> ; </Content>
 </Token>
 <Token>
 <ID> 18 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
+<Type> Keyword </Type>
+<Content> end </Content>
 </Token>
 <Token>
 <ID> 19 </ID>
 <Type> Keyword </Type>
-<Content> print </Content>
+<Content> num </Content>
 </Token>
 <Token>
 <ID> 20 </ID>
-<Type> CONST </Type>
-<Content> "Hell" </Content>
+<Type> FNAME </Type>
+<Content> F_f1 </Content>
 </Token>
 <Token>
 <ID> 21 </ID>
 <Type> Symbol </Type>
-<Content> ; </Content>
+<Content> ( </Content>
 </Token>
 <Token>
 <ID> 22 </ID>
-<Type> Keyword </Type>
-<Content> print </Content>
+<Type> VNAME </Type>
+<Content> V_v1 </Content>
 </Token>
 <Token>
 <ID> 23 </ID>
-<Type> CONST </Type>
-<Content> 0 </Content>
+<Type> Symbol </Type>
+<Content> , </Content>
 </Token>
 <Token>
 <ID> 24 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
+<Type> VNAME </Type>
+<Content> V_v2 </Content>
 </Token>
 <Token>
 <ID> 25 </ID>
-<Type> Keyword </Type>
-<Content> print </Content>
+<Type> Symbol </Type>
+<Content> , </Content>
 </Token>
 <Token>
 <ID> 26 </ID>
-<Type> CONST </Type>
-<Content> 0.1001 </Content>
+<Type> VNAME </Type>
+<Content> V_v3 </Content>
 </Token>
 <Token>
 <ID> 27 </ID>
 <Type> Symbol </Type>
-<Content> ; </Content>
+<Content> ) </Content>
 </Token>
 <Token>
 <ID> 28 </ID>
-<Type> Keyword </Type>
-<Content> print </Content>
+<Type> Symbol </Type>
+<Content> { </Content>
 </Token>
 <Token>
 <ID> 29 </ID>
-<Type> CONST </Type>
-<Content> -0.1001 </Content>
+<Type> Keyword </Type>
+<Content> num </Content>
 </Token>
 <Token>
 <ID> 30 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
+<Type> VNAME </Type>
+<Content> V_v4 </Content>
 </Token>
 <Token>
 <ID> 31 </ID>
-<Type> Keyword </Type>
-<Content> print </Content>
+<Type> Symbol </Type>
+<Content> , </Content>
 </Token>
 <Token>
 <ID> 32 </ID>
-<Type> VNAME </Type>
-<Content> V_surname </Content>
+<Type> Keyword </Type>
+<Content> text </Content>
 </Token>
 <Token>
 <ID> 33 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
+<Type> VNAME </Type>
+<Content> V_v5 </Content>
 </Token>
 <Token>
 <ID> 34 </ID>
-<Type> Keyword </Type>
-<Content> print </Content>
+<Type> Symbol </Type>
+<Content> , </Content>
 </Token>
 <Token>
 <ID> 35 </ID>
-<Type> CONST </Type>
-<Content> -155 </Content>
+<Type> Keyword </Type>
+<Content> text </Content>
 </Token>
 <Token>
 <ID> 36 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
+<Type> VNAME </Type>
+<Content> V_v6 </Content>
 </Token>
 <Token>
 <ID> 37 </ID>
-<Type> VNAME </Type>
-<Content> V_age </Content>
+<Type> Symbol </Type>
+<Content> , </Content>
 </Token>
 <Token>
 <ID> 38 </ID>
 <Type> Keyword </Type>
-<Content> &lt; input </Content>
+<Content> begin </Content>
 </Token>
 <Token>
 <ID> 39 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
+<Type> Keyword </Type>
+<Content> return </Content>
 </Token>
 <Token>
 <ID> 40 </ID>
-<Type> Keyword </Type>
-<Content> print </Content>
+<Type> VNAME </Type>
+<Content> V_v4 </Content>
 </Token>
 <Token>
 <ID> 41 </ID>
-<Type> VNAME </Type>
-<Content> V_name </Content>
+<Type> Symbol </Type>
+<Content> ; </Content>
 </Token>
 <Token>
 <ID> 42 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
+<Type> Keyword </Type>
+<Content> end </Content>
 </Token>
 <Token>
 <ID> 43 </ID>
-<Type> VNAME </Type>
-<Content> V_name </Content>
+<Type> Symbol </Type>
+<Content> } </Content>
 </Token>
 <Token>
 <ID> 44 </ID>
-<Type> Symbol </Type>
-<Content> = </Content>
-</Token>
-<Token>
-<ID> 45 </ID>
-<Type> CONST </Type>
-<Content> "Parser" </Content>
-</Token>
-<Token>
-<ID> 46 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 47 </ID>
-<Type> Keyword </Type>
-<Content> print </Content>
-</Token>
-<Token>
-<ID> 48 </ID>
-<Type> VNAME </Type>
-<Content> V_age </Content>
-</Token>
-<Token>
-<ID> 49 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 50 </ID>
-<Type> VNAME </Type>
-<Content> V_age </Content>
-</Token>
-<Token>
-<ID> 51 </ID>
-<Type> Symbol </Type>
-<Content> = </Content>
-</Token>
-<Token>
-<ID> 52 </ID>
-<Type> CONST </Type>
-<Content> 100 </Content>
-</Token>
-<Token>
-<ID> 53 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 54 </ID>
-<Type> VNAME </Type>
-<Content> V_age </Content>
-</Token>
-<Token>
-<ID> 55 </ID>
-<Type> Symbol </Type>
-<Content> = </Content>
-</Token>
-<Token>
-<ID> 56 </ID>
-<Type> FNAME </Type>
-<Content> F_unc3 </Content>
-</Token>
-<Token>
-<ID> 57 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 58 </ID>
-<Type> CONST </Type>
-<Content> 23 </Content>
-</Token>
-<Token>
-<ID> 59 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 60 </ID>
-<Type> CONST </Type>
-<Content> 523 </Content>
-</Token>
-<Token>
-<ID> 61 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 62 </ID>
-<Type> CONST </Type>
-<Content> 20 </Content>
-</Token>
-<Token>
-<ID> 63 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 64 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 65 </ID>
-<Type> Keyword </Type>
-<Content> if </Content>
-</Token>
-<Token>
-<ID> 66 </ID>
-<Type> Keyword </Type>
-<Content> or </Content>
-</Token>
-<Token>
-<ID> 67 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 68 </ID>
-<Type> CONST </Type>
-<Content> 1 </Content>
-</Token>
-<Token>
-<ID> 69 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 70 </ID>
-<Type> CONST </Type>
-<Content> 0 </Content>
-</Token>
-<Token>
-<ID> 71 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 72 </ID>
-<Type> Keyword </Type>
-<Content> then </Content>
-</Token>
-<Token>
-<ID> 73 </ID>
-<Type> Keyword </Type>
-<Content> begin </Content>
-</Token>
-<Token>
-<ID> 74 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 75 </ID>
-<Type> Keyword </Type>
-<Content> else </Content>
-</Token>
-<Token>
-<ID> 76 </ID>
-<Type> Keyword </Type>
-<Content> begin </Content>
-</Token>
-<Token>
-<ID> 77 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 78 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 79 </ID>
-<Type> Keyword </Type>
-<Content> if </Content>
-</Token>
-<Token>
-<ID> 80 </ID>
-<Type> Keyword </Type>
-<Content> and </Content>
-</Token>
-<Token>
-<ID> 81 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 82 </ID>
-<Type> Keyword </Type>
-<Content> or </Content>
-</Token>
-<Token>
-<ID> 83 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 84 </ID>
-<Type> CONST </Type>
-<Content> 54.884 </Content>
-</Token>
-<Token>
-<ID> 85 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 86 </ID>
-<Type> CONST </Type>
-<Content> 0 </Content>
-</Token>
-<Token>
-<ID> 87 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 88 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 89 </ID>
-<Type> Keyword </Type>
-<Content> eq </Content>
-</Token>
-<Token>
-<ID> 90 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 91 </ID>
-<Type> CONST </Type>
-<Content> 2 </Content>
-</Token>
-<Token>
-<ID> 92 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 93 </ID>
-<Type> CONST </Type>
-<Content> 0 </Content>
-</Token>
-<Token>
-<ID> 94 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 95 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 96 </ID>
-<Type> Keyword </Type>
-<Content> then </Content>
-</Token>
-<Token>
-<ID> 97 </ID>
-<Type> Keyword </Type>
-<Content> begin </Content>
-</Token>
-<Token>
-<ID> 98 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 99 </ID>
-<Type> Keyword </Type>
-<Content> else </Content>
-</Token>
-<Token>
-<ID> 100 </ID>
-<Type> Keyword </Type>
-<Content> begin </Content>
-</Token>
-<Token>
-<ID> 101 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 102 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 103 </ID>
-<Type> Keyword </Type>
-<Content> if </Content>
-</Token>
-<Token>
-<ID> 104 </ID>
-<Type> Keyword </Type>
-<Content> not </Content>
-</Token>
-<Token>
-<ID> 105 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 106 </ID>
-<Type> Keyword </Type>
-<Content> or </Content>
-</Token>
-<Token>
-<ID> 107 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 108 </ID>
-<Type> VNAME </Type>
-<Content> V_age </Content>
-</Token>
-<Token>
-<ID> 109 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 110 </ID>
-<Type> CONST </Type>
-<Content> 0 </Content>
-</Token>
-<Token>
-<ID> 111 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 112 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 113 </ID>
-<Type> Keyword </Type>
-<Content> then </Content>
-</Token>
-<Token>
-<ID> 114 </ID>
-<Type> Keyword </Type>
-<Content> begin </Content>
-</Token>
-<Token>
-<ID> 115 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 116 </ID>
-<Type> Keyword </Type>
-<Content> else </Content>
-</Token>
-<Token>
-<ID> 117 </ID>
-<Type> Keyword </Type>
-<Content> begin </Content>
-</Token>
-<Token>
-<ID> 118 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 119 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 120 </ID>
-<Type> VNAME </Type>
-<Content> V_age </Content>
-</Token>
-<Token>
-<ID> 121 </ID>
-<Type> Symbol </Type>
-<Content> = </Content>
-</Token>
-<Token>
-<ID> 122 </ID>
-<Type> Keyword </Type>
-<Content> mul </Content>
-</Token>
-<Token>
-<ID> 123 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 124 </ID>
-<Type> Keyword </Type>
-<Content> add </Content>
-</Token>
-<Token>
-<ID> 125 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 126 </ID>
-<Type> Keyword </Type>
-<Content> div </Content>
-</Token>
-<Token>
-<ID> 127 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 128 </ID>
-<Type> CONST </Type>
-<Content> 522.64 </Content>
-</Token>
-<Token>
-<ID> 129 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 130 </ID>
-<Type> CONST </Type>
-<Content> 0 </Content>
-</Token>
-<Token>
-<ID> 131 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 132 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 133 </ID>
-<Type> Keyword </Type>
-<Content> sub </Content>
-</Token>
-<Token>
-<ID> 134 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 135 </ID>
-<Type> VNAME </Type>
-<Content> V_age </Content>
-</Token>
-<Token>
-<ID> 136 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 137 </ID>
-<Type> CONST </Type>
-<Content> 0 </Content>
-</Token>
-<Token>
-<ID> 138 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 139 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 140 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 141 </ID>
-<Type> CONST </Type>
-<Content> 0 </Content>
-</Token>
-<Token>
-<ID> 142 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 143 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 144 </ID>
-<Type> Keyword </Type>
-<Content> print </Content>
-</Token>
-<Token>
-<ID> 145 </ID>
-<Type> VNAME </Type>
-<Content> V_age </Content>
-</Token>
-<Token>
-<ID> 146 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 147 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 148 </ID>
-<Type> Keyword </Type>
-<Content> num </Content>
-</Token>
-<Token>
-<ID> 149 </ID>
-<Type> FNAME </Type>
-<Content> F_unc3 </Content>
-</Token>
-<Token>
-<ID> 150 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 151 </ID>
-<Type> VNAME </Type>
-<Content> V_name </Content>
-</Token>
-<Token>
-<ID> 152 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 153 </ID>
-<Type> VNAME </Type>
-<Content> V_age </Content>
-</Token>
-<Token>
-<ID> 154 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 155 </ID>
-<Type> VNAME </Type>
-<Content> V_surname </Content>
-</Token>
-<Token>
-<ID> 156 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 157 </ID>
-<Type> Symbol </Type>
-<Content> { </Content>
-</Token>
-<Token>
-<ID> 158 </ID>
-<Type> Keyword </Type>
-<Content> text </Content>
-</Token>
-<Token>
-<ID> 159 </ID>
-<Type> VNAME </Type>
-<Content> V_abc </Content>
-</Token>
-<Token>
-<ID> 160 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 161 </ID>
-<Type> Keyword </Type>
-<Content> num </Content>
-</Token>
-<Token>
-<ID> 162 </ID>
-<Type> VNAME </Type>
-<Content> V_def </Content>
-</Token>
-<Token>
-<ID> 163 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 164 </ID>
-<Type> Keyword </Type>
-<Content> text </Content>
-</Token>
-<Token>
-<ID> 165 </ID>
-<Type> VNAME </Type>
-<Content> V_ghi </Content>
-</Token>
-<Token>
-<ID> 166 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 167 </ID>
-<Type> Keyword </Type>
-<Content> begin </Content>
-</Token>
-<Token>
-<ID> 168 </ID>
-<Type> Keyword </Type>
-<Content> return </Content>
-</Token>
-<Token>
-<ID> 169 </ID>
-<Type> VNAME </Type>
-<Content> V_name </Content>
-</Token>
-<Token>
-<ID> 170 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 171 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 172 </ID>
-<Type> Symbol </Type>
-<Content> } </Content>
-</Token>
-<Token>
-<ID> 173 </ID>
-<Type> Keyword </Type>
-<Content> void </Content>
-</Token>
-<Token>
-<ID> 174 </ID>
-<Type> FNAME </Type>
-<Content> F_unc4 </Content>
-</Token>
-<Token>
-<ID> 175 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 176 </ID>
-<Type> VNAME </Type>
-<Content> V_abc </Content>
-</Token>
-<Token>
-<ID> 177 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 178 </ID>
-<Type> VNAME </Type>
-<Content> V_def </Content>
-</Token>
-<Token>
-<ID> 179 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 180 </ID>
-<Type> VNAME </Type>
-<Content> V_ghi </Content>
-</Token>
-<Token>
-<ID> 181 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 182 </ID>
-<Type> Symbol </Type>
-<Content> { </Content>
-</Token>
-<Token>
-<ID> 183 </ID>
-<Type> Keyword </Type>
-<Content> text </Content>
-</Token>
-<Token>
-<ID> 184 </ID>
-<Type> VNAME </Type>
-<Content> V_jkl </Content>
-</Token>
-<Token>
-<ID> 185 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 186 </ID>
-<Type> Keyword </Type>
-<Content> num </Content>
-</Token>
-<Token>
-<ID> 187 </ID>
-<Type> VNAME </Type>
-<Content> V_mno </Content>
-</Token>
-<Token>
-<ID> 188 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 189 </ID>
-<Type> Keyword </Type>
-<Content> text </Content>
-</Token>
-<Token>
-<ID> 190 </ID>
-<Type> VNAME </Type>
-<Content> V_pqr </Content>
-</Token>
-<Token>
-<ID> 191 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 192 </ID>
-<Type> Keyword </Type>
-<Content> begin </Content>
-</Token>
-<Token>
-<ID> 193 </ID>
-<Type> VNAME </Type>
-<Content> V_name </Content>
-</Token>
-<Token>
-<ID> 194 </ID>
-<Type> Keyword </Type>
-<Content> &lt; input </Content>
-</Token>
-<Token>
-<ID> 195 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 196 </ID>
-<Type> FNAME </Type>
-<Content> F_unc4 </Content>
-</Token>
-<Token>
-<ID> 197 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 198 </ID>
-<Type> CONST </Type>
-<Content> 0 </Content>
-</Token>
-<Token>
-<ID> 199 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 200 </ID>
-<Type> VNAME </Type>
-<Content> V_mno </Content>
-</Token>
-<Token>
-<ID> 201 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 202 </ID>
-<Type> VNAME </Type>
-<Content> V_pqr </Content>
-</Token>
-<Token>
-<ID> 203 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 204 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 205 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 206 </ID>
-<Type> Symbol </Type>
-<Content> } </Content>
-</Token>
-<Token>
-<ID> 207 </ID>
-<Type> Keyword </Type>
-<Content> num </Content>
-</Token>
-<Token>
-<ID> 208 </ID>
-<Type> FNAME </Type>
-<Content> F_unc5 </Content>
-</Token>
-<Token>
-<ID> 209 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 210 </ID>
-<Type> VNAME </Type>
-<Content> V_def </Content>
-</Token>
-<Token>
-<ID> 211 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 212 </ID>
-<Type> VNAME </Type>
-<Content> V_mno </Content>
-</Token>
-<Token>
-<ID> 213 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 214 </ID>
-<Type> VNAME </Type>
-<Content> V_pqr </Content>
-</Token>
-<Token>
-<ID> 215 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 216 </ID>
-<Type> Symbol </Type>
-<Content> { </Content>
-</Token>
-<Token>
-<ID> 217 </ID>
-<Type> Keyword </Type>
-<Content> text </Content>
-</Token>
-<Token>
-<ID> 218 </ID>
-<Type> VNAME </Type>
-<Content> V_stu </Content>
-</Token>
-<Token>
-<ID> 219 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 220 </ID>
-<Type> Keyword </Type>
-<Content> num </Content>
-</Token>
-<Token>
-<ID> 221 </ID>
-<Type> VNAME </Type>
-<Content> V_vwx </Content>
-</Token>
-<Token>
-<ID> 222 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 223 </ID>
-<Type> Keyword </Type>
-<Content> num </Content>
-</Token>
-<Token>
-<ID> 224 </ID>
-<Type> VNAME </Type>
-<Content> V_jkl </Content>
-</Token>
-<Token>
-<ID> 225 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 226 </ID>
-<Type> Keyword </Type>
-<Content> begin </Content>
-</Token>
-<Token>
-<ID> 227 </ID>
-<Type> VNAME </Type>
-<Content> V_vwx </Content>
-</Token>
-<Token>
-<ID> 228 </ID>
-<Type> Symbol </Type>
-<Content> = </Content>
-</Token>
-<Token>
-<ID> 229 </ID>
-<Type> FNAME </Type>
-<Content> F_unc5 </Content>
-</Token>
-<Token>
-<ID> 230 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 231 </ID>
-<Type> VNAME </Type>
-<Content> V_abc </Content>
-</Token>
-<Token>
-<ID> 232 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 233 </ID>
-<Type> VNAME </Type>
-<Content> V_def </Content>
-</Token>
-<Token>
-<ID> 234 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 235 </ID>
-<Type> VNAME </Type>
-<Content> V_ghi </Content>
-</Token>
-<Token>
-<ID> 236 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 237 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 238 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 239 </ID>
-<Type> Symbol </Type>
-<Content> } </Content>
-</Token>
-<Token>
-<ID> 240 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 241 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 242 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 243 </ID>
-<Type> Keyword </Type>
-<Content> num </Content>
-</Token>
-<Token>
-<ID> 244 </ID>
-<Type> FNAME </Type>
-<Content> F_unc3 </Content>
-</Token>
-<Token>
-<ID> 245 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 246 </ID>
-<Type> VNAME </Type>
-<Content> V_name </Content>
-</Token>
-<Token>
-<ID> 247 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 248 </ID>
-<Type> VNAME </Type>
-<Content> V_age </Content>
-</Token>
-<Token>
-<ID> 249 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 250 </ID>
-<Type> VNAME </Type>
-<Content> V_surname </Content>
-</Token>
-<Token>
-<ID> 251 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 252 </ID>
-<Type> Symbol </Type>
-<Content> { </Content>
-</Token>
-<Token>
-<ID> 253 </ID>
-<Type> Keyword </Type>
-<Content> text </Content>
-</Token>
-<Token>
-<ID> 254 </ID>
-<Type> VNAME </Type>
-<Content> V_abc </Content>
-</Token>
-<Token>
-<ID> 255 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 256 </ID>
-<Type> Keyword </Type>
-<Content> num </Content>
-</Token>
-<Token>
-<ID> 257 </ID>
-<Type> VNAME </Type>
-<Content> V_def </Content>
-</Token>
-<Token>
-<ID> 258 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 259 </ID>
-<Type> Keyword </Type>
-<Content> text </Content>
-</Token>
-<Token>
-<ID> 260 </ID>
-<Type> VNAME </Type>
-<Content> V_ghi </Content>
-</Token>
-<Token>
-<ID> 261 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 262 </ID>
-<Type> Keyword </Type>
-<Content> begin </Content>
-</Token>
-<Token>
-<ID> 263 </ID>
-<Type> Keyword </Type>
-<Content> return </Content>
-</Token>
-<Token>
-<ID> 264 </ID>
-<Type> VNAME </Type>
-<Content> V_name </Content>
-</Token>
-<Token>
-<ID> 265 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 266 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 267 </ID>
-<Type> Symbol </Type>
-<Content> } </Content>
-</Token>
-<Token>
-<ID> 268 </ID>
-<Type> Keyword </Type>
-<Content> void </Content>
-</Token>
-<Token>
-<ID> 269 </ID>
-<Type> FNAME </Type>
-<Content> F_unc4 </Content>
-</Token>
-<Token>
-<ID> 270 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 271 </ID>
-<Type> VNAME </Type>
-<Content> V_abc </Content>
-</Token>
-<Token>
-<ID> 272 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 273 </ID>
-<Type> VNAME </Type>
-<Content> V_def </Content>
-</Token>
-<Token>
-<ID> 274 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 275 </ID>
-<Type> VNAME </Type>
-<Content> V_ghi </Content>
-</Token>
-<Token>
-<ID> 276 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 277 </ID>
-<Type> Symbol </Type>
-<Content> { </Content>
-</Token>
-<Token>
-<ID> 278 </ID>
-<Type> Keyword </Type>
-<Content> text </Content>
-</Token>
-<Token>
-<ID> 279 </ID>
-<Type> VNAME </Type>
-<Content> V_jkl </Content>
-</Token>
-<Token>
-<ID> 280 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 281 </ID>
-<Type> Keyword </Type>
-<Content> num </Content>
-</Token>
-<Token>
-<ID> 282 </ID>
-<Type> VNAME </Type>
-<Content> V_mno </Content>
-</Token>
-<Token>
-<ID> 283 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 284 </ID>
-<Type> Keyword </Type>
-<Content> text </Content>
-</Token>
-<Token>
-<ID> 285 </ID>
-<Type> VNAME </Type>
-<Content> V_pqr </Content>
-</Token>
-<Token>
-<ID> 286 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 287 </ID>
-<Type> Keyword </Type>
-<Content> begin </Content>
-</Token>
-<Token>
-<ID> 288 </ID>
-<Type> FNAME </Type>
-<Content> F_unc4 </Content>
-</Token>
-<Token>
-<ID> 289 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 290 </ID>
-<Type> CONST </Type>
-<Content> 0 </Content>
-</Token>
-<Token>
-<ID> 291 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 292 </ID>
-<Type> VNAME </Type>
-<Content> V_mno </Content>
-</Token>
-<Token>
-<ID> 293 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 294 </ID>
-<Type> VNAME </Type>
-<Content> V_pqr </Content>
-</Token>
-<Token>
-<ID> 295 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 296 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 297 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 298 </ID>
-<Type> Symbol </Type>
-<Content> } </Content>
-</Token>
-<Token>
-<ID> 299 </ID>
-<Type> Keyword </Type>
-<Content> num </Content>
-</Token>
-<Token>
-<ID> 300 </ID>
-<Type> FNAME </Type>
-<Content> F_unc5 </Content>
-</Token>
-<Token>
-<ID> 301 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 302 </ID>
-<Type> VNAME </Type>
-<Content> V_def </Content>
-</Token>
-<Token>
-<ID> 303 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 304 </ID>
-<Type> VNAME </Type>
-<Content> V_mno </Content>
-</Token>
-<Token>
-<ID> 305 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 306 </ID>
-<Type> VNAME </Type>
-<Content> V_pqr </Content>
-</Token>
-<Token>
-<ID> 307 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 308 </ID>
-<Type> Symbol </Type>
-<Content> { </Content>
-</Token>
-<Token>
-<ID> 309 </ID>
-<Type> Keyword </Type>
-<Content> text </Content>
-</Token>
-<Token>
-<ID> 310 </ID>
-<Type> VNAME </Type>
-<Content> V_stu </Content>
-</Token>
-<Token>
-<ID> 311 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 312 </ID>
-<Type> Keyword </Type>
-<Content> num </Content>
-</Token>
-<Token>
-<ID> 313 </ID>
-<Type> VNAME </Type>
-<Content> V_vwx </Content>
-</Token>
-<Token>
-<ID> 314 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 315 </ID>
-<Type> Keyword </Type>
-<Content> num </Content>
-</Token>
-<Token>
-<ID> 316 </ID>
-<Type> VNAME </Type>
-<Content> V_jkl </Content>
-</Token>
-<Token>
-<ID> 317 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 318 </ID>
-<Type> Keyword </Type>
-<Content> begin </Content>
-</Token>
-<Token>
-<ID> 319 </ID>
-<Type> VNAME </Type>
-<Content> V_vwx </Content>
-</Token>
-<Token>
-<ID> 320 </ID>
-<Type> Symbol </Type>
-<Content> = </Content>
-</Token>
-<Token>
-<ID> 321 </ID>
-<Type> FNAME </Type>
-<Content> F_unc5 </Content>
-</Token>
-<Token>
-<ID> 322 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 323 </ID>
-<Type> VNAME </Type>
-<Content> V_abc </Content>
-</Token>
-<Token>
-<ID> 324 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 325 </ID>
-<Type> VNAME </Type>
-<Content> V_def </Content>
-</Token>
-<Token>
-<ID> 326 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 327 </ID>
-<Type> VNAME </Type>
-<Content> V_ghi </Content>
-</Token>
-<Token>
-<ID> 328 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 329 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 330 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 331 </ID>
-<Type> Symbol </Type>
-<Content> } </Content>
-</Token>
-<Token>
-<ID> 332 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 333 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 334 </ID>
 <Type> Keyword </Type>
 <Content> end </Content>
 </Token>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SyntaxTree>
+<Root>
+<UniqueID>1</UniqueID>
+<StartSymbol>PROG</StartSymbol>
+<Children>
+<Child>
+<UniqueID> 2 </UniqueID>
+<Type> Terminal </Type>
+<Content> main </Content>
+</Child>
+<Child>
+<UniqueID> 3 </UniqueID>
+<Type> Non-Terminal </Type>
+<Content> GLOBVARS </Content>
+</Child>
+<Child>
+<UniqueID> 27 </UniqueID>
+<Type> Non-Terminal </Type>
+<Content> ALGO </Content>
+</Child>
+<Child>
+<UniqueID> 37 </UniqueID>
+<Type> Non-Terminal </Type>
+<Content> FUNCTIONS </Content>
+</Child>
+</Children>
+</Root>
+<InnerNodes>
+</InnerNodes>
+<LeafNodes>
+</LeafNodes>
+</SyntaxTree>
