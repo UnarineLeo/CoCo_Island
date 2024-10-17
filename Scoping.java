@@ -978,10 +978,12 @@ public class Scoping
                     }
                     fileWriter.write("<td>" + unqName + "</td>\n");
                     uniqueName += 1;
+                    scopeTable.get(key)[5] = unqName;
                 }
                 else
                 {
                     fileWriter.write("<td>" + "-" + "</td>\n");
+                    scopeTable.get(key)[5] = "-";
                 }
                 fileWriter.write("</tr>\n");
             }
