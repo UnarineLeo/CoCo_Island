@@ -158,8 +158,7 @@ public class Translation
         }
         else if(firstChild.getContent().equals("OP"))
         {
-            //fixing the issue
-            value = TransTERM(firstChild, currentProc, currentScopeID);
+            value = TransOP(firstChild, currentProc, currentScopeID);
         }
         else
         {
@@ -168,6 +167,41 @@ public class Translation
         }
 
         return value;
+    }
+
+    private String TransOP(Node node, String currentProc, int currentScopeID)
+    {
+        Node firstChild = node.children.getFirst().children.getFirst();
+
+        if(firstChild.getContent().equals("sqrt"))
+        {
+            return "SQR(" + TransOP(node.children.get(2).children.getFirst(), currentProc, currentScopeID) + ")";
+        }
+        else if(firstChild.getContent().equals("add"))
+        {
+            return TransOP(node.children.get(2).children.getFirst(), currentProc, currentScopeID) + " + " + TransOP(node.children.get(4).children.getFirst(), currentProc, currentScopeID);
+        }
+        else if(firstChild.getContent().equals("sub"))
+        {
+            return TransOP(node.children.get(2).children.getFirst(), currentProc, currentScopeID) + " - " + TransOP(node.children.get(4).children.getFirst(), currentProc, currentScopeID);
+        }
+        else if(firstChild.getContent().equals("mul"))
+        {
+            return TransOP(node.children.get(2).children.getFirst(), currentProc, currentScopeID) + " * " + TransOP(node.children.get(4).children.getFirst(), currentProc, currentScopeID);
+        }
+        else if(firstChild.getContent().equals("div"))
+        {
+            return TransOP(node.children.get(2).children.getFirst(), currentProc, currentScopeID) + " / " + TransOP(node.children.get(4).children.getFirst(), currentProc, currentScopeID);
+        }
+        else if(node.getContent().equals("ATOMIC"))
+        {
+            return TransATOMIC(node, currentProc, currentScopeID);
+        }
+        else
+        {
+            return "";
+        }
+
     }
 
     private void TransPrint(Node node, String currentProc, int currentScopeID)
