@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.*;
 
 public class Translation
 {
@@ -97,11 +96,12 @@ public class Translation
             }
             else if(node.children.getFirst().getContent().equals("BRANCH"))
             {
-//                TransPrint(node, currentProc, currentScopeID);
+                branchCount++;
+                TransBranch(node, currentProc, currentScopeID);
             }
             else
             {
-
+                return;
             }
         }
         else
@@ -244,87 +244,71 @@ public class Translation
         return value;
     }
 
-    private void TransCOND(Node node, String currentProc, int currentScopeID)
+    private String TransCOND(Node node, String currentProc, int currentScopeID)
     {
-        //on COND
-        Node firstChild = node.children.getFirst();
-        if(firstChild.getContent().equals("SIMPLE"))
-        {
-//            TransSIMPLE(firstChild, currentProc);
-        }
-        else
-        {
-//            TransCOMPOSIT(firstChild, currentProc);
-        }
+        //Should be on SIMPLE/COMPOSIT
 
-    }
+        Node firstChild = node.children.getFirst().children.getFirst();
 
-    private String TransBINOP(Node node, String currentProc, int currentScopeID)
-    {
-        //on the symbol : > + - * /
-        String value = "";
-        if(node.getContent().equals("eq"))
+        if(firstChild.getContent().equals("sqrt"))
         {
-            value = " = ";
+            return "SQR(" + TransOP(node.children.get(2), currentProc, currentScopeID) + ")";
         }
-        else if(node.getContent().equals("grt"))
+        else if(firstChild.getContent().equals("add"))
         {
-            value = " > ";
+            return TransOP(node.children.get(2), currentProc, currentScopeID) + " + " + TransOP(node.children.get(4), currentProc, currentScopeID);
         }
-        else if(node.getContent().equals("add"))
+        else if(firstChild.getContent().equals("sub"))
         {
-            value = " + ";
+            return TransOP(node.children.get(2), currentProc, currentScopeID) + " - " + TransOP(node.children.get(4), currentProc, currentScopeID);
         }
-        else if(node.getContent().equals("sub"))
+        else if(firstChild.getContent().equals("mul"))
         {
-            value = " - ";
+            return TransOP(node.children.get(2), currentProc, currentScopeID) + " * " + TransOP(node.children.get(4), currentProc, currentScopeID);
         }
-        else if(node.getContent().equals("mul"))
+        else if(firstChild.getContent().equals("div"))
         {
-            value = " * ";
+            return TransOP(node.children.get(2), currentProc, currentScopeID) + " / " + TransOP(node.children.get(4), currentProc, currentScopeID);
         }
-        else if(node.getContent().equals("div"))
+        else if(firstChild.getContent().equals("eq"))
         {
-            value = " / ";
+            return TransOP(node.children.get(2), currentProc, currentScopeID) + " = " + TransOP(node.children.get(4), currentProc, currentScopeID);
         }
-        else if(node.getContent().equals("or"))
+        else if(firstChild.getContent().equals("grt"))
         {
-            //OR
-            TransOr(node, currentProc, currentScopeID);
-            return "P";
+            return TransOP(node.children.get(2), currentProc, currentScopeID) + " > " + TransOP(node.children.get(4), currentProc, currentScopeID);
         }
-        else
+        else if(firstChild.getContent().equals("not"))
         {
-            //AND
-            TransAnd(node, currentProc, currentScopeID);
-            return "P";
-        }
-
-        return value;
-    }
-
-    private String TransUNOP(Node node, String currentProc, int currentScopeID)
-    {
-        //on the symbol
-        String value = "";
-        if(node.getContent().equals("sqrt"))
-        {
-            value = " SQR ";
-        }
-        else
-        {
-            //not
             TransNot(node, currentProc, currentScopeID);
             return "P";
         }
-
-        return value;
+        else if(firstChild.getContent().equals("or"))
+        {
+            TransOr(node, currentProc, currentScopeID);
+            return "P";
+        }
+        else if(firstChild.getContent().equals("and"))
+        {
+            TransAnd(node, currentProc, currentScopeID);
+            return "P";
+        }
+        else if(node.getContent().equals("ATOMIC"))
+        {
+            return TransATOMIC(node, currentProc, currentScopeID);
+        }
+        else
+        {
+            return "";
+        }
     }
 
     private void TransOr(Node node,String currentProc, int currentScopeID)
     {
-        String BoolExpr1 = TransUNOP(node.children.get(2),currentProc, currentScopeID);
-        String BoolExpr2 = TransUNOP(node.children.get(4),currentProc, currentScopeID);
+        //from SIMPLE or COMPOSIT node
+
+        String BoolExpr1 = TransCOND(node.children.get(2),currentProc, currentScopeID);
+        String BoolExpr2 = TransCOND(node.children.get(4),currentProc, currentScopeID);
 
         code += String.valueOf(lineNumber) + " IF " + BoolExpr1 + " THEN GOTO success \n";
         lineNumber += 10;
@@ -350,8 +334,10 @@ public class Translation
 
     private void TransAnd(Node node,String currentProc, int currentScopeID)
     {
-        String BoolExpr1 = TransUNOP(node.children.get(2),currentProc, currentScopeID);
-        String BoolExpr2 = TransUNOP(node.children.get(4),currentProc, currentScopeID);
+        //from SIMPLE or COMPOSIT node
+
+        String BoolExpr1 = TransCOND(node.children.get(2),currentProc, currentScopeID);
+        String BoolExpr2 = TransCOND(node.children.get(4),currentProc, currentScopeID);
 
         code += String.valueOf(lineNumber) + " IF " + BoolExpr1 + " THEN GOTO otherCond \n";
         lineNumber += 10;
@@ -381,7 +367,9 @@ public class Translation
 
     private void TransNot(Node node,String currentProc, int currentScopeID)
     {
-        String BoolExpr = TransUNOP(node.children.get(2),currentProc, currentScopeID);
+        //from SIMPLE or COMPOSIT node
+
+        String BoolExpr = TransCOND(node.children.get(2),currentProc, currentScopeID);
         logicExpr = BoolExpr;
 
         code += String.valueOf(lineNumber) + " IF " + BoolExpr + " THEN GOTO failed \n";
@@ -397,6 +385,26 @@ public class Translation
 
         code = code.replace("failed", String.valueOf(failedLineNumber));
         code = code.replace("exit", String.valueOf(exitLineNumber));
+    }
+
+    private void TransBranch(Node node, String currentProc, int currentScope)
+    {
+        String BooleanExpr = TransCOND(node.children.get(1).children.getFirst(),currentProc, currentScope);
+
+        int branchNumber = branchCount;
+        inBranch = true;
+
+        code += String.valueOf(lineNumber) + " IF " + BooleanExpr + " THEN GOTO Branch" + branchNumber + "\n";
+        lineNumber += 10;
+        translate(node.children.get(8), currentScope, currentProc);
+        code+= String.valueOf(lineNumber) + " GOTO exit" + branchNumber + "\n";
+        lineNumber += 10;
+        int otherLineNumber = lineNumber;
+        translate(node.children.get(4), currentScope, currentProc);
+        int exitLineNumber = lineNumber;
+
+        code = code.replace("Branch" + branchNumber, String.valueOf(otherLineNumber));
+        code = code.replace("exit" + branchNumber, String.valueOf(exitLineNumber));
     }
 
     private void createBASICFile()
