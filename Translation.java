@@ -58,12 +58,52 @@ public class Translation
             currScope[0] = funcName;
             currScope[1] = scopeNameID;
         }
+        else if(node.getContent().equals("PROG"))
+        {
+            for(int i = 0; i < node.children.size(); i++)
+            {
+                if(node.children.get(i).getContent().equals("ALGO"))
+                {
+                    for(int j = 0; j < node.children.get(i).children.size(); j++)
+                    {
+                        translate(node.children.get(i).children.get(j), currentScopeID, currentProc);
+                    }
+                    code += String.valueOf(lineNumber) + " STOP";
+                    lineNumber += 10;
+                    ///verify
+                }
+                else
+                {
+                    //hopefully it doesn't interrupt FUNCTIONS
+                    translate(node.children.get(i), currentScopeID, currentProc);
+                }
+            }
+
+        }
+        else if(node.getContent().equals("FUNCTIONS"))
+        {
+            if(node.children.isEmpty())
+            {
+                code += String.valueOf(lineNumber) + " REM END";
+                lineNumber += 10;
+            }
+        }
+        else if(node.getContent().equals("INSTRUC"))
+        {
+            if(node.children.isEmpty())
+            {
+                code += String.valueOf(lineNumber) + " REM END";
+                lineNumber += 10;
+            }
+        }
         else if(node.getContent().equals("BODY"))
         {
             for(int i = 0; i < node.children.size(); i++)
             {
                 translate(node.children.get(i), Integer.parseInt(currScope[1]), currScope[0]);
             }
+            code += String.valueOf(lineNumber) + " STOP";
+            lineNumber += 10;
         }
         else if(node.getContent().equals("COMMAND"))
         {
