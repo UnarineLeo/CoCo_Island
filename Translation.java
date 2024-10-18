@@ -87,6 +87,19 @@ public class Translation
                 code += String.valueOf(lineNumber) + " REM END";
                 lineNumber += 10;
             }
+            else
+            {
+                String funcName = scope.getName(node.children.getFirst().children.getFirst().children.get(1));
+                for(int i = 0; i < scope.scopeTable.size(); i++)
+                {
+                    if(scope.scopeTable.get(i)[0].equals(funcName) && scope.scopeTable.get(i)[4].equals(currentProc) && scope.scopeTable.get(i)[3].equals(String.valueOf(currentScopeID)))
+                    {
+                        funcName = scope.scopeTable.get(i)[5];
+                    }
+                }
+
+                code = code.replace("GOSUB " + funcName, "GOSUB " + String.valueOf(lineNumber));
+            }
         }
         else if(node.getContent().equals("INSTRUC"))
         {
@@ -183,8 +196,16 @@ public class Translation
                 }
             }
 
-            code += String.valueOf(lineNumber) + " LET " + varName + " = " +  TransTERM(isItTerm, currentProc, currentScopeID) + "\n";
-            lineNumber += 10;
+            Node isItCall = isItTerm.children.getFirst();
+            if(isItCall.getContent().equals("CALL"))
+            {
+                TransTERM(isItTerm, currentProc, currentScopeID);
+            }
+            else
+            {
+                code += String.valueOf(lineNumber) + " LET " + varName + " = " +  TransTERM(isItTerm, currentProc, currentScopeID) + "\n";
+                lineNumber += 10;
+            }
         }
     }
 
@@ -202,8 +223,8 @@ public class Translation
         }
         else
         {
-            //fixing the issue[CALL]
-            value = TransTERM(firstChild, currentProc, currentScopeID);
+
+            value = "";
         }
 
         return value;
@@ -242,6 +263,21 @@ public class Translation
             return "";
         }
 
+    }
+
+    private void TransCALL(Node node, String currentProc, int currentScopeID)
+    {
+        String procName = scope.getName(node.children.getFirst());
+        for(int i = 0; i < scope.scopeTable.size(); i++)
+        {
+            if(scope.scopeTable.get(i)[0].equals(procName) && scope.scopeTable.get(i)[4].equals(currentProc) && scope.scopeTable.get(i)[3].equals(String.valueOf(currentScopeID)))
+            {
+                procName = scope.scopeTable.get(i)[5];
+            }
+        }
+
+        code += String.valueOf(lineNumber) + " GOSUB " + procName + "\n";
+        lineNumber += 10;
     }
 
     private void TransPrint(Node node, String currentProc, int currentScopeID)

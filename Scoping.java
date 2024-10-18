@@ -956,6 +956,7 @@ public class Scoping
 
             char uniqueName = 'A';
             String unqName = "";
+            int count = 0;
 
             for(String key: scopeTable.keySet()){
                 String[] value = scopeTable.get(key);
@@ -982,8 +983,9 @@ public class Scoping
                 }
                 else
                 {
-                    fileWriter.write("<td>" + "-" + "</td>\n");
-                    scopeTable.get(key)[5] = "-";
+                    fileWriter.write("<td>" + "label" + count + "</td>\n");
+                    scopeTable.get(key)[5] = "label" + count;
+                    count++;
                 }
                 fileWriter.write("</tr>\n");
             }
