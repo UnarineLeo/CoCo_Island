@@ -2,14 +2,13 @@ main
 
 num V_v1 , num V_v2 ,  num V_v3 , 
 
-begin F_f1(5, 5, 5) ; end
+begin F_f1(5, 5, 5) ; print V_v1; print V_v2;print V_v3; end
 
-num  F_f1(V_v1 , V_v2, V_v3 )
+void  F_f1(V_v1 , V_v2, V_v3 )
 {
       num V_v4 ,  text V_v5, num V_v6 ,
 
-     begin 
-    return V_v4;
+     begin
     end
 }
 end

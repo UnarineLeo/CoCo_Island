@@ -2,14 +2,17 @@ main
 
 num V_v6 , num V_v1 , num V_v2 , num V_v3 ,
 
-begin V_v6 < input ; end
+begin V_v6 < input ;
+print V_v2;
+end
 
 num  F_f1(V_v1 , V_v2, V_v3 )
 {
-    num V_v4 , text V_v5, text V_v6 ,
+    num V_v4 , text V_v5 , text V_v7 ,
 
     begin 
-    
+    V_v4 = 15;
+
     return V_v4 ;
     end
 }  

@@ -2,7 +2,7 @@ main
 
 num V_v1 , num V_v2 ,  num V_v3,
 
-begin if and(1, 1) then begin end else begin end ; end
+begin if and(1, 0) then begin print "Yes" ; end else begin print "No"; end ; end
 
 num  F_f1(V_v1 , V_v2, V_v3 )
 {

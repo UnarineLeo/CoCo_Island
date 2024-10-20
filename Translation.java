@@ -34,24 +34,14 @@ public class Translation
         {
             String funcName = scope.getName(node);
             String scopeNameID = "";
-            for(int i = 0; i < scope.scopeTable.size(); i++)
+            for(String key: scope.scopeTable.keySet())
             {
-                if(!scopeNameID.isEmpty())
-                {
-                    break;
-                }
 
-                if(scope.scopeTable.get(i)[0].equals(funcName) && scope.scopeTable.get(i)[4].equals(currentProc) && scope.scopeTable.get(i)[3].equals(String.valueOf(currentScopeID)))
+                if(scope.scopeTable.get(key)[0].equals(funcName) && scope.scopeTable.get(key)[4].equals(currentProc) && scope.scopeTable.get(key)[3].equals(String.valueOf(currentScopeID)))
                 {
-                    funcName = scope.scopeTable.get(i)[5];
-                    for(String key: scope.scopeTable.keySet())
-                    {
-                        if(scope.scopeTable.get(key)[0].equals(funcName) && scope.scopeTable.get(key)[4].equals(currentProc) && scope.scopeTable.get(key)[3].equals(String.valueOf(currentScopeID)))
-                        {
-                            scopeNameID = key;
-                            break;
-                        }
-                    }
+                    funcName = scope.scopeTable.get(key)[0];
+                    scopeNameID = key;
+                    break;
                 }
             }
 
@@ -64,17 +54,18 @@ public class Translation
             {
                 if(node.children.get(i).getContent().equals("ALGO"))
                 {
-                    for(int j = 0; j < node.children.get(i).children.size(); j++)
+                    for(int j = 0; j < node.children.size(); j++)
                     {
-                        translate(node.children.get(i).children.get(j), currentScopeID, currentProc);
+                        translate(node.children.get(j), currentScopeID, currentProc);
                     }
                     code += String.valueOf(lineNumber) + " STOP";
                     lineNumber += 10;
+                    break;
                     ///verify
                 }
                 else
                 {
-                    //hopefully it doesn't interrupt FUNCTIONS
+                    //hopefully assign.txt doesn't interrupt FUNCTIONS
                     translate(node.children.get(i), currentScopeID, currentProc);
                 }
             }
@@ -84,21 +75,27 @@ public class Translation
         {
             if(node.children.isEmpty())
             {
-                code += String.valueOf(lineNumber) + " REM END";
+                code += String.valueOf(lineNumber) + " REM END\n";
                 lineNumber += 10;
             }
             else
             {
                 String funcName = scope.getName(node.children.getFirst().children.getFirst().children.get(1));
-                for(int i = 0; i < scope.scopeTable.size(); i++)
+                for(String key: scope.scopeTable.keySet())
                 {
-                    if(scope.scopeTable.get(i)[0].equals(funcName) && scope.scopeTable.get(i)[4].equals(currentProc) && scope.scopeTable.get(i)[3].equals(String.valueOf(currentScopeID)))
+                    if(scope.scopeTable.get(key)[0].equals(funcName) && scope.scopeTable.get(key)[4].equals(currentProc) && scope.scopeTable.get(key)[3].equals(String.valueOf(currentScopeID)))
                     {
-                        funcName = scope.scopeTable.get(i)[5];
+                        funcName = scope.scopeTable.get(key)[5];
+                        break;
                     }
                 }
 
                 code = code.replace("GOSUB " + funcName, "GOSUB " + String.valueOf(lineNumber));
+
+                for(int i = 0; i < node.children.size(); i++)
+                {
+                    translate(node.children.get(i), currentScopeID, currentProc);
+                }
             }
         }
         else if(node.getContent().equals("INSTRUC"))
@@ -108,6 +105,14 @@ public class Translation
                 code += String.valueOf(lineNumber) + " REM END";
                 lineNumber += 10;
             }
+            else
+            {
+                for(int i = 0; i < node.children.size(); i++)
+                {
+                    translate(node.children.get(i), currentScopeID, currentProc);
+                }
+            }
+
         }
         else if(node.getContent().equals("BODY"))
         {
@@ -115,19 +120,19 @@ public class Translation
             {
                 translate(node.children.get(i), Integer.parseInt(currScope[1]), currScope[0]);
             }
-            code += String.valueOf(lineNumber) + " STOP";
+            code += String.valueOf(lineNumber) + " STOP\n";
             lineNumber += 10;
         }
         else if(node.getContent().equals("COMMAND"))
         {
             if(node.children.getFirst().getContent().equals("skip"))
             {
-                code += String.valueOf(lineNumber) + "REM DO NOTHING";
+                code += String.valueOf(lineNumber) + " REM DO NOTHING\n";
                 lineNumber += 10;
             }
             else if(node.children.getFirst().getContent().equals("halt"))
             {
-                code += String.valueOf(lineNumber) + "STOP";
+                code += String.valueOf(lineNumber) + " STOP\n";
                 lineNumber += 10;
             }
             else if(node.children.getFirst().getContent().equals("print"))
@@ -136,21 +141,21 @@ public class Translation
             }
             else if(node.children.getFirst().getContent().equals("return"))
             {
-                code += String.valueOf(lineNumber) + "RETURN" + "\n";
+                code += String.valueOf(lineNumber) + " RETURN" + "\n";
                 lineNumber += 10;
             }
             else if(node.children.getFirst().getContent().equals("ASSIGN"))
             {
-                TransASSIGN(node, currentProc, currentScopeID);
+                TransASSIGN(node.children.getFirst(), currentProc, currentScopeID);
             }
             else if(node.children.getFirst().getContent().equals("CALL"))
             {
-//                TransPrint(node, currentProc, currentScopeID);
+                TransCALL(node.children.getFirst(), currentProc, currentScopeID);
             }
             else if(node.children.getFirst().getContent().equals("BRANCH"))
             {
                 branchCount++;
-                TransBranch(node, currentProc, currentScopeID);
+                TransBranch(node.children.getFirst(), currentProc, currentScopeID);
             }
             else
             {
@@ -169,16 +174,22 @@ public class Translation
 
     private void TransASSIGN(Node node, String currentProc, int currentScopeID)
     {
+        Node isItTerm = null;
         Node isItInput = node.children.get(1);
-        Node isItTerm = node.children.get(2);
+        if(node.children.size() >= 3)
+        {
+            isItTerm = node.children.get(2);
+        }
+
         if(isItInput.getContent().equals("< input"))
         {
             String varName = scope.getName(node.children.getFirst());
-            for(int i = 0; i < scope.scopeTable.size(); i++)
+            for(String key: scope.scopeTable.keySet())
             {
-                if(scope.scopeTable.get(i)[0].equals(varName) && scope.scopeTable.get(i)[4].equals(currentProc) && scope.scopeTable.get(i)[3].equals(String.valueOf(currentScopeID)))
+                if(scope.scopeTable.get(key)[0].equals(varName) && scope.scopeTable.get(key)[4].equals(currentProc) && scope.scopeTable.get(key)[3].equals(String.valueOf(currentScopeID)))
                 {
-                    varName = scope.scopeTable.get(i)[5];
+                    varName = scope.scopeTable.get(key)[5];
+                    break;
                 }
             }
 
@@ -188,18 +199,19 @@ public class Translation
         else
         {
             String varName = scope.getName(node.children.getFirst());
-            for(int i = 0; i < scope.scopeTable.size(); i++)
+            for(String key: scope.scopeTable.keySet())
             {
-                if(scope.scopeTable.get(i)[0].equals(varName) && scope.scopeTable.get(i)[4].equals(currentProc) && scope.scopeTable.get(i)[3].equals(String.valueOf(currentScopeID)))
+                if(scope.scopeTable.get(key)[0].equals(varName) && scope.scopeTable.get(key)[4].equals(currentProc) && scope.scopeTable.get(key)[3].equals(String.valueOf(currentScopeID)))
                 {
-                    varName = scope.scopeTable.get(i)[5];
+                    varName = scope.scopeTable.get(key)[5];
+                    break;
                 }
             }
 
             Node isItCall = isItTerm.children.getFirst();
             if(isItCall.getContent().equals("CALL"))
             {
-                TransTERM(isItTerm, currentProc, currentScopeID);
+                TransCALL(isItCall, currentProc, currentScopeID);
             }
             else
             {
@@ -268,11 +280,12 @@ public class Translation
     private void TransCALL(Node node, String currentProc, int currentScopeID)
     {
         String procName = scope.getName(node.children.getFirst());
-        for(int i = 0; i < scope.scopeTable.size(); i++)
+        for(String key: scope.scopeTable.keySet())
         {
-            if(scope.scopeTable.get(i)[0].equals(procName) && scope.scopeTable.get(i)[4].equals(currentProc) && scope.scopeTable.get(i)[3].equals(String.valueOf(currentScopeID)))
+            if(scope.scopeTable.get(key)[0].equals(procName) && scope.scopeTable.get(key)[4].equals(currentProc) && scope.scopeTable.get(key)[3].equals(String.valueOf(currentScopeID)))
             {
-                procName = scope.scopeTable.get(i)[5];
+                procName = scope.scopeTable.get(key)[5];
+                break;
             }
         }
 
@@ -284,7 +297,7 @@ public class Translation
     {
         Node atomicNode = node.children.get(1);
         String value = TransATOMIC(atomicNode, currentProc, currentScopeID);
-        code += String.valueOf(lineNumber) + "PRINT " + value + "\n";
+        code += String.valueOf(lineNumber) + " PRINT " + value + "\n";
         lineNumber += 10;
     }
 
@@ -296,11 +309,12 @@ public class Translation
         if(firstChild.getContent().equals("VNAME"))
         {
             String name = scope.getName(firstChild);
-            for(int i = 0; i < scope.scopeTable.size(); i++)
+            for(String key: scope.scopeTable.keySet())
             {
-                if(scope.scopeTable.get(i)[0].equals(name) && scope.scopeTable.get(i)[4].equals(currentProc) && scope.scopeTable.get(i)[3].equals(String.valueOf(currentScopeID)))
+                if(scope.scopeTable.get(key)[0].equals(name) && scope.scopeTable.get(key)[4].equals(currentProc) && scope.scopeTable.get(key)[3].equals(String.valueOf(currentScopeID)))
                 {
-                    value = scope.scopeTable.get(i)[5];
+                    value = scope.scopeTable.get(key)[5];
+                    break;
                 }
             }
         }
@@ -309,7 +323,7 @@ public class Translation
             Node constChild = firstChild.children.getFirst();
             if(constChild.getContent().charAt(0) == '"')
             {
-                value = "\"" + constChild.getContent() + "\"";
+                value = constChild.getContent();
             }
             else
             {
@@ -472,11 +486,11 @@ public class Translation
 
         code += String.valueOf(lineNumber) + " IF " + BooleanExpr + " THEN GOTO Branch" + branchNumber + "\n";
         lineNumber += 10;
-        translate(node.children.get(8), currentScope, currentProc);
+        translate(node.children.get(3), currentScope, currentProc);
         code+= String.valueOf(lineNumber) + " GOTO exit" + branchNumber + "\n";
         lineNumber += 10;
         int otherLineNumber = lineNumber;
-        translate(node.children.get(4), currentScope, currentProc);
+        translate(node.children.get(5), currentScope, currentProc);
         int exitLineNumber = lineNumber;
 
         code = code.replace("Branch" + branchNumber, String.valueOf(otherLineNumber));

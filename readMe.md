@@ -21,3 +21,4 @@ Specifications:
 1. The code is written in Java.
 2. The code is written in IntelliJ IDEA and/or vscode.
 3. Pdf file is attached for the detailed explanation of the project.
+4. The translated code is written in the BASIC.txt file.
