@@ -13,6 +13,7 @@ public class Translation
     int scopeNumber = 1;
     String logicExpr = "";
     String currScope[] = new String[2];
+    String returnValue = "";
 
     public void Translate(Node root, Scoping scopeDefined)
     {
@@ -141,6 +142,9 @@ public class Translation
             }
             else if(node.children.getFirst().getContent().equals("return"))
             {
+                String toAssign = TransATOMIC(node.children.get(1), currentProc, currentScopeID);
+                code += String.valueOf(lineNumber) + " LET " + returnValue + " = " + toAssign + "\n";
+                lineNumber += 10;
                 code += String.valueOf(lineNumber) + " RETURN" + "\n";
                 lineNumber += 10;
             }
@@ -211,6 +215,7 @@ public class Translation
             Node isItCall = isItTerm.children.getFirst();
             if(isItCall.getContent().equals("CALL"))
             {
+                returnValue = varName;
                 TransCALL(isItCall, currentProc, currentScopeID);
             }
             else

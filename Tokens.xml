@@ -58,235 +58,250 @@
 <Token>
 <ID> 12 </ID>
 <Type> Keyword </Type>
-<Content> if </Content>
+<Content> end </Content>
 </Token>
 <Token>
 <ID> 13 </ID>
 <Type> Keyword </Type>
-<Content> and </Content>
-</Token>
-<Token>
-<ID> 14 </ID>
-<Type> Symbol </Type>
-<Content> ( </Content>
-</Token>
-<Token>
-<ID> 15 </ID>
-<Type> CONST </Type>
-<Content> 1 </Content>
-</Token>
-<Token>
-<ID> 16 </ID>
-<Type> Symbol </Type>
-<Content> , </Content>
-</Token>
-<Token>
-<ID> 17 </ID>
-<Type> CONST </Type>
-<Content> 0 </Content>
-</Token>
-<Token>
-<ID> 18 </ID>
-<Type> Symbol </Type>
-<Content> ) </Content>
-</Token>
-<Token>
-<ID> 19 </ID>
-<Type> Keyword </Type>
-<Content> then </Content>
-</Token>
-<Token>
-<ID> 20 </ID>
-<Type> Keyword </Type>
-<Content> begin </Content>
-</Token>
-<Token>
-<ID> 21 </ID>
-<Type> Keyword </Type>
-<Content> print </Content>
-</Token>
-<Token>
-<ID> 22 </ID>
-<Type> CONST </Type>
-<Content> "Yes" </Content>
-</Token>
-<Token>
-<ID> 23 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 24 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 25 </ID>
-<Type> Keyword </Type>
-<Content> else </Content>
-</Token>
-<Token>
-<ID> 26 </ID>
-<Type> Keyword </Type>
-<Content> begin </Content>
-</Token>
-<Token>
-<ID> 27 </ID>
-<Type> Keyword </Type>
-<Content> print </Content>
-</Token>
-<Token>
-<ID> 28 </ID>
-<Type> CONST </Type>
-<Content> "No" </Content>
-</Token>
-<Token>
-<ID> 29 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 30 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 31 </ID>
-<Type> Symbol </Type>
-<Content> ; </Content>
-</Token>
-<Token>
-<ID> 32 </ID>
-<Type> Keyword </Type>
-<Content> end </Content>
-</Token>
-<Token>
-<ID> 33 </ID>
-<Type> Keyword </Type>
 <Content> num </Content>
 </Token>
 <Token>
-<ID> 34 </ID>
+<ID> 14 </ID>
 <Type> FNAME </Type>
 <Content> F_f1 </Content>
 </Token>
 <Token>
-<ID> 35 </ID>
+<ID> 15 </ID>
 <Type> Symbol </Type>
 <Content> ( </Content>
 </Token>
 <Token>
-<ID> 36 </ID>
+<ID> 16 </ID>
 <Type> VNAME </Type>
 <Content> V_v1 </Content>
 </Token>
 <Token>
-<ID> 37 </ID>
+<ID> 17 </ID>
 <Type> Symbol </Type>
 <Content> , </Content>
 </Token>
 <Token>
-<ID> 38 </ID>
+<ID> 18 </ID>
 <Type> VNAME </Type>
 <Content> V_v2 </Content>
 </Token>
 <Token>
-<ID> 39 </ID>
+<ID> 19 </ID>
 <Type> Symbol </Type>
 <Content> , </Content>
 </Token>
 <Token>
-<ID> 40 </ID>
+<ID> 20 </ID>
 <Type> VNAME </Type>
 <Content> V_v3 </Content>
 </Token>
 <Token>
-<ID> 41 </ID>
+<ID> 21 </ID>
 <Type> Symbol </Type>
 <Content> ) </Content>
 </Token>
 <Token>
-<ID> 42 </ID>
+<ID> 22 </ID>
 <Type> Symbol </Type>
 <Content> { </Content>
 </Token>
 <Token>
-<ID> 43 </ID>
+<ID> 23 </ID>
 <Type> Keyword </Type>
 <Content> num </Content>
 </Token>
 <Token>
-<ID> 44 </ID>
+<ID> 24 </ID>
 <Type> VNAME </Type>
 <Content> V_v4 </Content>
 </Token>
 <Token>
-<ID> 45 </ID>
+<ID> 25 </ID>
 <Type> Symbol </Type>
 <Content> , </Content>
 </Token>
 <Token>
-<ID> 46 </ID>
+<ID> 26 </ID>
 <Type> Keyword </Type>
-<Content> text </Content>
+<Content> num </Content>
 </Token>
 <Token>
-<ID> 47 </ID>
+<ID> 27 </ID>
 <Type> VNAME </Type>
 <Content> V_v5 </Content>
 </Token>
 <Token>
-<ID> 48 </ID>
+<ID> 28 </ID>
 <Type> Symbol </Type>
 <Content> , </Content>
 </Token>
 <Token>
-<ID> 49 </ID>
+<ID> 29 </ID>
 <Type> Keyword </Type>
 <Content> num </Content>
 </Token>
 <Token>
-<ID> 50 </ID>
+<ID> 30 </ID>
 <Type> VNAME </Type>
 <Content> V_v6 </Content>
 </Token>
 <Token>
-<ID> 51 </ID>
+<ID> 31 </ID>
 <Type> Symbol </Type>
 <Content> , </Content>
 </Token>
 <Token>
-<ID> 52 </ID>
+<ID> 32 </ID>
 <Type> Keyword </Type>
 <Content> begin </Content>
 </Token>
 <Token>
-<ID> 53 </ID>
+<ID> 33 </ID>
 <Type> Keyword </Type>
 <Content> return </Content>
 </Token>
 <Token>
-<ID> 54 </ID>
+<ID> 34 </ID>
 <Type> VNAME </Type>
 <Content> V_v4 </Content>
 </Token>
 <Token>
-<ID> 55 </ID>
+<ID> 35 </ID>
 <Type> Symbol </Type>
 <Content> ; </Content>
 </Token>
 <Token>
-<ID> 56 </ID>
+<ID> 36 </ID>
 <Type> Keyword </Type>
 <Content> end </Content>
 </Token>
 <Token>
-<ID> 57 </ID>
+<ID> 37 </ID>
 <Type> Symbol </Type>
 <Content> } </Content>
 </Token>
 <Token>
+<ID> 38 </ID>
+<Type> Keyword </Type>
+<Content> void </Content>
+</Token>
+<Token>
+<ID> 39 </ID>
+<Type> FNAME </Type>
+<Content> F_f2 </Content>
+</Token>
+<Token>
+<ID> 40 </ID>
+<Type> Symbol </Type>
+<Content> ( </Content>
+</Token>
+<Token>
+<ID> 41 </ID>
+<Type> VNAME </Type>
+<Content> V_v4 </Content>
+</Token>
+<Token>
+<ID> 42 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 43 </ID>
+<Type> VNAME </Type>
+<Content> V_v5 </Content>
+</Token>
+<Token>
+<ID> 44 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 45 </ID>
+<Type> VNAME </Type>
+<Content> V_v6 </Content>
+</Token>
+<Token>
+<ID> 46 </ID>
+<Type> Symbol </Type>
+<Content> ) </Content>
+</Token>
+<Token>
+<ID> 47 </ID>
+<Type> Symbol </Type>
+<Content> { </Content>
+</Token>
+<Token>
+<ID> 48 </ID>
+<Type> Keyword </Type>
+<Content> num </Content>
+</Token>
+<Token>
+<ID> 49 </ID>
+<Type> VNAME </Type>
+<Content> V_v4 </Content>
+</Token>
+<Token>
+<ID> 50 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 51 </ID>
+<Type> Keyword </Type>
+<Content> text </Content>
+</Token>
+<Token>
+<ID> 52 </ID>
+<Type> VNAME </Type>
+<Content> V_v5 </Content>
+</Token>
+<Token>
+<ID> 53 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 54 </ID>
+<Type> Keyword </Type>
+<Content> num </Content>
+</Token>
+<Token>
+<ID> 55 </ID>
+<Type> VNAME </Type>
+<Content> V_v6 </Content>
+</Token>
+<Token>
+<ID> 56 </ID>
+<Type> Symbol </Type>
+<Content> , </Content>
+</Token>
+<Token>
+<ID> 57 </ID>
+<Type> Keyword </Type>
+<Content> begin </Content>
+</Token>
+<Token>
 <ID> 58 </ID>
+<Type> Keyword </Type>
+<Content> end </Content>
+</Token>
+<Token>
+<ID> 59 </ID>
+<Type> Symbol </Type>
+<Content> } </Content>
+</Token>
+<Token>
+<ID> 60 </ID>
+<Type> Keyword </Type>
+<Content> end </Content>
+</Token>
+<Token>
+<ID> 61 </ID>
 <Type> Keyword </Type>
 <Content> end </Content>
 </Token>

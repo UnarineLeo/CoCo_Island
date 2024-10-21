@@ -148,22 +148,6 @@ public class Scoping
                     }
                 }
 
-//                for(int i = (declaredList.size()-1); i >= 0; i--)
-//                {
-//                    if(declaredList.get(i)[0].equals(var) && declaredList.get(i)[2].equals(currentScope))
-//                    {
-//                        if(isDeclaration)
-//                        {
-//                            //getLast() returns the last element in the list, so it's ready to accommodate situation where there are multiple variables with the same name
-//                            String[] value = {var, declaredList.get(i)[1], "Variable", String.valueOf(currentScopeID), currentScope};
-//                            scopeTable.put(String.valueOf(node.getId()), value);
-//                        }
-//
-//                        found = true;
-//                        break;
-//                    }
-//                }
-
                 if(!found)
                 {
                     System.out.println("\u001B[31mSemantic Error: Variable \"" + var + "\" is being used before it is declared");
@@ -202,6 +186,13 @@ public class Scoping
                 for(Node child: node.children)
                 {
                     createTable(child, currentScope, currentScopeID, false);
+                }
+            }
+            else if(node.getContent().equals("FUNCTIONS"))
+            {
+                for(Node child: node.children)
+                {
+                    createTable(child, currentScope, currentScopeID, node.getContent().equals("LOCVARS"));
                 }
             }
             else if(node.getContent().equals("HEADER"))
