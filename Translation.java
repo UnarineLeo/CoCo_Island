@@ -103,7 +103,7 @@ public class Translation
         {
             if(node.children.isEmpty())
             {
-                code += String.valueOf(lineNumber) + " REM END";
+                code += String.valueOf(lineNumber) + " REM END\n";
                 lineNumber += 10;
             }
             else
@@ -122,6 +122,16 @@ public class Translation
                 translate(node.children.get(i), Integer.parseInt(currScope[1]), currScope[0]);
             }
             code += String.valueOf(lineNumber) + " STOP\n";
+            lineNumber += 10;
+        }
+        else if(node.getContent().equals("PROLOG"))
+        {
+            code += String.valueOf(lineNumber) + " REM BEGIN\n";
+            lineNumber += 10;
+        }
+        else if(node.getContent().equals("EPILOG"))
+        {
+            code += String.valueOf(lineNumber) + " REM END\n";
             lineNumber += 10;
         }
         else if(node.getContent().equals("COMMAND"))
@@ -491,11 +501,11 @@ public class Translation
 
         code += String.valueOf(lineNumber) + " IF " + BooleanExpr + " THEN GOTO Branch" + branchNumber + "\n";
         lineNumber += 10;
-        translate(node.children.get(3), currentScope, currentProc);
+        translate(node.children.get(5), currentScope, currentProc);
         code+= String.valueOf(lineNumber) + " GOTO exit" + branchNumber + "\n";
         lineNumber += 10;
         int otherLineNumber = lineNumber;
-        translate(node.children.get(5), currentScope, currentProc);
+        translate(node.children.get(3), currentScope, currentProc);
         int exitLineNumber = lineNumber;
 
         code = code.replace("Branch" + branchNumber, String.valueOf(otherLineNumber));

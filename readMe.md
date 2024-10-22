@@ -5,8 +5,10 @@ Phases:
 3. Semantic Analysis (Type Checking and Symbol Table)
 4. Translation to Machine Code
 
-# Java Version
-Please make sure that you are using Java with an ```SDK21``` to accommodate the getFirst and getLast() functions
+# Java Version && other clarities
+1. Please make sure that you are using Java with an ```SDK21``` to accommodate the getFirst and getLast() functions
+2. We have taken "< input" as one token whereby there's a space between < AND input
+3. 
 
 # How to run the code:
 1. Clone the repository
