@@ -18,8 +18,8 @@ public class Main
              root = parser.parse();
               Scoping scope = new Scoping();
               scope.Scope(root);
-            //  Translation translation = new Translation();
-            //  translation.Translate(root, scope);
+              Translation translation = new Translation();
+              translation.Translate(root, scope);
 
              System.out.print("Do you want to enter another file? (y/n): ");
              response = scanner.nextLine();

@@ -20,6 +20,8 @@ public class Scoping
     private List<String[]> procArgs;
     private List<String> scopeOrder;
     private String variableType;
+    char uniqueName;
+    int count;
 
     public Scoping()
     {
@@ -31,6 +33,8 @@ public class Scoping
         procArgs = new ArrayList<String[]>();
         scopeOrder = new ArrayList<String>();
         variableType = "";
+        uniqueName = 'A';
+        count = 0;
     }
 
     public void Scope(Node root)
@@ -135,7 +139,7 @@ public class Scoping
                     {
                         if(isDeclaration)
                         {
-                            String[] value = {var, val[1], "Variable", String.valueOf(currentScopeID), currentScope};
+                            String[] value = {var, val[1], "Variable", String.valueOf(currentScopeID), currentScope, createUniqueName(var, val[1], "Variable")};
                             scopeTable.put(String.valueOf(node.getId()), value);
                         }
 
@@ -143,22 +147,6 @@ public class Scoping
                         break;
                     }
                 }
-
-//                for(int i = (declaredList.size()-1); i >= 0; i--)
-//                {
-//                    if(declaredList.get(i)[0].equals(var) && declaredList.get(i)[2].equals(currentScope))
-//                    {
-//                        if(isDeclaration)
-//                        {
-//                            //getLast() returns the last element in the list, so it's ready to accommodate situation where there are multiple variables with the same name
-//                            String[] value = {var, declaredList.get(i)[1], "Variable", String.valueOf(currentScopeID), currentScope};
-//                            scopeTable.put(String.valueOf(node.getId()), value);
-//                        }
-//
-//                        found = true;
-//                        break;
-//                    }
-//                }
 
                 if(!found)
                 {
@@ -200,6 +188,13 @@ public class Scoping
                     createTable(child, currentScope, currentScopeID, false);
                 }
             }
+            else if(node.getContent().equals("FUNCTIONS"))
+            {
+                for(Node child: node.children)
+                {
+                    createTable(child, currentScope, currentScopeID, node.getContent().equals("LOCVARS"));
+                }
+            }
             else if(node.getContent().equals("HEADER"))
             {
                 String type = getType(node.children.getFirst());
@@ -230,7 +225,7 @@ public class Scoping
                 scopeOrder.add(var);
 
                 procList.add(new String[]{var, type, currentScope, String.valueOf(node.children.get(1).getId()), String.valueOf(currentScopeID)});
-                String[] value = {var, type, "Function", String.valueOf(currentScopeID), currentScope};
+                String[] value = {var, type, "Function", String.valueOf(currentScopeID), currentScope, createUniqueName(var, type, "Function")};
                 scopeTable.put(String.valueOf(node.children.get(1).getId()), value);
 
                 for(Node child: node.children)
@@ -485,10 +480,12 @@ public class Scoping
 
                 Node functionNode = callNode.children.getFirst();
 
+                //final touch ups
                 String functionType = "";
+                String funcName = getName(functionNode);
                 for(String[] val: procList)
                 {
-                    if(val[0].equals(getName(functionNode)) && val[3].equals(String.valueOf(currentScopeID)))
+                    if(val[0].equals(funcName) && val[4].equals(String.valueOf(currentScopeID)))
                     {
                         functionType = val[1];
                         break;
@@ -922,6 +919,30 @@ public class Scoping
         }
     }
 
+    private String createUniqueName(String variable, String type, String keyword)
+    {
+        String unqName;
+        if(keyword.equals("Variable"))
+        {
+            if(type.equals("num"))
+            {
+                unqName = String.valueOf(uniqueName);
+            }
+            else
+            {
+                unqName = uniqueName + "$";
+            }
+            uniqueName += 1;
+        }
+        else
+        {
+            unqName = "label" + count;
+            count++;
+        }
+
+        return unqName;
+    }
+
     private void createHTMLTable()
     {
         try
@@ -954,10 +975,6 @@ public class Scoping
             fileWriter.write("<th>UniqueName</th>\n");
             fileWriter.write("</tr>\n");
 
-            char uniqueName = 'A';
-            String unqName = "";
-            int count = 0;
-
             for(String key: scopeTable.keySet()){
                 String[] value = scopeTable.get(key);
                 fileWriter.write("<tr>\n");
@@ -967,26 +984,7 @@ public class Scoping
                 fileWriter.write("<td>" + value[2] + "</td>\n");
                 fileWriter.write("<td>" + value[3] + "</td>\n");
                 fileWriter.write("<td>" + value[4] + "</td>\n");
-                if(value[2].equals("Variable"))
-                {
-                    if(value[1].equals("num"))
-                    {
-                        unqName = String.valueOf(uniqueName);
-                    }
-                    else
-                    {
-                        unqName = uniqueName + "$";
-                    }
-                    fileWriter.write("<td>" + unqName + "</td>\n");
-                    uniqueName += 1;
-                    scopeTable.get(key)[5] = unqName;
-                }
-                else
-                {
-                    fileWriter.write("<td>" + "label" + count + "</td>\n");
-                    scopeTable.get(key)[5] = "label" + count;
-                    count++;
-                }
+                fileWriter.write("<td>" + value[5] + "</td>\n");
                 fileWriter.write("</tr>\n");
             }
 

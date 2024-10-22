@@ -5,8 +5,10 @@ Phases:
 3. Semantic Analysis (Type Checking and Symbol Table)
 4. Translation to Machine Code
 
-# Java Version
-Please make sure that you are using Java with an ```SDK21``` to accommodate the getFirst and getLast() functions
+# Java Version && other clarities
+1. Please make sure that you are using Java with an ```SDK21``` to accommodate the getFirst and getLast() functions
+2. We have taken "< input" as one token whereby there's a space between < AND input
+3. 
 
 # How to run the code:
 1. Clone the repository
@@ -21,3 +23,4 @@ Specifications:
 1. The code is written in Java.
 2. The code is written in IntelliJ IDEA and/or vscode.
 3. Pdf file is attached for the detailed explanation of the project.
+4. The translated code is written in the BASIC.txt file.

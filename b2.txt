@@ -2,25 +2,27 @@ main
 
 num V_v1 , num V_v2 ,  num V_v3 ,
 
+
 begin  end
 
 
 
 num  F_f1(V_v1 , V_v2, V_v3 )
 {
-    num V_v4 ,  text V_v5, num V_v6 ,
+    num V_v4 ,  num V_v5, num V_v6 ,
 
-     begin 
+     begin
+
     return V_v4;
     end
 }
 
-void F_f2(V_v1 , V_v2, V_v3 )
+void F_f2(V_v4 , V_v5, V_v6 )
 {
     num V_v4 ,  text V_v5, num V_v6 ,
 
      begin 
-    return V_v4;
+
     end
 }
 end
